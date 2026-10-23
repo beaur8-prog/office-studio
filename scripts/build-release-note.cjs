@@ -15,11 +15,11 @@ async function main(){
 >
 > **‘실행’ 버튼이 없거나 회사·기관 정책으로 차단되면 관리자에게 설치 허용 여부를 확인하세요. 악성코드 탐지 경고가 나타나면 실행을 중단하세요.** [Microsoft의 SmartScreen 안내](https://learn.microsoft.com/windows/apps/package-and-deploy/smartscreen-reputation)
 
-# 오피스 스튜디오 다운로드 및 사용 안내
+# 오피스 스튜디오 Windows 다운로드 및 사용 안내
 
 **Office Studio ${lock.version} · 2026년 10월 23일 · Windows 통합 설치·앱별 자동 업데이트**
 
-표, 발표 자료, 문서를 만드는 세 가지 독립 앱을 한 번에 설치합니다. 일상적인 오피스 작업을 위한 대안으로, **Sheet Studio·Slide Studio·Word Studio**를 함께 제공합니다. 설치 후에는 시작 메뉴에서 필요한 앱을 각각 실행합니다.
+Windows에서 표, 발표 자료, 문서를 만드는 세 가지 독립 앱을 한 번에 설치합니다. 일상적인 오피스 작업을 위한 대안으로, **Sheet Studio·Slide Studio·Word Studio**를 함께 제공합니다. 설치 후에는 시작 메뉴에서 필요한 앱을 각각 실행합니다.
 
 ## 1. Windows 통합 다운로드
 
@@ -54,21 +54,15 @@ ${rows}
 
 셀을 클릭해 글자와 숫자를 입력하고, 수식은 **=**로 시작합니다. 범위를 선택해 서식·정렬·필터를 적용하고 차트나 피벗테이블을 만들 수 있습니다. XLSX·CSV를 열고 저장하며, 중요한 원본은 보관하고 사본으로 작업하세요.
 
-[Sheet Studio 사용 안내](https://sentence-durable-databases-toys.trycloudflare.com/s/a008a4ca381a381757d01e6af438186affb229dffe03e926) · [파일 형식 지원 범위](https://github.com/beaur8-prog/sheet-studio/blob/v${lock.apps[0].version}/IO-NOTES.md)
+[파일 형식 지원 범위](https://github.com/beaur8-prog/sheet-studio/blob/v${lock.apps[0].version}/IO-NOTES.md)
 
 ### Slide Studio — 슬라이드와 발표
 
 첫 제목 슬라이드에서 글자를 더블클릭해 입력하고 **새 슬라이드**로 장을 추가합니다. 텍스트·도형·이미지·표·차트를 넣고 **PPTX 저장**으로 파일을 만듭니다. 발표자 노트를 작성하고 발표하거나 PDF로 내보낼 수 있습니다.
 
-[Slide Studio 사용 안내](https://pink-photos-barrel-activation.trycloudflare.com/s/209727b046a226e48d2c00d344cf6facbd4bdb99d62595a6)
-
 ### Word Studio — 문서와 PDF
 
 본문을 클릭해 내용을 입력하고 상단 도구에서 글꼴·문단·표·그림을 편집합니다. **Ctrl+S**로 문서를 저장하며 DOCX·PDF 등 필요한 형식으로 내보낼 수 있습니다. HWP/HWPX 파일도 열어 작업할 수 있으며, 변환 결과는 원본과 비교해 확인하세요. 인쇄 전에는 인쇄 미리보기에서 페이지와 줄바꿈을 확인합니다.
-
-[Word Studio 사용 안내](https://sentence-durable-databases-toys.trycloudflare.com/s/27d5426a7402aedab453f7b9abe4ed0c268bf73c0fdf6318)
-
-앱별 상세 안내에는 이전 배포 버전의 설명도 포함되어 있습니다. **이번 Windows 통합본의 버전과 업데이트 방법은 이 페이지를 기준으로 확인하세요.**
 
 ## 4. 자동 업데이트
 
@@ -82,25 +76,13 @@ ${rows}
 
 다운로드한 업데이트 파일은 크기와 SHA-256을 확인한 뒤 사용합니다. 보안 정책 때문에 설치가 차단되거나 설치에 실패하면 문서를 저장하고 앱을 종료한 뒤 해당 앱의 정식 설치 파일로 다시 설치할 수 있습니다.
 
-## 5. Mac·Linux는 앱별 다운로드
-
-**오피스 스튜디오 통합 설치는 Windows용입니다.** Mac과 Linux 사용자는 아래 개별 배포 파일을 이용하세요. 이 링크들은 기존 별도 배포이며, 위 Windows 통합본의 앱 버전·자동 업데이트 안내와 구분됩니다.
-
-| 앱 | Apple Silicon Mac ZIP | Linux x64 DEB |
-| --- | --- | --- |
-| Sheet Studio 0.7.20 | [Mac 다운로드](https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.20/Sheet-Studio-0.7.20-macOS-arm64.zip) | [Linux 다운로드](https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.20/Sheet-Studio-0.7.20-Linux-amd64.deb) |
-| Slide Studio 1.6.9 | [Mac 다운로드](https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.9/Slide-Studio-mac-arm64.zip) | [Linux 다운로드](https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.9/Slide-Studio-linux-amd64.deb) |
-| Word Studio 1.4.3 | [Mac 다운로드](https://github.com/beaur8-prog/word-studio/releases/download/v1.4.3/Word-Studio-1.4.3-mac-arm64.zip) | [Linux 다운로드](https://github.com/beaur8-prog/word-studio/releases/download/v1.4.3/Word-Studio-1.4.3-linux-x64.deb) |
-
-Mac은 Apple Silicon용이며 ZIP을 풀어 앱을 응용 프로그램 폴더로 옮깁니다. 현재 Apple 공증이 없어 첫 실행이 제한될 수 있으므로 각 앱의 상세 설치 안내를 확인하세요. Linux DEB는 Ubuntu·Debian 계열 amd64용이며, 내려받은 폴더에서 **sudo apt install ./파일명.deb**로 설치합니다. 업데이트 전에 작업을 저장하고 앱을 종료하세요.
-
-## 6. 문서 보관과 제거
+## 5. 문서 보관과 제거
 
 **Windows 설정 → 앱 → 설치된 앱**에서 제거할 앱을 선택합니다. Windows 10에서는 **앱 및 기능**을 사용합니다. Sheet·Slide·Word를 각각 제거하며, 저장한 문서와 앱별 사용자 데이터는 보존합니다.
 
 자동 복구 자료와 별개로 중요한 문서는 **직접 파일로 저장하고 백업**하세요. 설치·업데이트 전에 열려 있는 문서를 저장하는 것을 권장합니다.
 
-## 7. 호환 범위와 문제 해결
+## 6. 호환 범위와 문제 해결
 
 일상적인 표·문서·발표 작업을 지원하지만 Microsoft Office의 모든 기능과 원본 서식을 완전히 재현하지는 않습니다. 복잡한 파일은 사본으로 열고 저장한 결과를 다시 확인하세요. 글꼴 차이로 줄바꿈과 배치가 달라질 수 있으므로 모양을 고정해 전달할 때는 PDF를 사용하세요.
 
@@ -112,7 +94,7 @@ Mac은 Apple Silicon용이며 ZIP을 풀어 앱을 응용 프로그램 폴더로
 
 문제가 계속되면 운영체제, 앱 이름·버전, 오류 메시지와 재현 순서를 [Office Studio 이슈](https://github.com/beaur8-prog/office-studio/issues)에 남겨 주세요. 개인 정보가 담긴 문서는 공유하지 말고 민감한 내용을 제거한 예제를 사용하세요.
 
-## 8. 다운로드 파일 확인
+## 7. 다운로드 파일 확인
 
 PowerShell에서 내려받은 파일이 있는 폴더로 이동한 뒤 실행합니다.
 
@@ -128,7 +110,7 @@ ${build.sha256}
 
 체크섬은 다운로드 중 손상이나 파일 변경 여부를 확인하는 값입니다. 다운로드 주소도 함께 확인하세요.
 
-## 9. 이번 배포의 확인 결과
+## 8. 이번 배포의 확인 결과
 
 세 앱 설치 파일과 통합 설치 파일의 SHA-256을 확인했습니다. 격리된 Windows 환경에서 **통합 설치·재설치·앱별 제거·문서 및 사용자 데이터 보존**을 검사하고, **이전 앱 버전에서 업데이트 도우미로 새 버전 설치·실행·정상 종료**를 확인했습니다. 자동 업데이트의 다운로드 검증과 문서 닫기 취소 처리도 시험했습니다. 한글·공백·작은따옴표가 포함된 업데이트 경로도 확인했습니다.
 

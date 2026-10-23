@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "title": "오피스 스튜디오 다운로드",
   "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/b448bde7b88792d8776c7f6a908e88891c473d4b5f6cace2",
-  "contentSHA256": "c52a807a9db9d76f58ad1189f697354baf14da745b8f540622b2dc985d13b245",
+  "contentSHA256": "f029259d86bb0c9d13e0d1094d330086256f9630794c057f08ac3d76e6343073",
   "installer": "Office-Studio-1.0.0-win-x64-Setup.exe",
   "installerSHA256": "108de8cfa36b1f4c73e032ba82f3b2365b63eb4fa0fc64ab426c70ad6f754046",
-  "windowsVerification": "https://github.com/beaur8-prog/office-studio/actions/runs/39900579684"
+  "windowsVerification": "https://github.com/beaur8-prog/office-studio/actions/runs/39900579684",
+  "platform": "Windows x64"
 }
