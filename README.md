@@ -1,5 +1,7 @@
 # Office Studio 배포
 
+[리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/b448bde7b88792d8776c7f6a908e88891c473d4b5f6cace2) · [Windows 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.0/Office-Studio-1.0.0-win-x64-Setup.exe)
+
 Sheet Studio, Slide Studio, Word Studio를 묶어 설치하는 **Windows x64 전용** 통합 배포 폴더입니다. Mac·Linux는 각 앱 저장소에서 별도로 배포합니다. 이 폴더의 통합 릴리즈에는 Windows Setup과 그 검증 파일만 포함합니다.
 
 | 구성 | 포함 버전 |
