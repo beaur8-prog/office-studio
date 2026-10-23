@@ -38,6 +38,18 @@ function Assert-Preserved([string]$name) {
     if (-not (Test-Path $file) -or (Get-Content $file -Raw).Trim() -ne 'PRESERVE STUDIO SUITE USER DATA') { throw "User data changed: $file" }
   }
 }
+function Remove-App($app) {
+  $entry = @(Entries $app.product)[0]
+  if ($entry.UninstallString -notmatch '^"([^"]+)"') { throw 'Unexpected uninstaller registration.' }
+  $uninstaller = $Matches[1]
+  $arguments = if ($app.id -eq 'slide') { @('/S') } else { @('/S','/currentuser') }
+  Run-Setup $uninstaller $arguments
+  $deadline = (Get-Date).AddSeconds(60)
+  while (@(Entries $app.product).Count -ne 0 -and (Get-Date) -lt $deadline) { Start-Sleep -Milliseconds 250 }
+  if (@(Entries $app.product).Count -ne 0) { throw "Uninstall registration remains: $($app.product)" }
+  if (Test-Path (Join-Path $entry.InstallLocation "$($app.product).exe")) { throw 'Executable remains after uninstall.' }
+  Assert-Preserved $app.product
+}
 foreach ($app in $lock.apps) {
   if (@(Entries $app.product).Count -ne 0 -or (Test-Path (Join-Path $env:LOCALAPPDATA "Programs/$($app.product)"))) { throw "Already installed: $($app.product)" }
 }
@@ -55,17 +67,52 @@ try {
   Run-Setup $setup @('/S')
   Assert-Installed
   $report.reinstall = $true
+  # Exercise the real update helper from the previous public app versions.
+  # Only this disposable CI runner is used; no user application is terminated.
+  $previous = Get-Content (Join-Path $root 'previous-apps-lock.json') -Raw | ConvertFrom-Json
+  $extracted = Join-Path $env:RUNNER_TEMP 'office-studio-payloads'
+  & 7z x -y "-o$extracted" $setup | Out-Null
+  if ($LASTEXITCODE -ne 0) { throw 'Payload extraction failed.' }
+  $report.upgrades = @()
   foreach ($app in $lock.apps) {
     $entry = @(Entries $app.product)[0]
-    if ($entry.UninstallString -notmatch '^"([^"]+)"') { throw 'Unexpected uninstaller registration.' }
-    $uninstaller = $Matches[1]
+    $old = @($previous.apps | Where-Object id -eq $app.id)[0]
+    $directory = Join-Path $env:RUNNER_TEMP "office-studio-update-$($app.id)"
+    New-Item -ItemType Directory $directory -Force | Out-Null
+    $oldSetup = Join-Path $directory 'previous.exe'
+    Invoke-WebRequest -Uri $old.assets.'win-x64'.url -OutFile $oldSetup
+    if ((Get-FileHash $oldSetup -Algorithm SHA256).Hash.ToLowerInvariant() -ne $old.assets.'win-x64'.sha256) { throw 'Previous installer digest mismatch.' }
     $arguments = if ($app.id -eq 'slide') { @('/S') } else { @('/S','/currentuser') }
-    Run-Setup $uninstaller $arguments
-    $deadline = (Get-Date).AddSeconds(60)
-    while (@(Entries $app.product).Count -ne 0 -and (Get-Date) -lt $deadline) { Start-Sleep -Milliseconds 250 }
-    if (@(Entries $app.product).Count -ne 0) { throw "Uninstall registration remains: $($app.product)" }
-    if (Test-Path (Join-Path $entry.InstallLocation "$($app.product).exe")) { throw 'Executable remains after uninstall.' }
+    Remove-App $app
+    Run-Setup $oldSetup $arguments
+    $executable = Join-Path $entry.InstallLocation "$($app.product).exe"
+    if ((Get-Item $executable).VersionInfo.ProductVersion -ne $old.version) { throw 'Previous app was not installed.' }
+    $newSetup = Join-Path $directory 'update.exe'
+    Copy-Item -LiteralPath (Join-Path $extracted ('$PLUGINSDIR/' + $app.id + '-setup.exe')) -Destination $newSetup
+    $log = Join-Path $directory 'update.log'
+    $jobFile = Join-Path $directory 'job.json'
+    # The wait target exits naturally, as the editor does before handing off.
+    $parent = Start-Process $env:ComSpec -ArgumentList @('/c','exit','0') -PassThru
+    $parent.WaitForExit()
+    @{ schema=1; id=$app.id; parentPid=$parent.Id; installer=$newSetup; bytes=$app.assets.'win-x64'.bytes; sha256=$app.assets.'win-x64'.sha256; version=$app.version; executable=$executable; log=$log } | ConvertTo-Json | Set-Content -LiteralPath $jobFile
+    & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $root 'updater/studio-update-windows.ps1') -JobFile $jobFile
+    if ($LASTEXITCODE -ne 0 -or (Get-Content $log -Raw) -notmatch '^Installed ') { throw "Real update failed: $($app.id)" }
+    $deadline = (Get-Date).AddSeconds(45)
+    do {
+      Start-Sleep -Milliseconds 500
+      $running = @(Get-Process -Name $app.product -ErrorAction SilentlyContinue | Where-Object MainWindowHandle -ne 0)
+    } while ($running.Count -eq 0 -and (Get-Date) -lt $deadline)
+    if ($running.Count -eq 0) { throw "Updated app did not open a window: $($app.id)" }
+    foreach ($process in $running) { [void]$process.CloseMainWindow(); if (-not $process.WaitForExit(30000)) { throw 'Updated app did not close normally.' } }
+    $asar = Join-Path $entry.InstallLocation 'resources/app.asar'
+    & node (Join-Path $root 'scripts/verify-installed-updater.cjs') $asar $app.id $app.version
+    if ($LASTEXITCODE -ne 0) { throw 'Installed update controller verification failed.' }
     Assert-Preserved $app.product
+    $report.upgrades += @{ app=$app.id; from=$old.version; to=$app.version; helper=$true; nativeWindow=$true; normalClose=$true }
+  }
+  Assert-Installed
+  foreach ($app in $lock.apps) {
+    Remove-App $app
   }
   $report.uninstall = $true
   $report.userDataPreserved = $true

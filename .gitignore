@@ -4,3 +4,4 @@ test-results/
 archive/
 *.log
 .DS_Store
+scripts/publish-lithos.cjs

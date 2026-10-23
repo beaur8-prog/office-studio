@@ -5,9 +5,9 @@ Sheet Studio, Slide Studio, Word Studio를 묶어 설치하는 **Windows x64 전
 | 구성 | 포함 버전 |
 | --- | --- |
 | Office Studio | 1.0.0 |
-| Sheet Studio | 0.7.20 |
-| Slide Studio | 1.6.9 |
-| Word Studio | 1.4.3 |
+| Sheet Studio | 0.7.21 |
+| Slide Studio | 1.6.10 |
+| Word Studio | 1.4.4 |
 
 ## 설치 파일
 
@@ -33,7 +33,7 @@ Mac·Linux는 통합 설치 파일을 제공하지 않고 각 앱의 다운로�
 
 각 앱의 최신 배포본: [Sheet](https://github.com/beaur8-prog/sheet-studio/releases/latest), [Slide](https://github.com/beaur8-prog/slide-studio/releases/latest), [Word](https://github.com/beaur8-prog/word-studio/releases/latest).
 
-## 앱 업데이트 — 다음 배포 준비
+## 앱 업데이트
 
 세 앱 소스에 **도움말 → 업데이트 확인…**과 **업데이트 자동 확인·다운로드**를 추가했습니다. Windows에서는 Alt 키로 숨겨진 메뉴를 표시할 수 있습니다. 설치된 앱은 실행 15초 뒤와 이후 6시간마다 해당 앱의 공개 GitHub 최신 정식 릴리스를 확인합니다. 새 버전은 백그라운드에서 내려받고 알림을 표시합니다. 자동 확인·다운로드 설정은 앱별로 기억하며 끌 수 있습니다. 개발 실행에서는 자동 확인하지 않습니다.
 
@@ -44,7 +44,7 @@ Mac·Linux는 통합 설치 파일을 제공하지 않고 각 앱의 다운로�
 
 공통 원본은 `updater/`입니다. 변경 뒤 `npm run updater:sync`로 각 앱의 `electron/`에 복사하며, 복사된 파일은 앱 저장소에도 함께 커밋합니다. 기존 패키징 스크립트가 `electron/` 전체를 ASAR에 포함하므로 추가 런타임 의존성은 필요하지 않습니다. 이 프로젝트의 `npm test`로 업데이트 무결성·종료 취소·플랫폼별 동작을 검증합니다.
 
-**위의 1.0.0 설치 파일과 현재 공개된 개별 앱에는 아직 업데이트 코드가 포함되지 않았습니다.** 업데이트 기능이 들어간 첫 배포본은 한 번 직접 설치해야 하며, 그 이후의 새 버전을 앱에서 받을 수 있습니다. 새 앱 버전으로 패키징·설치 시험한 뒤 통합 버전과 `suite-lock.json`을 갱신하여 공개합니다. Windows의 실제 구버전→신버전 설치 시험은 아직 남아 있습니다.
+**Office Studio 1.0.0에는 업데이트 코드가 포함된 세 Windows 앱을 묶습니다.** 업데이트 기능이 없는 이전 앱을 사용한다면 이 통합본을 한 번 직접 설치해야 하며, 이후의 새 버전을 앱에서 받을 수 있습니다. 앱별 버전은 독립적으로 갱신됩니다. Mac·Linux 표의 기존 배포 파일에는 이 Windows 업데이트 안내가 적용되지 않습니다.
 
 ## 다시 빌드하기
 
@@ -70,3 +70,7 @@ Windows Setup은 NSIS와 7-Zip이 필요하고 Mac에서도 생성할 수 있습
 `npm test`는 입력 변조·잘못된 버전 및 URL·NSIS 문자열 처리·설치 실패 처리와 Windows 전용 릴리즈 범위를 확인합니다. 공통 앱 업데이트 시험에는 Mac·Linux의 개별 배포 동작도 포함됩니다. Windows 빌드는 생성한 Setup을 다시 풀어 세 설치 파일의 SHA-256을 원본과 비교합니다.
 
 이 검증은 실제 시스템 설치·앱 실행 시험과 구분합니다. 빌드 보고서의 `nativeInstall: false`는 해당 통합본의 실제 설치 시험이 아직 남아 있음을 뜻합니다. 격리된 Windows CI에서 `scripts/test-windows.ps1`로 전체 설치·재설치·제거와 문서 보존을 확인한 뒤 Windows 통합본만 공개합니다. Mac·Linux의 설치 시험과 릴리즈는 각 앱의 별도 배포 작업에서 진행합니다.
+
+Windows 검증은 `previous-apps-lock.json`에 고정한 이전 앱에서 실제 업데이트 도우미로 새 앱을 설치하고, 새 창 실행·정상 종료·업데이트 모듈 포함 여부도 확인합니다. 결과와 정확한 설치 파일 SHA-256은 Actions 검증 기록으로 보관합니다.
+
+공개 다운로드는 [Office Studio 릴리스](https://github.com/beaur8-prog/office-studio/releases)에서 제공합니다. 리토스 배포 문서 본문은 `publication/downloads-ready.md`에 보관하며 `node scripts/build-release-note.cjs`로 버전·파일 크기·체크섬을 반영합니다.
