@@ -1,0 +1,6 @@
+inputs/
+release/
+test-results/
+archive/
+*.log
+.DS_Store

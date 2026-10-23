@@ -1,0 +1,44 @@
+name: Verify Windows deployment
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Draft release tag to verify
+        required: true
+        default: v1.0.0
+      sha256:
+        description: Reviewed installer SHA-256
+        required: true
+permissions:
+  contents: write
+jobs:
+  install-update-uninstall:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+      - run: npm test
+      - name: Download reviewed installer
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+          EXPECTED_SHA256: ${{ inputs.sha256 }}
+        run: |
+          $lock = Get-Content suite-lock.json -Raw | ConvertFrom-Json
+          if ($env:RELEASE_TAG -ne "v$($lock.version)" -or $env:EXPECTED_SHA256 -notmatch '^[a-f0-9]{64}$') { throw 'Invalid release metadata' }
+          $dir = "release/$($lock.version)"
+          New-Item -ItemType Directory $dir -Force | Out-Null
+          gh release download $env:RELEASE_TAG --repo $env:GITHUB_REPOSITORY --dir $dir --pattern "Office-Studio-$($lock.version)-win-x64-Setup.exe" --pattern BUILD-win-x64.json
+          if ($LASTEXITCODE -ne 0) { throw 'Download failed' }
+          $build = Get-Content "$dir/BUILD-win-x64.json" -Raw | ConvertFrom-Json
+          if ($build.sha256 -ne $env:EXPECTED_SHA256) { throw 'Unexpected installer digest' }
+          ./scripts/test-windows.ps1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: windows-deployment-verification
+          path: test-results/
