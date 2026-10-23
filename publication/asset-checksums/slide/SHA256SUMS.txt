@@ -1,0 +1,2 @@
+05117b4fb9418ea90552db4310eee053feac8b4f89410778c5a14fdd366a9011  Slide-Studio-Setup-x64.exe
+a7926d7af5d71dfb4d50e1a98a9b604acd7a6b0c57af6bce3d90e04fe484baf6  Slide-Studio-win-x64.zip
