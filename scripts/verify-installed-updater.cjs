@@ -14,7 +14,8 @@ function read(name) {
 }
 assert.equal(JSON.parse(read('package.json')).version, version);
 for (const name of ['studio-updater.cjs','studio-update-windows.ps1']) {
-  assert.equal(read('electron/' + name), fs.readFileSync(path.join(__dirname,'../updater',name),'utf8'));
+  const normalize = value => value.replaceAll('\r\n','\n');
+  assert.equal(normalize(read('electron/' + name)), normalize(fs.readFileSync(path.join(__dirname,'../updater',name),'utf8')), id + ': installed ' + name + ' differs from the release source');
 }
 assert.match(read('electron/main.cjs'), /createStudioUpdater/);
 console.log('Verified installed updater:', id, version);
