@@ -23,14 +23,21 @@ function Run-Setup([string]$file, [string[]]$arguments) {
   if (-not $process.WaitForExit(600000)) { throw "Installer timeout: $file" }
   if ($process.ExitCode -notin @(0,3010)) { throw "Installer failed: $($process.ExitCode)" }
 }
+function Install-Directory($entry) {
+  if ($entry.PSObject.Properties['InstallLocation'] -and $entry.InstallLocation) { return $entry.InstallLocation }
+  # electron-builder NSIS records its install path in UninstallString.
+  if ($entry.UninstallString -match '^"([^"]+)"') { return Split-Path -Parent $Matches[1] }
+  throw 'Installation directory is missing from the app registration.'
+}
 function Assert-Installed {
   foreach ($app in $lock.apps) {
     $entry = @(Entries $app.product)
     if ($entry.Count -ne 1 -or $entry[0].DisplayVersion -ne $app.version) { throw "Wrong installed version: $($app.product)" }
-    $executable = Join-Path $entry[0].InstallLocation "$($app.product).exe"
+    $directory = Install-Directory $entry[0]
+    $executable = Join-Path $directory "$($app.product).exe"
     if (-not (Test-Path $executable)) { throw "Missing executable: $executable" }
     if ((Get-Item $executable).VersionInfo.ProductVersion -ne $app.version) { throw "Executable version mismatch: $executable" }
-    if (-not (Test-Path (Join-Path $entry[0].InstallLocation 'resources/app.asar'))) { throw 'Missing app.asar' }
+    if (-not (Test-Path (Join-Path $directory 'resources/app.asar'))) { throw 'Missing app.asar' }
     Assert-Preserved $app.product
   }
 }
@@ -41,6 +48,7 @@ function Assert-Preserved([string]$name) {
 }
 function Remove-App($app) {
   $entry = @(Entries $app.product)[0]
+  $directory = Install-Directory $entry
   if ($entry.UninstallString -notmatch '^"([^"]+)"') { throw 'Unexpected uninstaller registration.' }
   $uninstaller = $Matches[1]
   $arguments = if ($app.id -eq 'slide') { @('/S') } else { @('/S','/currentuser') }
@@ -48,7 +56,7 @@ function Remove-App($app) {
   $deadline = (Get-Date).AddSeconds(60)
   while (@(Entries $app.product).Count -ne 0 -and (Get-Date) -lt $deadline) { Start-Sleep -Milliseconds 250 }
   if (@(Entries $app.product).Count -ne 0) { throw "Uninstall registration remains: $($app.product)" }
-  if (Test-Path (Join-Path $entry.InstallLocation "$($app.product).exe")) { throw 'Executable remains after uninstall.' }
+  if (Test-Path (Join-Path $directory "$($app.product).exe")) { throw 'Executable remains after uninstall.' }
   Assert-Preserved $app.product
 }
 foreach ($app in $lock.apps) {
@@ -65,9 +73,11 @@ try {
   Run-Setup $setup @('/S')
   Assert-Installed
   $report.freshInstall = $true
+  Write-Output 'All three apps installed; registered versions and preserved user data verified.'
   Run-Setup $setup @('/S')
   Assert-Installed
   $report.reinstall = $true
+  Write-Output 'Suite reinstall and user data preservation verified.'
   # Exercise the real update helper from the previous public app versions.
   # Only this disposable CI runner is used; no user application is terminated.
   $previous = Get-Content (Join-Path $root 'previous-apps-lock.json') -Raw | ConvertFrom-Json
@@ -77,6 +87,7 @@ try {
   $report.upgrades = @()
   foreach ($app in $lock.apps) {
     $entry = @(Entries $app.product)[0]
+    $installDirectory = Install-Directory $entry
     $old = @($previous.apps | Where-Object id -eq $app.id)[0]
     $directory = Join-Path $env:RUNNER_TEMP "office-studio-사용자 O'Brien 업데이트-$($app.id)"
     New-Item -ItemType Directory $directory -Force | Out-Null
@@ -86,7 +97,7 @@ try {
     $arguments = if ($app.id -eq 'slide') { @('/S') } else { @('/S','/currentuser') }
     Remove-App $app
     Run-Setup $oldSetup $arguments
-    $executable = Join-Path $entry.InstallLocation "$($app.product).exe"
+    $executable = Join-Path $installDirectory "$($app.product).exe"
     if ((Get-Item $executable).VersionInfo.ProductVersion -ne $old.version) { throw 'Previous app was not installed.' }
     $newSetup = Join-Path $directory 'update.exe'
     Copy-Item -LiteralPath (Join-Path $extracted ('$PLUGINSDIR/' + $app.id + '-setup.exe')) -Destination $newSetup
@@ -105,7 +116,7 @@ try {
     } while ($running.Count -eq 0 -and (Get-Date) -lt $deadline)
     if ($running.Count -eq 0) { throw "Updated app did not open a window: $($app.id)" }
     foreach ($process in $running) { [void]$process.CloseMainWindow(); if (-not $process.WaitForExit(30000)) { throw 'Updated app did not close normally.' } }
-    $asar = Join-Path $entry.InstallLocation 'resources/app.asar'
+    $asar = Join-Path $installDirectory 'resources/app.asar'
     & node (Join-Path $root 'scripts/verify-installed-updater.cjs') $asar $app.id $app.version
     if ($LASTEXITCODE -ne 0) { throw 'Installed update controller verification failed.' }
     Assert-Preserved $app.product
