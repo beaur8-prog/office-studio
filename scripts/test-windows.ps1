@@ -14,6 +14,7 @@ if ((Get-FileHash $setup -Algorithm SHA256).Hash.ToLowerInvariant() -ne $build.s
 $report = [ordered]@{ suiteVersion = $lock.version; setupSHA256 = $build.sha256; passed = $false }
 
 function Entries([string]$name) {
+  if (-not (Test-Path 'HKCU:/Software/Microsoft/Windows/CurrentVersion/Uninstall')) { return @() }
   @(Get-ItemProperty 'HKCU:/Software/Microsoft/Windows/CurrentVersion/Uninstall/*' |
     Where-Object { $_.PSObject.Properties['DisplayName'] -and $_.DisplayName -eq $name })
 }
@@ -77,7 +78,7 @@ try {
   foreach ($app in $lock.apps) {
     $entry = @(Entries $app.product)[0]
     $old = @($previous.apps | Where-Object id -eq $app.id)[0]
-    $directory = Join-Path $env:RUNNER_TEMP "office-studio-update-$($app.id)"
+    $directory = Join-Path $env:RUNNER_TEMP "office-studio-사용자 O'Brien 업데이트-$($app.id)"
     New-Item -ItemType Directory $directory -Force | Out-Null
     $oldSetup = Join-Path $directory 'previous.exe'
     Invoke-WebRequest -Uri $old.assets.'win-x64'.url -OutFile $oldSetup
@@ -89,7 +90,7 @@ try {
     if ((Get-Item $executable).VersionInfo.ProductVersion -ne $old.version) { throw 'Previous app was not installed.' }
     $newSetup = Join-Path $directory 'update.exe'
     Copy-Item -LiteralPath (Join-Path $extracted ('$PLUGINSDIR/' + $app.id + '-setup.exe')) -Destination $newSetup
-    $log = Join-Path $directory 'update.log'
+    $log = Join-Path $directory '업데이트 기록.log'
     $jobFile = Join-Path $directory 'job.json'
     # The wait target exits naturally, as the editor does before handing off.
     $parent = Start-Process $env:ComSpec -ArgumentList @('/c','exit','0') -PassThru

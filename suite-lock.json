@@ -6,14 +6,14 @@
     {
       "id": "sheet",
       "product": "Sheet Studio",
-      "version": "0.7.21",
+      "version": "0.7.22",
       "bundleId": "local.lattice.sheetstudio",
       "assets": {
         "win-x64": {
-          "filename": "Sheet-Studio-0.7.21-Windows-x64-Setup.exe",
-          "bytes": 102827911,
-          "sha256": "a94e250ce771254e83ece10d18591200a21dfdeeb2b64e31e5b5bab491053463",
-          "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.21/Sheet-Studio-0.7.21-Windows-x64-Setup.exe"
+          "filename": "Sheet-Studio-0.7.22-Windows-x64-Setup.exe",
+          "bytes": 102828012,
+          "sha256": "77e21a9b70e67b309f9d216b6d45cab499558f6d63bc9d175019966f8a0bf452",
+          "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.22/Sheet-Studio-0.7.22-Windows-x64-Setup.exe"
         }
       }
     },
@@ -25,8 +25,8 @@
       "assets": {
         "win-x64": {
           "filename": "Slide-Studio-Setup-x64.exe",
-          "bytes": 109613325,
-          "sha256": "b156d4879821f2dce7a2930a45892c806700da89b82e1b9ac3ab7d4911c4003b",
+          "bytes": 109668601,
+          "sha256": "05117b4fb9418ea90552db4310eee053feac8b4f89410778c5a14fdd366a9011",
           "url": "https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.10/Slide-Studio-Setup-x64.exe"
         }
       }
@@ -39,8 +39,8 @@
       "assets": {
         "win-x64": {
           "filename": "Word-Studio-1.4.4-windows-x64-setup.exe",
-          "bytes": 132700409,
-          "sha256": "90e55657b0b5ec8333dd7d157636aa7e8926059491b7624f4f4c73b1b7616264",
+          "bytes": 132700474,
+          "sha256": "00824646db5dd2c43d59b8e99e2ba05f2e9f1d62744cf71927e48d35e99b2027",
           "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.4/Word-Studio-1.4.4-windows-x64-setup.exe"
         }
       }

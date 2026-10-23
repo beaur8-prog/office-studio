@@ -1,0 +1,32 @@
+'use strict';
+const fs=require('node:fs/promises');
+const path=require('node:path');
+const assert=require('node:assert/strict');
+const {root,hashFile}=require('./common.cjs');
+async function main(){
+  const publication=JSON.parse(await fs.readFile(path.join(root,'test-results/lithos-published.json'),'utf8'));
+  const expected=await fs.readFile(path.join(root,'publication/downloads-ready.md'),'utf8');
+  const build=JSON.parse(await fs.readFile(path.join(root,'release/1.0.0/BUILD-win-x64.json'),'utf8'));
+  const html=await fetch(publication.url,{signal:AbortSignal.timeout(20000)});
+  assert.equal(html.status,200);assert.ok((await html.text()).includes('오피스 스튜디오'));
+  const dataResponse=await fetch(publication.url+'/data',{signal:AbortSignal.timeout(20000)});
+  assert.equal(dataResponse.status,200);
+  const data=await dataResponse.json();
+  assert.equal(data.content,expected);assert.equal(data.editingEnabled,false);assert.equal(data.expiresAt,null);
+  assert.ok(data.content.startsWith('> **Windows 설치 안내'));
+  const urls=[...new Set([...expected.matchAll(/\]\((https:\/\/[^)]+)\)/g)].map(match=>match[1]))];
+  const checks=[];
+  for(let i=0;i<urls.length;i+=4){
+    const items=await Promise.all(urls.slice(i,i+4).map(async url=>{
+      const response=await fetch(url,{method:'HEAD',signal:AbortSignal.timeout(20000)});
+      assert.equal(response.status,200,url);
+      if(url.endsWith(build.filename))assert.equal(Number(response.headers.get('content-length')),build.bytes);
+      return {url,status:response.status};
+    }));checks.push(...items);
+  }
+  assert.equal(await hashFile(path.join(root,'release/1.0.0',build.filename)),build.sha256);
+  const result={url:publication.url,title:data.title,warningFirst:true,bodyMatches:true,readOnly:true,links:checks,installerSHA256:build.sha256};
+  await fs.writeFile(path.join(root,'test-results/publication-verified.json'),JSON.stringify(result,null,2)+'\n');
+  console.log(JSON.stringify({url:result.url,title:result.title,warningFirst:true,bodyMatches:true,readOnly:true,verifiedLinks:checks.length,installerSHA256:build.sha256},null,2));
+}
+main().catch(error=>{console.error(error.stack);process.exitCode=1;});

@@ -5,7 +5,7 @@ Sheet Studio, Slide Studio, Word Studio를 묶어 설치하는 **Windows x64 전
 | 구성 | 포함 버전 |
 | --- | --- |
 | Office Studio | 1.0.0 |
-| Sheet Studio | 0.7.21 |
+| Sheet Studio | 0.7.22 |
 | Slide Studio | 1.6.10 |
 | Word Studio | 1.4.4 |
 

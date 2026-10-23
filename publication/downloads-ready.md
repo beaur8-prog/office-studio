@@ -24,7 +24,7 @@
 
 | 포함 앱 | 버전 | 주로 하는 일 |
 | --- | --- | --- |
-| Sheet Studio | 0.7.21 | 표·수식·차트·XLSX/CSV |
+| Sheet Studio | 0.7.22 | 표·수식·차트·XLSX/CSV |
 | Slide Studio | 1.6.10 | 슬라이드 편집·발표·PPTX |
 | Word Studio | 1.4.4 | 문서 작성·DOCX·PDF·HWP/HWPX |
 
@@ -47,7 +47,7 @@
 
 셀을 클릭해 글자와 숫자를 입력하고, 수식은 **=**로 시작합니다. 범위를 선택해 서식·정렬·필터를 적용하고 차트나 피벗테이블을 만들 수 있습니다. XLSX·CSV를 열고 저장하며, 중요한 원본은 보관하고 사본으로 작업하세요.
 
-[Sheet Studio 사용 안내](https://sentence-durable-databases-toys.trycloudflare.com/s/a008a4ca381a381757d01e6af438186affb229dffe03e926) · [파일 형식 지원 범위](https://github.com/beaur8-prog/sheet-studio/blob/v0.7.21/IO-NOTES.md)
+[Sheet Studio 사용 안내](https://sentence-durable-databases-toys.trycloudflare.com/s/a008a4ca381a381757d01e6af438186affb229dffe03e926) · [파일 형식 지원 범위](https://github.com/beaur8-prog/sheet-studio/blob/v0.7.22/IO-NOTES.md)
 
 ### Slide Studio — 슬라이드와 발표
 
@@ -116,7 +116,7 @@ Get-FileHash .\Office-Studio-1.0.0-win-x64-Setup.exe -Algorithm SHA256
 아래 값과 일치하는지 확인하세요.
 
 ~~~text
-17c903dbd2e5bff0862a66cd68c0322a93ae2f819df83c7ed1cb5fdfe6a5c598
+108de8cfa36b1f4c73e032ba82f3b2365b63eb4fa0fc64ab426c70ad6f754046
 ~~~
 
 체크섬은 다운로드 중 손상이나 파일 변경 여부를 확인하는 값입니다. 다운로드 주소도 함께 확인하세요.
