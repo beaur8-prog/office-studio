@@ -2,33 +2,35 @@
 >
 > **‘Windows의 PC 보호’ 화면에서 ‘실행 안 함’만 보이면, 창 안의 ‘추가 정보’를 누른 다음 새로 나타나는 ‘실행’을 선택하세요.** 영문 Windows에서는 **More info → Run anyway**입니다.
 >
-> 아래 GitHub 배포 주소에서 받은 **Office-Studio-1.0.0-win-x64-Setup.exe**인지 먼저 확인하세요. 현재 설치 파일은 배포용 코드 서명이 없어 경고가 나타날 수 있습니다. 브라우저의 ‘일반적으로 다운로드되지 않습니다’ 경고는 출처·파일명·아래 SHA-256을 확인한 뒤 해당 파일의 **유지/계속 다운로드**를 선택합니다.
+> 아래 GitHub 배포 주소에서 받은 **Office-Studio-1.0.1-win-x64-Setup.exe**인지 먼저 확인하세요. 현재 설치 파일은 배포용 코드 서명이 없어 경고가 나타날 수 있습니다. 브라우저의 ‘일반적으로 다운로드되지 않습니다’ 경고는 출처·파일명·아래 SHA-256을 확인한 뒤 해당 파일의 **유지/계속 다운로드**를 선택합니다.
 >
 > **‘실행’ 버튼이 없거나 회사·기관 정책으로 차단되면 관리자에게 설치 허용 여부를 확인하세요. 악성코드 탐지 경고가 나타나면 실행을 중단하세요.** [Microsoft의 SmartScreen 안내](https://learn.microsoft.com/windows/apps/package-and-deploy/smartscreen-reputation)
 
 # 오피스 스튜디오 Windows 다운로드 및 사용 안내
 
-**Office Studio 1.0.0 · 2026년 10월 23일 · Windows 통합 설치·앱별 자동 업데이트**
+**Office Studio 1.0.1 · 2026년 10월 25일 · Windows 통합 설치·앱별 자동 업데이트**
 
 Windows에서 표, 발표 자료, 문서를 만드는 세 가지 독립 앱을 한 번에 설치합니다. 일상적인 오피스 작업을 위한 대안으로, **Sheet Studio·Slide Studio·Word Studio**를 함께 제공합니다. 설치 후에는 시작 메뉴에서 필요한 앱을 각각 실행합니다.
 
+이번 버전은 세 앱의 운영체제 파일 열기 수정과 Slide의 네이티브 차트 가져오기·저장 보존을 포함합니다. Windows에서는 기존 앱 안에서 새 버전 확인·다운로드 후 **종료하고 업데이트**로 설치할 수 있습니다.
+
 ## 1. Windows 통합 다운로드
 
-### [오피스 스튜디오 Windows 설치 파일 다운로드](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.0/Office-Studio-1.0.0-win-x64-Setup.exe)
+### [오피스 스튜디오 Windows 설치 파일 다운로드](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.1/Office-Studio-1.0.1-win-x64-Setup.exe)
 
 **Windows 10/11 · Intel/AMD 64비트(x64) · 329.3 MiB**
 
-파일명: **Office-Studio-1.0.0-win-x64-Setup.exe**
+파일명: **Office-Studio-1.0.1-win-x64-Setup.exe**
 
 한 파일에 세 앱의 실행 환경이 포함되어 있습니다. 설치와 기본 편집에는 Microsoft Office·Node.js·인터넷 연결이 필요하지 않습니다. 자동 업데이트 확인과 다운로드에는 인터넷 연결이 필요합니다. Windows 32비트와 Windows ARM 전용 설치 파일은 이번 통합 배포에 포함하지 않습니다.
 
 | 포함 앱 | 버전 | 주로 하는 일 |
 | --- | --- | --- |
-| Sheet Studio | 0.7.22 | 표·수식·차트·XLSX/CSV |
-| Slide Studio | 1.6.10 | 슬라이드 편집·발표·PPTX |
-| Word Studio | 1.4.4 | 문서 작성·DOCX·PDF·HWP/HWPX |
+| Sheet Studio | 0.7.26 | 표·수식·차트·XLSX/CSV |
+| Slide Studio | 1.6.13 | 슬라이드 편집·발표·PPTX |
+| Word Studio | 1.4.7 | 문서 작성·DOCX·PDF·HWP/HWPX |
 
-[SHA-256 확인 파일](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.0/Office-Studio-1.0.0-win-x64-Setup.exe.sha256) · [배포 구성·검증 기록](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.0/BUILD-win-x64.json) · [GitHub 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/v1.0.0)
+[SHA-256 확인 파일](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.1/Office-Studio-1.0.1-win-x64-Setup.exe.sha256) · [배포 구성·검증 기록](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.1/BUILD-win-x64.json) · [GitHub 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/v1.0.1)
 
 ## 2. Windows 설치와 실행
 
@@ -47,7 +49,7 @@ Windows에서 표, 발표 자료, 문서를 만드는 세 가지 독립 앱을 �
 
 셀을 클릭해 글자와 숫자를 입력하고, 수식은 **=**로 시작합니다. 범위를 선택해 서식·정렬·필터를 적용하고 차트나 피벗테이블을 만들 수 있습니다. XLSX·CSV를 열고 저장하며, 중요한 원본은 보관하고 사본으로 작업하세요.
 
-[파일 형식 지원 범위](https://github.com/beaur8-prog/sheet-studio/blob/v0.7.22/IO-NOTES.md)
+[파일 형식 지원 범위](https://github.com/beaur8-prog/sheet-studio/blob/v0.7.26/IO-NOTES.md)
 
 ### Slide Studio — 슬라이드와 발표
 
@@ -92,13 +94,13 @@ Windows에서 표, 발표 자료, 문서를 만드는 세 가지 독립 앱을 �
 PowerShell에서 내려받은 파일이 있는 폴더로 이동한 뒤 실행합니다.
 
 ~~~powershell
-Get-FileHash .\Office-Studio-1.0.0-win-x64-Setup.exe -Algorithm SHA256
+Get-FileHash .\Office-Studio-1.0.1-win-x64-Setup.exe -Algorithm SHA256
 ~~~
 
 아래 값과 일치하는지 확인하세요.
 
 ~~~text
-108de8cfa36b1f4c73e032ba82f3b2365b63eb4fa0fc64ab426c70ad6f754046
+72885d04cee65f29467c8ee572c88f58044b5b15c31bdda6b1154d926e065ed4
 ~~~
 
 체크섬은 다운로드 중 손상이나 파일 변경 여부를 확인하는 값입니다. 다운로드 주소도 함께 확인하세요.
@@ -107,7 +109,7 @@ Get-FileHash .\Office-Studio-1.0.0-win-x64-Setup.exe -Algorithm SHA256
 
 세 앱 설치 파일과 통합 설치 파일의 SHA-256을 확인했습니다. 격리된 Windows 환경에서 **통합 설치·재설치·앱별 제거·문서 및 사용자 데이터 보존**을 검사하고, **이전 앱 버전에서 업데이트 도우미로 새 버전 설치·실행·정상 종료**를 확인했습니다. 자동 업데이트의 다운로드 검증과 문서 닫기 취소 처리도 시험했습니다. 한글·공백·작은따옴표가 포함된 업데이트 경로도 확인했습니다.
 
-[Windows 배포 검증 기록](https://github.com/beaur8-prog/office-studio/actions/runs/39900579684)
+[Windows 배포 검증 기록](https://github.com/beaur8-prog/office-studio/actions/workflows/windows-install.yml)
 
 ## 공유 페이지 이용 안내
 
