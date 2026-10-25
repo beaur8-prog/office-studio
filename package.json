@@ -2,13 +2,16 @@
   "name": "office-studio-deployment",
   "version": "1.0.0",
   "private": true,
-  "description": "Windows-only offline suite installer for Sheet Studio, Slide Studio and Word Studio",
+  "description": "Separate Windows and Mac offline suite installers for Sheet Studio, Slide Studio and Word Studio",
   "scripts": {
     "test": "node --test tests/*.test.cjs",
     "updater:sync": "node scripts/sync-updater.cjs",
     "test:updater-desktop": "node scripts/check-updater-desktop.cjs",
     "fetch:win": "node scripts/fetch.cjs win-x64",
-    "package:win": "node scripts/build.cjs win-x64"
+    "package:win": "node scripts/build.cjs win-x64",
+    "fetch:mac": "node mac/fetch.cjs",
+    "package:mac": "node mac/build.cjs",
+    "test:mac": "node mac/test-native.cjs"
   },
   "engines": { "node": ">=22.12.0" }
 }

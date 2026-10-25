@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "product": "Office Studio",
+  "version": "1.0.0",
+  "tag": "mac-v1.0.0",
+  "target": "mac-arm64",
+  "apps": [
+    {
+      "id": "sheet",
+      "product": "Sheet Studio",
+      "version": "0.7.23",
+      "bundleId": "local.lattice.sheetstudio",
+      "asset": {
+        "filename": "Sheet-Studio-0.7.23-macOS-arm64.zip",
+        "bytes": 119939228,
+        "sha256": "4899de030d55c5e60cf21b53fd8424c04cdf96033f1f2b16a837152567a4a64b",
+        "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.23/Sheet-Studio-0.7.23-macOS-arm64.zip"
+      },
+      "sourceCommit": "2b6773e8cfc5c75b85e163433171a7fd11cdc235"
+    },
+    {
+      "id": "slide",
+      "product": "Slide Studio",
+      "version": "1.6.11",
+      "bundleId": "local.slidestudio.app",
+      "asset": {
+        "filename": "Slide-Studio-mac-arm64.zip",
+        "bytes": 129825838,
+        "sha256": "c37a2fa49eeeb8cd1c80220a451c1cb45af075f3fe5c2888e5da0b730161ed96",
+        "url": "https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.11/Slide-Studio-mac-arm64.zip"
+      },
+      "sourceCommit": "d1ae8c037e2a133f474461a83616a681886f6937"
+    },
+    {
+      "id": "word",
+      "product": "Word Studio",
+      "version": "1.4.5",
+      "bundleId": "local.wordstudio.app",
+      "asset": {
+        "filename": "Word-Studio-1.4.5-mac-arm64.zip",
+        "bytes": 154951357,
+        "sha256": "fe0a624e9405b61661d415227f4514b46638868fbf794252bc7ac58a513e1bba",
+        "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.5/Word-Studio-1.4.5-mac-arm64.zip"
+      },
+      "sourceCommit": "1f2ab99b966371645b24766c8600e913f7d2df45"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "product": "Sheet Studio",
+  "version": "0.7.23",
+  "sourceCommit": "2b6773e8cfc5c75b85e163433171a7fd11cdc235",
+  "platform": "darwin",
+  "architecture": "arm64",
+  "signing": "ad-hoc; not Apple notarized",
+  "asset": {
+    "filename": "Sheet-Studio-0.7.23-macOS-arm64.zip",
+    "bytes": 119939228,
+    "sha256": "4899de030d55c5e60cf21b53fd8424c04cdf96033f1f2b16a837152567a4a64b",
+    "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.23/Sheet-Studio-0.7.23-macOS-arm64.zip"
+  },
+  "checks": {
+    "id": "sheet",
+    "version": "0.7.23",
+    "minimumMacOS": "12.0",
+    "architecture": "arm64",
+    "nativeStartup": true,
+    "packaged": true,
+    "profileIsolated": true,
+    "updateMenu": true,
+    "disableUpdatesPersists": true,
+    "rendererFiles": 6,
+    "rendererMatchesSource": true,
+    "updaterSHA256": "7c18a130a3ef4f701d5a9c962a279994abf4d7f616000d3c6dc2f6eb7aeb402a",
+    "normalClose": true,
+    "profileSentinelPreserved": true
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "product": "Word Studio",
+  "version": "1.4.5",
+  "sourceCommit": "1f2ab99b966371645b24766c8600e913f7d2df45",
+  "platform": "darwin",
+  "architecture": "arm64",
+  "signing": "ad-hoc; not Apple notarized",
+  "asset": {
+    "filename": "Word-Studio-1.4.5-mac-arm64.zip",
+    "bytes": 154951357,
+    "sha256": "fe0a624e9405b61661d415227f4514b46638868fbf794252bc7ac58a513e1bba",
+    "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.5/Word-Studio-1.4.5-mac-arm64.zip"
+  },
+  "checks": {
+    "id": "word",
+    "version": "1.4.5",
+    "minimumMacOS": "12.0",
+    "architecture": "arm64",
+    "nativeStartup": true,
+    "packaged": true,
+    "profileIsolated": true,
+    "updateMenu": true,
+    "disableUpdatesPersists": true,
+    "rendererFiles": 1003,
+    "rendererMatchesSource": true,
+    "updaterSHA256": "7c18a130a3ef4f701d5a9c962a279994abf4d7f616000d3c6dc2f6eb7aeb402a",
+    "normalClose": true,
+    "profileSentinelPreserved": true
+  }
+}

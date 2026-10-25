@@ -2,7 +2,9 @@
 
 [리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/b448bde7b88792d8776c7f6a908e88891c473d4b5f6cace2) · [Windows 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.0/Office-Studio-1.0.0-win-x64-Setup.exe)
 
-Sheet Studio, Slide Studio, Word Studio를 묶어 설치하는 **Windows x64 전용** 통합 배포 폴더입니다. 이 폴더의 통합 릴리즈에는 Windows Setup과 그 검증 파일만 포함합니다.
+[Mac Apple Silicon 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.0/Office-Studio-1.0.0-mac-arm64-Setup.pkg) · [Mac 배포 안내](publication/mac/downloads-ready.md)
+
+Sheet Studio, Slide Studio, Word Studio를 묶어 설치하는 배포 프로젝트입니다. 기존 Windows x64 통합본과 별도 Mac Apple Silicon 통합본을 관리합니다. 아래 내용과 루트 잠금 파일은 Windows 배포용이며, Mac 배포 절차와 잠금 파일은 [mac/README.md](mac/README.md)에 있습니다.
 
 | 구성 | 포함 버전 |
 | --- | --- |
@@ -44,7 +46,7 @@ npm run fetch:win
 npm run package:win
 ```
 
-Windows Setup 빌드에는 NSIS와 7-Zip이 필요합니다. 도구가 PATH에 없으면 `MAKENSIS`와 `SEVENZIP`에 실행 파일 경로를 지정합니다. 통합 빌드는 `win-x64`만 허용하며 다른 대상을 지정하면 중단합니다.
+Windows Setup 빌드에는 NSIS와 7-Zip이 필요합니다. 도구가 PATH에 없으면 `MAKENSIS`와 `SEVENZIP`에 실행 파일 경로를 지정합니다. 이 Windows 빌드 경로는 `win-x64`만 허용합니다. Mac 빌드는 별도의 `npm run package:mac`을 사용합니다.
 
 `fetch:win`은 `suite-lock.json`에 고정한 GitHub 태그에서 Windows 설치 파일을 받아 `inputs/`에 저장합니다. 파일 크기·SHA-256이 맞는 파일만 사용하고, 이미 저장된 파일의 체크섬이 다르면 중단합니다. 이번 로컬 빌드의 `inputs/`는 기존 검증 파일을 가리키는 심볼릭 링크이며 Git에는 포함하지 않습니다. 새 환경에서는 `fetch:win`을 사용하면 됩니다. 통합 릴리즈 잠금 파일에는 Windows 자산만 등록합니다.
 
