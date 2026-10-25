@@ -3,6 +3,7 @@ const fs=require('node:fs/promises');
 const path=require('node:path');
 const {root,readLock}=require('./common.cjs');
 async function main(){
+  const windows=JSON.parse(await fs.readFile(path.join(root,'suite-lock.json'),'utf8'));
   const lock=await readLock(),release=path.join(root,'release/mac',lock.version);
   const build=JSON.parse(await fs.readFile(path.join(release,'BUILD-mac-arm64.json'),'utf8'));
   const native=JSON.parse(await fs.readFile(path.join(root,'test-results/mac/native-verification.json'),'utf8'));
@@ -59,7 +60,7 @@ ${lock.apps.map(a=>`| ${a.product} | ${a.version} | [Mac ZIP](${a.asset.url}) |`
 ## 4. 기본 사용
 
 - **Sheet Studio:** 표·수식·차트 편집, XLSX·CSV 등의 열기와 저장.
-- **Slide Studio:** 슬라이드 편집·발표, PPTX 열기와 저장. 이번 Mac 버전에는 최근 표 행 높이·테두리 표시 수정이 포함되어 있습니다.
+- **Slide Studio:** 슬라이드 편집·발표, PPTX 열기와 저장. 이번 Mac 버전에는 네이티브 차트 가져오기·표시·저장 보존과 최근 표 표시 수정, Finder 파일 열기 수정을 포함합니다. 가져온 차트 데이터의 직접 편집에는 제한이 있습니다.
 - **Word Studio:** 문서·표·서식 편집, DOCX 열기와 저장, HWP·HWPX 변환 지원.
 
 각 앱의 파일 메뉴에서 문서를 열거나 저장합니다. 중요한 원본은 별도로 보관하고 다른 이름으로 저장해 확인하세요. Microsoft Office와 완전히 같은 기능·레이아웃을 보장하지 않으며, 복잡한 문서·매크로·외부 연결 등에는 제한이 있을 수 있습니다.
@@ -111,9 +112,9 @@ ${tick.repeat(3)}
 이 문서는 리토스의 읽기 전용 공유 페이지입니다. 공유 호스트의 실행·네트워크 상태에 따라 연결이 중단될 수 있으며 설치 파일은 GitHub Mac 릴리스에서도 받을 수 있습니다.
 `;
   await fs.writeFile(path.join(directory,'downloads-ready.md'),contents);
-  const notes=`Office Studio ${lock.version} Mac 배포입니다. Apple Silicon(M1 이상) · macOS 12 이상에서 사용합니다.\n\n${lock.apps.map(a=>'- '+a.product+' '+a.version).join('\n')}\n\n한 PKG에서 설치할 앱을 선택할 수 있습니다. Developer ID 서명·공증은 없으며 시스템 설정의 앱별 열기 허용이 필요할 수 있습니다. 앱 업데이트는 Mac 릴리스를 자동 확인·다운로드한 뒤 ZIP을 직접 교체하는 방식입니다.\n\n최종 PKG의 앱 버전·서명 무결성·편집 코드 일치와 세 앱의 실제 시작·종료·업데이트 설정을 검증했습니다. 관리자 권한을 사용한 시스템 설치 시험은 수행하지 않았습니다. 자세한 범위는 BUILD-mac-arm64.json과 MAC-VERIFICATION.json을 확인하세요.\n\nWindows 배포는 기존 v1.0.0 릴리스를 사용합니다.\n`;
+  const notes=`Office Studio ${lock.version} Mac 배포입니다. Apple Silicon(M1 이상) · macOS 12 이상에서 사용합니다.\n\n${lock.apps.map(a=>'- '+a.product+' '+a.version).join('\n')}\n\n한 PKG에서 설치할 앱을 선택할 수 있습니다. Developer ID 서명·공증은 없으며 시스템 설정의 앱별 열기 허용이 필요할 수 있습니다. 앱 업데이트는 Mac 릴리스를 자동 확인·다운로드한 뒤 ZIP을 직접 교체하는 방식입니다.\n\n최종 PKG의 앱 버전·서명 무결성·편집 코드 일치와 세 앱의 실제 시작·종료·업데이트 설정을 검증했습니다. 관리자 권한을 사용한 시스템 설치 시험은 수행하지 않았습니다. 자세한 범위는 BUILD-mac-arm64.json과 MAC-VERIFICATION.json을 확인하세요.\n\nWindows 배포는 별도 v${windows.version} 릴리스를 사용합니다.\n`;
   await fs.writeFile(path.join(directory,'release-notes.md'),notes);
-  for(const app of lock.apps)await fs.writeFile(path.join(directory,app.id+'-release-notes.md'),`${app.product} ${app.version} · Mac Apple Silicon 배포\n\n- Apple Silicon(M1 이상), macOS 12 이상.\n- Mac 릴리스만 확인해 새 버전을 자동 다운로드하고, 문서 저장·종료 후 ZIP을 직접 교체하도록 안내합니다.\n- 도움말에서 자동 확인·다운로드를 끌 수 있습니다.\n- 앱은 ad-hoc 서명 상태이며 Apple Developer ID 서명·공증은 없습니다.\n${app.id==='slide'?'- 최근 표 행 높이와 테두리 표시 수정을 포함합니다.\n':''}\n이 릴리스는 Mac 전용이며 GitHub의 Windows latest 릴리스를 변경하지 않습니다.\n`);
+  for(const app of lock.apps)await fs.writeFile(path.join(directory,app.id+'-release-notes.md'),`${app.product} ${app.version} · Mac Apple Silicon 배포\n\n- Apple Silicon(M1 이상), macOS 12 이상.\n- Mac 릴리스만 확인해 새 버전을 자동 다운로드하고, 문서 저장·종료 후 ZIP을 직접 교체하도록 안내합니다.\n- 도움말에서 자동 확인·다운로드를 끌 수 있습니다.\n- 앱은 ad-hoc 서명 상태이며 Apple Developer ID 서명·공증은 없습니다.\n${app.id==='slide'?'- 최근 표 행 높이와 테두리 표시 수정을 포함합니다.\n':''}\n이 버전의 Windows x64 파일과 Mac Apple Silicon 파일은 같은 앱 릴리스에서 제공합니다.\n`);
   console.log('Generated Mac distribution page and release notes');
 }
 main().catch(e=>{console.error(e.stack);process.exitCode=1;});

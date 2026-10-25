@@ -1,6 +1,6 @@
 # Office Studio · Mac Apple Silicon
 
-[리토스 Mac 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/7ef9c9402c857485a69bb9e8e0c441f57e1025bc8dd9d002) · [Mac 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/mac-v1.0.0)
+[리토스 Mac 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/7ef9c9402c857485a69bb9e8e0c441f57e1025bc8dd9d002) · [Mac 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/mac-v1.0.1)
 
 Windows 배포와 별도로 관리하는 Apple Silicon(M1 이상) · macOS 12 이상용 통합 PKG입니다. `mac/suite-lock.json`은 Mac 입력만 고정하고, 기존 루트 `suite-lock.json`과 Windows 릴리스는 유지합니다.
 
@@ -20,7 +20,8 @@ Mac 빌드는 Apple Silicon Mac과 기본 macOS 개발 도구(pkgbuild, productb
 
 ## 플랫폼별 릴리스
 
-- 앱별 Mac 릴리스는 각 저장소의 정식 `v<app-version>` 태그에 게시하되 **GitHub latest를 변경하지 않도록 `--latest=false`**를 지정합니다. 자산은 해당 버전에 고정한 파일명·URL·SHA-256을 사용합니다.
+- Windows와 Mac을 같은 앱 버전으로 배포할 때는 두 플랫폼 자산을 같은 정식 릴리스에 올리고 Windows latest로 지정합니다.
+- 앱별 Mac 전용 릴리스는 각 저장소의 정식 `v<app-version>` 태그에 게시하되 **GitHub latest를 변경하지 않도록 `--latest=false`**를 지정합니다. 자산은 해당 버전에 고정한 파일명·URL·SHA-256을 사용합니다.
 - Mac 앱은 `releases?per_page=20`에서 해당 아키텍처의 ZIP이 있는 가장 높은 정식 버전을 확인합니다. 새 Mac 버전이 최근 20개 릴리스에 포함되도록 관리합니다.
 - Windows 앱은 기존 `/releases/latest` 경로를 계속 사용합니다. Mac 전용 릴리스로 Windows latest를 바꾸면 기존 Windows 앱의 업데이트 확인이 실패하므로 반드시 유지하세요.
 - Office Studio Mac 통합본은 같은 저장소의 별도 **`mac-v<version>`** 릴리스에 `--latest=false`로 게시합니다. Windows `v<version>` 자산을 교체하지 않습니다.

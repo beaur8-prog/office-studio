@@ -5,9 +5,10 @@ const assert=require('node:assert/strict');
 const {root,hashFile,readLock}=require('./common.cjs');
 const {selectRelease}=require('../updater/studio-updater.cjs');
 async function main(){
+  const lock=await readLock();
   const publication=JSON.parse(await fs.readFile(path.join(root,'test-results/lithos-published.json'),'utf8'));
   const expected=await fs.readFile(path.join(root,'publication/downloads-ready.md'),'utf8');
-  const build=JSON.parse(await fs.readFile(path.join(root,'release/1.0.0/BUILD-win-x64.json'),'utf8'));
+  const build=JSON.parse(await fs.readFile(path.join(root,'release',lock.version,'BUILD-win-x64.json'),'utf8'));
   const html=await fetch(publication.url,{signal:AbortSignal.timeout(20000)});
   assert.equal(html.status,200);assert.ok((await html.text()).includes('오피스 스튜디오'));
   const dataResponse=await fetch(publication.url+'/data',{signal:AbortSignal.timeout(20000)});
@@ -26,8 +27,8 @@ async function main(){
       return {url,status:response.status};
     }));checks.push(...items);
   }
-  assert.equal(await hashFile(path.join(root,'release/1.0.0',build.filename)),build.sha256);
-  const lock=await readLock(),previous=JSON.parse(await fs.readFile(path.join(root,'previous-apps-lock.json'),'utf8'));
+  assert.equal(await hashFile(path.join(root,'release',lock.version,build.filename)),build.sha256);
+  const previous=JSON.parse(await fs.readFile(path.join(root,'previous-apps-lock.json'),'utf8'));
   const updates=[];
   for(const app of lock.apps){
     const response=await fetch('https://api.github.com/repos/beaur8-prog/'+app.id+'-studio/releases/latest',{headers:{Accept:'application/vnd.github+json','User-Agent':'Office-Studio-Release-Verification'},signal:AbortSignal.timeout(20000)});

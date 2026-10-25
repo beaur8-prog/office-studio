@@ -1,6 +1,6 @@
 {
   "name": "office-studio-deployment",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Separate Windows and Mac offline suite installers for Sheet Studio, Slide Studio and Word Studio",
   "scripts": {
@@ -13,5 +13,7 @@
     "package:mac": "node mac/build.cjs",
     "test:mac": "node mac/test-native.cjs"
   },
-  "engines": { "node": ">=22.12.0" }
+  "engines": {
+    "node": ">=22.12.0"
+  }
 }

@@ -6,42 +6,42 @@
     {
       "id": "sheet",
       "product": "Sheet Studio",
-      "version": "0.7.20",
+      "version": "0.7.22",
       "bundleId": "local.lattice.sheetstudio",
       "assets": {
         "win-x64": {
-          "filename": "Sheet-Studio-0.7.20-Windows-x64-Setup.exe",
-          "bytes": 102822897,
-          "sha256": "4d093543d144a65ed7cbd87643888731025c83b3f894b89f9fbf9536ab0dd14a",
-          "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.20/Sheet-Studio-0.7.20-Windows-x64-Setup.exe"
+          "filename": "Sheet-Studio-0.7.22-Windows-x64-Setup.exe",
+          "bytes": 102828012,
+          "sha256": "77e21a9b70e67b309f9d216b6d45cab499558f6d63bc9d175019966f8a0bf452",
+          "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.22/Sheet-Studio-0.7.22-Windows-x64-Setup.exe"
         }
       }
     },
     {
       "id": "slide",
       "product": "Slide Studio",
-      "version": "1.6.9",
+      "version": "1.6.10",
       "bundleId": "local.slidestudio.app",
       "assets": {
         "win-x64": {
           "filename": "Slide-Studio-Setup-x64.exe",
-          "bytes": 109593638,
-          "sha256": "b170258c9afb85fb76e583eb2c1bc8d2459990a959f3948866f855c27dda01cc",
-          "url": "https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.9/Slide-Studio-Setup-x64.exe"
+          "bytes": 109668601,
+          "sha256": "05117b4fb9418ea90552db4310eee053feac8b4f89410778c5a14fdd366a9011",
+          "url": "https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.10/Slide-Studio-Setup-x64.exe"
         }
       }
     },
     {
       "id": "word",
       "product": "Word Studio",
-      "version": "1.4.3",
+      "version": "1.4.4",
       "bundleId": "local.wordstudio.app",
       "assets": {
         "win-x64": {
-          "filename": "Word-Studio-1.4.3-windows-x64-setup.exe",
-          "bytes": 132696384,
-          "sha256": "bccc82318231da82080bd14c3957016e922b3c53bac880debbfa389e05218a5a",
-          "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.3/Word-Studio-1.4.3-windows-x64-setup.exe"
+          "filename": "Word-Studio-1.4.4-windows-x64-setup.exe",
+          "bytes": 132700474,
+          "sha256": "00824646db5dd2c43d59b8e99e2ba05f2e9f1d62744cf71927e48d35e99b2027",
+          "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.4/Word-Studio-1.4.4-windows-x64-setup.exe"
         }
       }
     }

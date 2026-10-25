@@ -6,6 +6,7 @@ async function main(){
   const lock=await readLock();
   const build=JSON.parse(await fs.readFile(path.join(root,'release',lock.version,'BUILD-win-x64.json'),'utf8'));
   const base=`https://github.com/beaur8-prog/office-studio/releases/download/v${lock.version}`;
+  const date=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric'}).format(new Date());
   const rows=lock.apps.map(app=>`| ${app.product} | ${app.version} | ${ {sheet:'표·수식·차트·XLSX/CSV',slide:'슬라이드 편집·발표·PPTX',word:'문서 작성·DOCX·PDF·HWP/HWPX'}[app.id]} |`).join('\n');
   const body=`> **Windows 설치 안내 — ‘실행 안 함’ 버튼만 보일 때**
 >
@@ -17,9 +18,11 @@ async function main(){
 
 # 오피스 스튜디오 Windows 다운로드 및 사용 안내
 
-**Office Studio ${lock.version} · 2026년 10월 23일 · Windows 통합 설치·앱별 자동 업데이트**
+**Office Studio ${lock.version} · ${date} · Windows 통합 설치·앱별 자동 업데이트**
 
 Windows에서 표, 발표 자료, 문서를 만드는 세 가지 독립 앱을 한 번에 설치합니다. 일상적인 오피스 작업을 위한 대안으로, **Sheet Studio·Slide Studio·Word Studio**를 함께 제공합니다. 설치 후에는 시작 메뉴에서 필요한 앱을 각각 실행합니다.
+
+이번 버전은 세 앱의 운영체제 파일 열기 수정과 Slide의 네이티브 차트 가져오기·저장 보존을 포함합니다. Windows에서는 기존 앱 안에서 새 버전 확인·다운로드 후 **종료하고 업데이트**로 설치할 수 있습니다.
 
 ## 1. Windows 통합 다운로드
 

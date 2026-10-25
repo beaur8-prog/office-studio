@@ -24,7 +24,7 @@ async function main() {
     const report = {
       product: lock.product, version: lock.version, target, builtAt: new Date().toISOString(),
       filename, bytes, sha256, signing: 'unsigned',
-      apps: inputs.map(app => ({ id: app.id, product: app.product, version: app.version, input: app.asset })),
+      apps: inputs.map(app => ({ id: app.id, product: app.product, version: app.version, sourceCommit: app.sourceCommit, input: app.asset })),
       checks: { inputSHA256: true, ...checks, nativeInstall: false },
     };
     await fs.writeFile(path.join(release, `BUILD-${target}.json`), JSON.stringify(report, null, 2) + '\n');

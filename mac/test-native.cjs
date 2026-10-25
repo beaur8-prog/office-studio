@@ -27,14 +27,18 @@ async function main(){
       assert.equal(await hashFile(archive),build.apps.find(a=>a.id===metadata.id).asarSHA256);
       const sourceDirectory=path.join(root,'..',metadata.id+'-studio','dist');
       let rendererFiles=0;
-      async function verifyTree(dir,relative=''){
+      async function verifyTree(dir,relative='',prefix='dist'){
         for(const entry of await fs.readdir(dir,{withFileTypes:true})){
           const next=path.posix.join(relative,entry.name);
-          if(entry.isDirectory())await verifyTree(path.join(dir,entry.name),next);
-          else {assert.deepEqual(asar.extractFile(archive,'dist/'+next),await fs.readFile(path.join(dir,entry.name)),'Renderer differs: '+next);rendererFiles++;}
+          if(entry.isDirectory())await verifyTree(path.join(dir,entry.name),next,prefix);
+          else {assert.deepEqual(asar.extractFile(archive,prefix+'/'+next),await fs.readFile(path.join(dir,entry.name)),'Renderer differs: '+next);rendererFiles++;}
         }
       }
       await verifyTree(sourceDirectory);
+      const frontendFiles=rendererFiles;
+      await verifyTree(path.join(root,'..',metadata.id+'-studio','electron'),'','electron');
+      const electronFiles=rendererFiles-frontendFiles;
+      rendererFiles=frontendFiles;
       const profile=path.join(work,'profile-'+metadata.id);
       await fs.mkdir(profile);
       const sentinel=path.join(profile,'preserve-existing-user-data.txt'),preserved='보존할 문서와 설정 '+metadata.id;
@@ -52,7 +56,7 @@ async function main(){
         await native.evaluate(({Menu})=>{const item=Menu.getApplicationMenu().items.find(i=>i.label==='도움말').submenu.items.find(i=>i.label==='업데이트 자동 확인·다운로드');item.click(item);});
         await expect.poll(async()=>{try{return JSON.parse(await fs.readFile(path.join(profile,'updates/settings.json'),'utf8')).automatic;}catch(e){if(e.code==='ENOENT')return null;throw e;}},{timeout:10000}).toBe(false);
         await page.screenshot({path:path.join(destination,metadata.id+'-startup.png')});
-        item={id:metadata.id,...info,nativeStartup:true,packaged:true,profileIsolated:true,updateMenu:true,disableUpdatesPersists:true,rendererFiles,rendererMatchesSource:true,updaterSHA256:createHash('sha256').update(actual).digest('hex')};
+        item={id:metadata.id,...info,nativeStartup:true,packaged:true,profileIsolated:true,updateMenu:true,disableUpdatesPersists:true,rendererFiles,electronFiles,rendererMatchesSource:true,electronMatchesSource:true,updaterSHA256:createHash('sha256').update(actual).digest('hex')};
       }finally{
         await native.evaluate(({dialog})=>{dialog.showMessageBoxSync=()=>1;dialog.showMessageBox=async()=>({response:1});}).catch(()=>{});
         await native.close();
