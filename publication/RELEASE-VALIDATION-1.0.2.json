@@ -1,0 +1,216 @@
+{
+  "suiteVersion": "1.0.2",
+  "builtAt": "2026-10-28T08:22:57.387Z",
+  "appSources": [
+    {
+      "id": "sheet",
+      "version": "0.7.27",
+      "sourceCommit": "61b2b761f058b15a81e3b553db763e18f09c41dd"
+    },
+    {
+      "id": "slide",
+      "version": "1.6.14",
+      "sourceCommit": "56c58c0819b743902ac1d12fe71327973c5c95c9"
+    },
+    {
+      "id": "word",
+      "version": "1.4.8",
+      "sourceCommit": "2b5bd77091338e87a912ad3ad04e429b8133a25f"
+    }
+  ],
+  "tests": {
+    "sheetUnit": {
+      "passed": 181,
+      "skipped": 1
+    },
+    "sheetUpdates": {
+      "passed": 17
+    },
+    "sheetNativeWindows": {
+      "runId": 40655579342,
+      "url": "https://github.com/beaur8-prog/sheet-studio/actions/runs/40655579342",
+      "passed": true
+    },
+    "slideDocumentChanges": {
+      "passed": 12
+    },
+    "slideUpdates": {
+      "passed": 17
+    },
+    "wordUnit": {
+      "passed": 81
+    },
+    "wordBrowser": {
+      "passed": 257
+    },
+    "wordUpdates": {
+      "passed": 17
+    },
+    "suiteUnit": {
+      "passed": 25
+    },
+    "packagedFileOpen": {
+      "sheet": 10,
+      "slide": 10,
+      "word": 9,
+      "passed": true
+    },
+    "packagedSlideChanges": {
+      "passed": true,
+      "checks": 5
+    },
+    "packagedWordHwpEditing": {
+      "passed": true,
+      "formats": [
+        "hwp",
+        "hwpx"
+      ]
+    },
+    "macNative": {
+      "target": "mac-arm64",
+      "suiteVersion": "1.0.2",
+      "setupSHA256": "571f03fa1cdfa0121e1b141933d4e40c4dbd5d1a2d05e50e02c542fa3be52017",
+      "passed": true,
+      "nativeInstall": false,
+      "apps": [
+        {
+          "id": "sheet",
+          "version": "0.7.27",
+          "minimumMacOS": "12.0",
+          "architecture": "arm64",
+          "nativeStartup": true,
+          "packaged": true,
+          "profileIsolated": true,
+          "updateMenu": true,
+          "disableUpdatesPersists": true,
+          "rendererFiles": 6,
+          "electronFiles": 9,
+          "rendererMatchesSource": true,
+          "electronMatchesSource": true,
+          "updaterSHA256": "7c18a130a3ef4f701d5a9c962a279994abf4d7f616000d3c6dc2f6eb7aeb402a",
+          "normalClose": true,
+          "profileSentinelPreserved": true
+        },
+        {
+          "id": "slide",
+          "version": "1.6.14",
+          "minimumMacOS": "12.0",
+          "architecture": "arm64",
+          "nativeStartup": true,
+          "packaged": true,
+          "profileIsolated": true,
+          "updateMenu": true,
+          "disableUpdatesPersists": true,
+          "rendererFiles": 47,
+          "electronFiles": 10,
+          "rendererMatchesSource": true,
+          "electronMatchesSource": true,
+          "updaterSHA256": "7c18a130a3ef4f701d5a9c962a279994abf4d7f616000d3c6dc2f6eb7aeb402a",
+          "normalClose": true,
+          "profileSentinelPreserved": true
+        },
+        {
+          "id": "word",
+          "version": "1.4.8",
+          "minimumMacOS": "12.0",
+          "architecture": "arm64",
+          "nativeStartup": true,
+          "packaged": true,
+          "profileIsolated": true,
+          "updateMenu": true,
+          "disableUpdatesPersists": true,
+          "rendererFiles": 1003,
+          "electronFiles": 26,
+          "rendererMatchesSource": true,
+          "electronMatchesSource": true,
+          "updaterSHA256": "7c18a130a3ef4f701d5a9c962a279994abf4d7f616000d3c6dc2f6eb7aeb402a",
+          "normalClose": true,
+          "profileSentinelPreserved": true
+        }
+      ],
+      "nativeStartup": true
+    },
+    "pptxFileStructure": {
+      "passed": true
+    },
+    "windowsAndMacEditorArchivesMatch": {
+      "slide": true,
+      "word": true
+    },
+    "windowsNative": {
+      "suiteVersion": "1.0.2",
+      "setupSHA256": "e38fa32a2ade52de7fc0add7b4105be87b52e270f16474963b0bbebe3c7e8845",
+      "passed": true,
+      "freshInstall": true,
+      "reinstall": true,
+      "upgrades": [
+        {
+          "to": "0.7.27",
+          "nativeWindow": true,
+          "helper": true,
+          "app": "sheet",
+          "from": "0.7.26",
+          "normalClose": true
+        },
+        {
+          "to": "1.6.14",
+          "nativeWindow": true,
+          "helper": true,
+          "app": "slide",
+          "from": "1.6.13",
+          "normalClose": true
+        },
+        {
+          "to": "1.4.8",
+          "nativeWindow": true,
+          "helper": true,
+          "app": "word",
+          "from": "1.4.7",
+          "normalClose": true
+        }
+      ],
+      "uninstall": true,
+      "userDataPreserved": true,
+      "url": "https://github.com/beaur8-prog/office-studio/actions/runs/40656622432",
+      "runId": 40656622432,
+      "headSha": "882adaafcf004368b3473c63f6f84f73ab723fcb"
+    }
+  },
+  "publication": {
+    "verifiedAt": "2026-10-28T08:32:01.086Z",
+    "windows": {
+      "product": "Office Studio",
+      "version": "1.0.2",
+      "title": "오피스 스튜디오 다운로드",
+      "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/b448bde7b88792d8776c7f6a908e88891c473d4b5f6cace2",
+      "contentSHA256": "8e553842c37588896fd7c8d46d9eebd51de12253fcba76a6f1e85c62ffe13170",
+      "platform": "Windows x64",
+      "installer": "Office-Studio-1.0.2-win-x64-Setup.exe",
+      "installerSHA256": "e38fa32a2ade52de7fc0add7b4105be87b52e270f16474963b0bbebe3c7e8845",
+      "downloadURL": "https://github.com/beaur8-prog/office-studio/releases/download/v1.0.2/Office-Studio-1.0.2-win-x64-Setup.exe",
+      "releaseURL": "https://github.com/beaur8-prog/office-studio/releases/tag/v1.0.2",
+      "shareURLPreserved": true,
+      "verifiedAt": "2026-10-28T08:32:01.086Z",
+      "verifiedLinks": 8,
+      "windowsVerification": "https://github.com/beaur8-prog/office-studio/actions/runs/40656622432",
+      "verifiedUpdateFeeds": 3
+    },
+    "mac": {
+      "product": "Office Studio",
+      "version": "1.0.2",
+      "title": "오피스 스튜디오 Mac 다운로드",
+      "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ef9c9402c857485a69bb9e8e0c441f57e1025bc8dd9d002",
+      "contentSHA256": "5686c96c05943c2522d0365220487e87cd813902556332f566c43585c6217aaf",
+      "platform": "mac-arm64",
+      "installer": "Office-Studio-1.0.2-mac-arm64-Setup.pkg",
+      "installerSHA256": "571f03fa1cdfa0121e1b141933d4e40c4dbd5d1a2d05e50e02c542fa3be52017",
+      "downloadURL": "https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.2/Office-Studio-1.0.2-mac-arm64-Setup.pkg",
+      "releaseURL": "https://github.com/beaur8-prog/office-studio/releases/tag/mac-v1.0.2",
+      "shareURLPreserved": true,
+      "verifiedAt": "2026-10-28T08:32:01.086Z",
+      "verifiedLinks": 9,
+      "verifiedMacUpdateFeeds": 3,
+      "windowsLatestPreserved": true
+    }
+  }
+}
