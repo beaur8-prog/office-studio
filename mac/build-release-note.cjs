@@ -60,8 +60,8 @@ ${lock.apps.map(a=>`| ${a.product} | ${a.version} | [Mac ZIP](${a.asset.url}) |`
 ## 4. 기본 사용
 
 - **Sheet Studio:** 표·수식·차트 편집, XLSX·CSV 등의 열기와 저장.
-- **Slide Studio:** 슬라이드 편집·발표, PPTX 열기와 저장. 이번 버전은 보기만 하거나 편집을 취소했을 때 불필요한 저장 경고가 나타나는 문제를 수정했습니다. 네이티브 차트 가져오기·표시·저장 보존도 포함합니다. 가져온 차트 데이터의 직접 편집에는 제한이 있습니다.
-- **Word Studio:** 문서·표·서식 편집, DOCX 열기와 저장, HWP·HWPX 변환 지원. 이번 버전은 HWP 표·그림·각주와 쪽 흐름, 책갈피·사용자 지정 탭·소수점 정렬 및 저장 시 보존을 개선했습니다. 원본과 페이지 배치·글꼴 차이가 남을 수 있습니다.
+- **Slide Studio:** 슬라이드 편집·발표, PPTX 열기와 저장. 최신 소스로 다시 빌드했으며 지원 파일 형식 등록과 네이티브 차트 가져오기·표시·저장 보존을 포함합니다. 가져온 차트 데이터의 직접 편집에는 제한이 있습니다.
+- **Word Studio:** 문서·표·서식 편집, DOCX 열기와 저장, HWP·HWPX 변환 지원. 이번 버전은 최신 HWP 페이지 경계·줄 간격과 중첩 표 격자·정렬 개선을 포함합니다. 원본과 페이지 배치·글꼴 차이가 남을 수 있습니다.
 
 각 앱의 파일 메뉴에서 문서를 열거나 저장합니다. 중요한 원본은 별도로 보관하고 다른 이름으로 저장해 확인하세요. Microsoft Office와 완전히 같은 기능·레이아웃을 보장하지 않으며, 복잡한 문서·매크로·외부 연결 등에는 제한이 있을 수 있습니다.
 
@@ -114,7 +114,7 @@ ${tick.repeat(3)}
   await fs.writeFile(path.join(directory,'downloads-ready.md'),contents);
   const notes=`Office Studio ${lock.version} Mac 배포입니다. Apple Silicon(M1 이상) · macOS 12 이상에서 사용합니다.\n\n${lock.apps.map(a=>'- '+a.product+' '+a.version).join('\n')}\n\n한 PKG에서 설치할 앱을 선택할 수 있습니다. Developer ID 서명·공증은 없으며 시스템 설정의 앱별 열기 허용이 필요할 수 있습니다. 앱 업데이트는 Mac 릴리스를 자동 확인·다운로드한 뒤 ZIP을 직접 교체하는 방식입니다.\n\n최종 PKG의 앱 버전·서명 무결성·편집 코드 일치와 세 앱의 실제 시작·종료·업데이트 설정을 검증했습니다. 관리자 권한을 사용한 시스템 설치 시험은 수행하지 않았습니다. 자세한 범위는 BUILD-mac-arm64.json과 MAC-VERIFICATION.json을 확인하세요.\n\nWindows 배포는 별도 v${windows.version} 릴리스를 사용합니다.\n`;
   await fs.writeFile(path.join(directory,'release-notes.md'),notes);
-  for(const app of lock.apps)await fs.writeFile(path.join(directory,app.id+'-release-notes.md'),`${app.product} ${app.version} · Mac Apple Silicon 배포\n\n- Apple Silicon(M1 이상), macOS 12 이상.\n- Mac 릴리스만 확인해 새 버전을 자동 다운로드하고, 문서 저장·종료 후 ZIP을 직접 교체하도록 안내합니다.\n- 도움말에서 자동 확인·다운로드를 끌 수 있습니다.\n- 앱은 ad-hoc 서명 상태이며 Apple Developer ID 서명·공증은 없습니다.\n${app.id==='slide'?'- 보기·취소한 편집의 불필요한 저장 경고를 수정했습니다.\n':app.id==='word'?'- HWP 편집·변환, 책갈피·탭·소수점 정렬과 저장 시 보존을 개선했습니다.\n':''}\n이 버전의 Windows x64 파일과 Mac Apple Silicon 파일은 같은 앱 릴리스에서 제공합니다.\n`);
+  for(const app of lock.apps)await fs.writeFile(path.join(directory,app.id+'-release-notes.md'),`${app.product} ${app.version} · Mac Apple Silicon 배포\n\n- Apple Silicon(M1 이상), macOS 12 이상.\n- Mac 릴리스만 확인해 새 버전을 자동 다운로드하고, 문서 저장·종료 후 ZIP을 직접 교체하도록 안내합니다.\n- 도움말에서 자동 확인·다운로드를 끌 수 있습니다.\n- 앱은 ad-hoc 서명 상태이며 Apple Developer ID 서명·공증은 없습니다.\n${app.id==='slide'?'- 지원 프레젠테이션 파일 형식 등록을 개선했습니다.\n':app.id==='word'?'- HWP 페이지 경계·줄 간격과 중첩 표 격자·정렬 개선을 포함합니다.\n':''}\n이 버전의 Windows x64 파일과 Mac Apple Silicon 파일은 같은 앱 릴리스에서 제공합니다.\n`);
   console.log('Generated Mac distribution page and release notes');
 }
 main().catch(e=>{console.error(e.stack);process.exitCode=1;});

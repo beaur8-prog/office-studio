@@ -1,6 +1,6 @@
 # Office Studio · Mac Apple Silicon
 
-[리토스 Mac 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/7ef9c9402c857485a69bb9e8e0c441f57e1025bc8dd9d002) · [Mac 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/mac-v1.0.2)
+[리토스 Mac 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/7ef9c9402c857485a69bb9e8e0c441f57e1025bc8dd9d002) · [Mac 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/mac-v1.0.3)
 
 Windows 배포와 별도로 관리하는 Apple Silicon(M1 이상) · macOS 12 이상용 통합 PKG입니다. `mac/suite-lock.json`은 Mac 입력만 고정하고, 기존 루트 `suite-lock.json`과 Windows 릴리스는 유지합니다.
 
@@ -28,3 +28,5 @@ Mac 빌드는 Apple Silicon Mac과 기본 macOS 개발 도구(pkgbuild, productb
 - Mac은 새 버전 자동 확인·다운로드 후 ZIP 직접 교체 방식입니다. 문서 저장·앱 종료·교체는 사용자가 수행하며 도움말에서 자동 다운로드를 끌 수 있습니다.
 
 `publication/mac/downloads-ready.md`는 별도 리토스 페이지의 본문이며, `publication/mac/PUBLISHED.json`에 공유 링크와 배포 체크섬을 기록합니다. 공개 후 `node mac/verify-publication.cjs`로 본문·다운로드 링크·Mac 업데이트와 기존 Windows 업데이트 경로를 검증합니다.
+
+별도 체크아웃에서 빌드한 앱은 `OFFICE_STUDIO_WORD_SOURCE`처럼 앱 이름을 넣은 환경 변수로 소스 경로를 지정할 수 있습니다. `test:mac`은 지정 경로의 Git 커밋이 잠금 파일에 고정한 커밋과 같은지 확인하고, 최종 패키지의 편집 코드·Electron 파일을 해당 체크아웃과 대조합니다.

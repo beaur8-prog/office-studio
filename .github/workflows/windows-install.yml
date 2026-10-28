@@ -5,7 +5,7 @@ on:
       tag:
         description: Draft release tag to verify
         required: true
-        default: v1.0.2
+        default: v1.0.3
       sha256:
         description: Reviewed installer SHA-256
         required: true

@@ -1,1 +1,1 @@
-915f8e2408388b250ea98848b6ec5e7b1b0675a27b37b0bc793fe581ac6b34d8  Sheet-Studio-0.7.27-Windows-x64-Setup.exe
+6783a3c82d94aacff594868eee17ca142e1ede5ebe1290ba6fc0bd819a443070  Sheet-Studio-0.7.28-Windows-x64-Setup.exe

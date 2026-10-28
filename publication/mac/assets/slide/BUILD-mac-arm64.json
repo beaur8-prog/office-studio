@@ -1,21 +1,22 @@
 {
   "product": "Slide Studio",
-  "version": "1.6.14",
-  "sourceCommit": "56c58c0819b743902ac1d12fe71327973c5c95c9",
+  "version": "1.6.15",
+  "sourceCommit": "19314fa034513f42fb2570f388ab169c826c81b3",
   "platform": "darwin",
   "architecture": "arm64",
   "asset": {
     "filename": "Slide-Studio-mac-arm64.zip",
-    "bytes": 129837959,
-    "sha256": "158b7484231928730c1609e25c55b916d49ff4058a3995a6b89099f1a66e1790",
-    "url": "https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.14/Slide-Studio-mac-arm64.zip"
+    "bytes": 129838108,
+    "sha256": "688e30cf1f1dbd03e7a242adde9ec3fc9b0b0487763013e095969e038ea2ca20",
+    "url": "https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.15/Slide-Studio-mac-arm64.zip"
   },
   "signing": "ad-hoc; not Apple notarized",
   "checks": {
     "id": "slide",
-    "version": "1.6.14",
+    "version": "1.6.15",
     "minimumMacOS": "12.0",
     "architecture": "arm64",
+    "sourceCommit": "19314fa034513f42fb2570f388ab169c826c81b3",
     "nativeStartup": true,
     "packaged": true,
     "profileIsolated": true,

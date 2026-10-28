@@ -25,7 +25,10 @@ async function main(){
       assert.deepEqual(actual,canonical,'Packaged updater must match canonical source');
       assert.equal(JSON.parse(asar.extractFile(archive,'package.json')).version,metadata.version);
       assert.equal(await hashFile(archive),build.apps.find(a=>a.id===metadata.id).asarSHA256);
-      const sourceDirectory=path.join(root,'..',metadata.id+'-studio','dist');
+      const sourceRoot=process.env['OFFICE_STUDIO_'+metadata.id.toUpperCase()+'_SOURCE']||path.join(root,'..',metadata.id+'-studio');
+      const sourceCommit=run('git',['-C',sourceRoot,'rev-parse','HEAD'],true).trim();
+      assert.equal(sourceCommit,metadata.sourceCommit,'Source checkout differs from the pinned release commit');
+      const sourceDirectory=path.join(sourceRoot,'dist');
       let rendererFiles=0;
       async function verifyTree(dir,relative='',prefix='dist'){
         for(const entry of await fs.readdir(dir,{withFileTypes:true})){
@@ -36,7 +39,7 @@ async function main(){
       }
       await verifyTree(sourceDirectory);
       const frontendFiles=rendererFiles;
-      await verifyTree(path.join(root,'..',metadata.id+'-studio','electron'),'','electron');
+      await verifyTree(path.join(sourceRoot,'electron'),'','electron');
       const electronFiles=rendererFiles-frontendFiles;
       rendererFiles=frontendFiles;
       const profile=path.join(work,'profile-'+metadata.id);
@@ -56,7 +59,7 @@ async function main(){
         await native.evaluate(({Menu})=>{const item=Menu.getApplicationMenu().items.find(i=>i.label==='도움말').submenu.items.find(i=>i.label==='업데이트 자동 확인·다운로드');item.click(item);});
         await expect.poll(async()=>{try{return JSON.parse(await fs.readFile(path.join(profile,'updates/settings.json'),'utf8')).automatic;}catch(e){if(e.code==='ENOENT')return null;throw e;}},{timeout:10000}).toBe(false);
         await page.screenshot({path:path.join(destination,metadata.id+'-startup.png')});
-        item={id:metadata.id,...info,nativeStartup:true,packaged:true,profileIsolated:true,updateMenu:true,disableUpdatesPersists:true,rendererFiles,electronFiles,rendererMatchesSource:true,electronMatchesSource:true,updaterSHA256:createHash('sha256').update(actual).digest('hex')};
+        item={id:metadata.id,...info,sourceCommit,nativeStartup:true,packaged:true,profileIsolated:true,updateMenu:true,disableUpdatesPersists:true,rendererFiles,electronFiles,rendererMatchesSource:true,electronMatchesSource:true,updaterSHA256:createHash('sha256').update(actual).digest('hex')};
       }finally{
         await native.evaluate(({dialog})=>{dialog.showMessageBoxSync=()=>1;dialog.showMessageBox=async()=>({response:1});}).catch(()=>{});
         await native.close();

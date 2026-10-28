@@ -1,1 +1,1 @@
-a753482f6e3bfc51e39876154425fd05995e36ab6dafaf2389b2000a77de4aaf  Sheet-Studio-0.7.27-macOS-arm64.zip
+28f79bfdbd663650b521cf9cc6cd72e8f5d9b3b310b45da3b812e5ff89d9588f  Sheet-Studio-0.7.28-macOS-arm64.zip

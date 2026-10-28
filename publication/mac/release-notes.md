@@ -1,8 +1,8 @@
-Office Studio 1.0.2 Mac 배포입니다. Apple Silicon(M1 이상) · macOS 12 이상에서 사용합니다.
+Office Studio 1.0.3 Mac 배포입니다. Apple Silicon(M1 이상) · macOS 12 이상에서 사용합니다.
 
-- Sheet Studio 0.7.27
-- Slide Studio 1.6.14
-- Word Studio 1.4.8
+- Sheet Studio 0.7.28
+- Slide Studio 1.6.15
+- Word Studio 1.4.9
 
 한 PKG에서 설치할 앱을 선택할 수 있습니다. Developer ID 서명·공증은 없으며 시스템 설정의 앱별 열기 허용이 필요할 수 있습니다. 앱 업데이트는 Mac 릴리스를 자동 확인·다운로드한 뒤 ZIP을 직접 교체하는 방식입니다.
 

@@ -1,21 +1,22 @@
 {
   "product": "Sheet Studio",
-  "version": "0.7.27",
-  "sourceCommit": "61b2b761f058b15a81e3b553db763e18f09c41dd",
+  "version": "0.7.28",
+  "sourceCommit": "0d3a05b8f06ddbefc7c01eea30e39927146cd5f8",
   "platform": "darwin",
   "architecture": "arm64",
   "asset": {
-    "filename": "Sheet-Studio-0.7.27-macOS-arm64.zip",
-    "bytes": 119940757,
-    "sha256": "a753482f6e3bfc51e39876154425fd05995e36ab6dafaf2389b2000a77de4aaf",
-    "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.27/Sheet-Studio-0.7.27-macOS-arm64.zip"
+    "filename": "Sheet-Studio-0.7.28-macOS-arm64.zip",
+    "bytes": 119940752,
+    "sha256": "28f79bfdbd663650b521cf9cc6cd72e8f5d9b3b310b45da3b812e5ff89d9588f",
+    "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.28/Sheet-Studio-0.7.28-macOS-arm64.zip"
   },
   "signing": "ad-hoc; not Apple notarized",
   "checks": {
     "id": "sheet",
-    "version": "0.7.27",
+    "version": "0.7.28",
     "minimumMacOS": "12.0",
     "architecture": "arm64",
+    "sourceCommit": "0d3a05b8f06ddbefc7c01eea30e39927146cd5f8",
     "nativeStartup": true,
     "packaged": true,
     "profileIsolated": true,

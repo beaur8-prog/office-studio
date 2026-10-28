@@ -1,7 +1,7 @@
-Office Studio 1.0.2 앱별 배포
+Office Studio 1.0.3 앱별 배포
 
-- Sheet Studio 0.7.27: 최신 main 재빌드.
-- Slide Studio 1.6.14: 보기·취소한 편집의 불필요한 저장 경고 수정.
-- Word Studio 1.4.8: HWP 편집·변환과 책갈피·탭·소수점 정렬 및 저장 보존 개선.
+- Sheet Studio 0.7.28: 지원 파일 등록·기존 기본 앱과 외부 등록 보존.
+- Slide Studio 1.6.15: 프레젠테이션 지원 형식 등록과 제거 시 외부 값 보존.
+- Word Studio 1.4.9: 문서 형식 등록과 HWP 페이지 경계·줄 간격·중첩 표 개선.
 
-세 앱은 Windows x64 및 Mac Apple Silicon용 파일을 같은 앱 릴리스에서 제공합니다. Windows는 앱 내 업데이트 설치, Mac은 자동 확인·다운로드 후 ZIP 직접 교체를 지원합니다.
+Windows x64 및 Mac Apple Silicon용 파일을 앱별 같은 정식 릴리스에서 제공합니다.
