@@ -1,1 +1,1 @@
-3d8763182a03221c07f0c30a250e18c7db9972bb59df78f7953c7c4fe4aa7509  Word-Studio-1.4.7-windows-x64-setup.exe
+a33bcbe853363faadf8bf651b93b3cb0ff815411a9dda10d68ee76261a24d9a1  Word-Studio-1.4.8-windows-x64-setup.exe

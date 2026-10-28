@@ -1,4 +1,4 @@
-Sheet Studio 0.7.26 · Mac Apple Silicon 배포
+Sheet Studio 0.7.27 · Mac Apple Silicon 배포
 
 - Apple Silicon(M1 이상), macOS 12 이상.
 - Mac 릴리스만 확인해 새 버전을 자동 다운로드하고, 문서 저장·종료 후 ZIP을 직접 교체하도록 안내합니다.

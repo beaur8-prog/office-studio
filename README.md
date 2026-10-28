@@ -1,23 +1,23 @@
 # Office Studio 배포
 
-[리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/b448bde7b88792d8776c7f6a908e88891c473d4b5f6cace2) · [Windows 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.1/Office-Studio-1.0.1-win-x64-Setup.exe)
+[리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/b448bde7b88792d8776c7f6a908e88891c473d4b5f6cace2) · [Windows 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.2/Office-Studio-1.0.2-win-x64-Setup.exe)
 
-[Mac 리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/7ef9c9402c857485a69bb9e8e0c441f57e1025bc8dd9d002) · [Mac Apple Silicon 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.1/Office-Studio-1.0.1-mac-arm64-Setup.pkg) · [Mac 배포 안내](publication/mac/downloads-ready.md)
+[Mac 리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/7ef9c9402c857485a69bb9e8e0c441f57e1025bc8dd9d002) · [Mac Apple Silicon 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.2/Office-Studio-1.0.2-mac-arm64-Setup.pkg) · [Mac 배포 안내](publication/mac/downloads-ready.md)
 
 Sheet Studio, Slide Studio, Word Studio를 묶어 설치하는 배포 프로젝트입니다. 기존 Windows x64 통합본과 별도 Mac Apple Silicon 통합본을 관리합니다. 아래 내용과 루트 잠금 파일은 Windows 배포용이며, Mac 배포 절차와 잠금 파일은 [mac/README.md](mac/README.md)에 있습니다.
 
 | 구성 | 포함 버전 |
 | --- | --- |
-| Office Studio | 1.0.1 |
-| Sheet Studio | 0.7.26 |
-| Slide Studio | 1.6.13 |
-| Word Studio | 1.4.7 |
+| Office Studio | 1.0.2 |
+| Sheet Studio | 0.7.27 |
+| Slide Studio | 1.6.14 |
+| Word Studio | 1.4.8 |
 
 ## 설치 파일
 
-결과물은 `release/1.0.1/`에 저장합니다.
+결과물은 `release/1.0.2/`에 저장합니다.
 
-- `Office-Studio-1.0.1-win-x64-Setup.exe`: Intel/AMD Windows 10·11 x64. 한 마법사에서 앱을 선택하고 현재 사용자 계정에 설치합니다. 세 앱 모두 기본 선택입니다. 시작 메뉴와 Windows의 앱별 제거 항목은 기존 설치 방식대로 생성됩니다.
+- `Office-Studio-1.0.2-win-x64-Setup.exe`: Intel/AMD Windows 10·11 x64. 한 마법사에서 앱을 선택하고 현재 사용자 계정에 설치합니다. 세 앱 모두 기본 선택입니다. 시작 메뉴와 Windows의 앱별 제거 항목은 기존 설치 방식대로 생성됩니다.
 
 먼저 문서를 저장하고 세 앱을 종료하세요. 설치 프로그램은 실행 중인 Studio 앱을 확인하고 종료를 안내합니다. Windows에서는 원래의 앱별 설치 파일을 순서대로 실행합니다. 중간에 실패하면 설치가 완료된 앱은 유지하고 오류를 표시하므로, 원인을 해결한 뒤 다시 실행하세요. 통합 설치 파일에는 앱별 제거 프로그램이 포함되며, 별도의 Office Studio 제거 항목은 생성하지 않습니다.
 
@@ -33,7 +33,7 @@ Sheet Studio, Slide Studio, Word Studio를 묶어 설치하는 배포 프로젝�
 
 공통 원본은 `updater/`입니다. 변경 뒤 `npm run updater:sync`로 각 앱의 `electron/`에 복사하며, 복사된 파일은 앱 저장소에도 함께 커밋합니다. 기존 패키징 스크립트가 `electron/` 전체를 ASAR에 포함하므로 추가 런타임 의존성은 필요하지 않습니다. 이 프로젝트의 `npm test`로 업데이트 무결성·종료 취소·플랫폼별 동작을 검증합니다.
 
-**Office Studio 1.0.1에는 업데이트 코드가 포함된 세 Windows 앱을 묶습니다.** 업데이트 기능이 없는 이전 앱을 사용한다면 이 통합본을 한 번 직접 설치해야 하며, 이후의 새 버전을 앱에서 받을 수 있습니다. 앱별 버전은 독립적으로 갱신됩니다.
+**Office Studio 1.0.2에는 업데이트 코드가 포함된 세 Windows 앱을 묶습니다.** 업데이트 기능이 없는 이전 앱을 사용한다면 이 통합본을 한 번 직접 설치해야 하며, 이후의 새 버전을 앱에서 받을 수 있습니다. 앱별 버전은 독립적으로 갱신됩니다.
 
 ## 다시 빌드하기
 
@@ -48,7 +48,7 @@ npm run package:win
 
 Windows Setup 빌드에는 NSIS와 7-Zip이 필요합니다. 도구가 PATH에 없으면 `MAKENSIS`와 `SEVENZIP`에 실행 파일 경로를 지정합니다. 이 Windows 빌드 경로는 `win-x64`만 허용합니다. Mac 빌드는 별도의 `npm run package:mac`을 사용합니다.
 
-`fetch:win`은 `suite-lock.json`에 고정한 GitHub 태그에서 Windows 설치 파일을 받아 `inputs/`에 저장합니다. 파일 크기·SHA-256이 맞는 파일만 사용하고, 이미 저장된 파일의 체크섬이 다르면 중단합니다. 이번 로컬 빌드의 `inputs/`는 기존 검증 파일을 가리키는 심볼릭 링크이며 Git에는 포함하지 않습니다. 새 환경에서는 `fetch:win`을 사용하면 됩니다. 통합 릴리즈 잠금 파일에는 Windows 자산만 등록합니다.
+`fetch:win`은 `suite-lock.json`에 고정한 GitHub 태그에서 Windows 설치 파일을 받아 `inputs/`에 저장합니다. 파일 크기·SHA-256이 맞는 파일만 사용하고, 이미 저장된 파일의 체크섬이 다르면 중단합니다. 로컬 빌드의 `inputs/`는 검증된 앱별 설치 파일을 보관하며 Git에는 포함하지 않습니다. 새 환경에서는 `fetch:win`을 사용하면 됩니다. 통합 릴리즈 잠금 파일에는 Windows 자산만 등록합니다.
 
 새 배포에서는 `suite-lock.json`의 통합 버전과 앱 버전·태그별 URL·파일 크기·SHA-256을 함께 갱신하고, `package.json` 버전도 맞춥니다. 체크섬은 해당 앱의 검증된 배포 기록과 대조하세요. `latest` URL은 빌드 입력으로 허용하지 않습니다. 한 번 배포한 통합 버전의 구성 파일을 바꾸지 말고 새 통합 버전을 발급합니다.
 

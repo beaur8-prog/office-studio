@@ -1,36 +1,36 @@
 > **Mac 설치 안내 — 보안 경고가 표시될 때**
 >
-> 아래 공식 GitHub 링크에서 받은 **Office-Studio-1.0.1-mac-arm64-Setup.pkg**인지 확인하세요. 현재 배포본은 Apple Developer ID 서명·공증을 받지 않았으므로 개발자 확인 경고가 나타날 수 있습니다. 파일을 한 번 열어 차단된 뒤 **시스템 설정 → 개인정보 보호 및 보안 → 그래도 열기 → 열기**를 선택합니다. 구버전 macOS에서는 **시스템 환경설정 → 보안 및 개인정보 보호**에서 해당 파일의 열기 허용 항목을 확인하세요. 설치 후 앱을 처음 실행할 때도 앱별로 같은 확인이 필요할 수 있습니다.
+> 아래 공식 GitHub 링크에서 받은 **Office-Studio-1.0.2-mac-arm64-Setup.pkg**인지 확인하세요. 현재 배포본은 Apple Developer ID 서명·공증을 받지 않았으므로 개발자 확인 경고가 나타날 수 있습니다. 파일을 한 번 열어 차단된 뒤 **시스템 설정 → 개인정보 보호 및 보안 → 그래도 열기 → 열기**를 선택합니다. 구버전 macOS에서는 **시스템 환경설정 → 보안 및 개인정보 보호**에서 해당 파일의 열기 허용 항목을 확인하세요. 설치 후 앱을 처음 실행할 때도 앱별로 같은 확인이 필요할 수 있습니다.
 >
 > 파일 출처와 맨 아래 SHA-256을 확인한 경우에만 허용하세요. 악성 소프트웨어 감지·손상 경고가 뜨면 강제로 실행하지 말고 파일을 다시 내려받아 체크섬을 확인하세요. 조직에서 관리하는 Mac은 관리자 정책을 따라야 합니다. [Apple 공식 보안 경고 안내](https://support.apple.com/ko-kr/102445)
 
 # 오피스 스튜디오 Mac 다운로드
 
-**Office Studio 1.0.1 · 2026-10-25 · Apple Silicon 전용 통합 설치**
+**Office Studio 1.0.2 · 2026-10-28 · Apple Silicon 전용 통합 설치**
 
 Sheet Studio·Slide Studio·Word Studio를 한 설치 파일로 설치합니다. 설치 화면의 **사용자화**에서 필요한 앱을 고를 수 있으며, 기본값은 세 앱 모두입니다.
 
 ## 1. 다운로드
 
-### [오피스 스튜디오 Mac 설치 파일 다운로드](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.1/Office-Studio-1.0.1-mac-arm64-Setup.pkg)
+### [오피스 스튜디오 Mac 설치 파일 다운로드](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.2/Office-Studio-1.0.2-mac-arm64-Setup.pkg)
 
 - **대상:** Apple Silicon(M1 이상) Mac · macOS 12 Monterey 이상
-- **파일:** `Office-Studio-1.0.1-mac-arm64-Setup.pkg`
-- **크기:** 385.5 MiB (404,260,851바이트)
+- **파일:** `Office-Studio-1.0.2-mac-arm64-Setup.pkg`
+- **크기:** 385.6 MiB (404,334,347바이트)
 - **설치 위치:** Finder의 **응용 프로그램** 폴더(`/Applications`)
 - **권한:** 관리자 인증 필요
 
 Intel Mac에서는 실행할 수 없습니다. Microsoft Office·Node.js를 따로 설치할 필요가 없고, 설치와 기본 편집은 오프라인에서도 가능합니다. 업데이트 확인과 다운로드에는 인터넷 연결이 필요합니다.
 
-[SHA-256 확인 파일](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.1/Office-Studio-1.0.1-mac-arm64-Setup.pkg.sha256) · [배포 구성·검증 기록](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.1/BUILD-mac-arm64.json) · [Mac 실행 검증 기록](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.1/MAC-VERIFICATION.json) · [GitHub Mac 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/mac-v1.0.1)
+[SHA-256 확인 파일](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.2/Office-Studio-1.0.2-mac-arm64-Setup.pkg.sha256) · [배포 구성·검증 기록](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.2/BUILD-mac-arm64.json) · [Mac 실행 검증 기록](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.2/MAC-VERIFICATION.json) · [GitHub Mac 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/mac-v1.0.2)
 
 ## 2. 포함 앱과 개별 다운로드
 
 | 앱 | 포함 버전 | 개별 다운로드 |
 | --- | --- | --- |
-| Sheet Studio | 0.7.26 | [Mac ZIP](https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.26/Sheet-Studio-0.7.26-macOS-arm64.zip) |
-| Slide Studio | 1.6.13 | [Mac ZIP](https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.13/Slide-Studio-mac-arm64.zip) |
-| Word Studio | 1.4.7 | [Mac ZIP](https://github.com/beaur8-prog/word-studio/releases/download/v1.4.7/Word-Studio-1.4.7-mac-arm64.zip) |
+| Sheet Studio | 0.7.27 | [Mac ZIP](https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.27/Sheet-Studio-0.7.27-macOS-arm64.zip) |
+| Slide Studio | 1.6.14 | [Mac ZIP](https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.14/Slide-Studio-mac-arm64.zip) |
+| Word Studio | 1.4.8 | [Mac ZIP](https://github.com/beaur8-prog/word-studio/releases/download/v1.4.8/Word-Studio-1.4.8-mac-arm64.zip) |
 
 통합 설치 파일은 세 앱을 응용 프로그램 폴더에 설치합니다. 개별 ZIP을 사용할 때는 압축을 풀고 원하는 앱을 응용 프로그램 폴더로 옮기세요.
 
@@ -47,8 +47,8 @@ Intel Mac에서는 실행할 수 없습니다. Microsoft Office·Node.js를 따�
 ## 4. 기본 사용
 
 - **Sheet Studio:** 표·수식·차트 편집, XLSX·CSV 등의 열기와 저장.
-- **Slide Studio:** 슬라이드 편집·발표, PPTX 열기와 저장. 이번 Mac 버전에는 네이티브 차트 가져오기·표시·저장 보존과 최근 표 표시 수정, Finder 파일 열기 수정을 포함합니다. 가져온 차트 데이터의 직접 편집에는 제한이 있습니다.
-- **Word Studio:** 문서·표·서식 편집, DOCX 열기와 저장, HWP·HWPX 변환 지원.
+- **Slide Studio:** 슬라이드 편집·발표, PPTX 열기와 저장. 이번 버전은 보기만 하거나 편집을 취소했을 때 불필요한 저장 경고가 나타나는 문제를 수정했습니다. 네이티브 차트 가져오기·표시·저장 보존도 포함합니다. 가져온 차트 데이터의 직접 편집에는 제한이 있습니다.
+- **Word Studio:** 문서·표·서식 편집, DOCX 열기와 저장, HWP·HWPX 변환 지원. 이번 버전은 HWP 표·그림·각주와 쪽 흐름, 책갈피·사용자 지정 탭·소수점 정렬 및 저장 시 보존을 개선했습니다. 원본과 페이지 배치·글꼴 차이가 남을 수 있습니다.
 
 각 앱의 파일 메뉴에서 문서를 열거나 저장합니다. 중요한 원본은 별도로 보관하고 다른 이름으로 저장해 확인하세요. Microsoft Office와 완전히 같은 기능·레이아웃을 보장하지 않으며, 복잡한 문서·매크로·외부 연결 등에는 제한이 있을 수 있습니다.
 
@@ -81,13 +81,13 @@ Mac 배포 인증서가 없으므로 앱을 자동 교체하지는 않습니다.
 다운로드한 파일의 SHA-256:
 
 ```text
-2fd971b1e71c9f54a2f9c640f3a0e2b940c13d611852d2df26a1cb79d38b4e79
+571f03fa1cdfa0121e1b141933d4e40c4dbd5d1a2d05e50e02c542fa3be52017
 ```
 
 터미널에서 다음 명령으로 확인할 수 있습니다. 다운로드 폴더나 파일명을 바꿨다면 경로도 맞춰주세요.
 
 ```sh
-shasum -a 256 ~/Downloads/Office-Studio-1.0.1-mac-arm64-Setup.pkg
+shasum -a 256 ~/Downloads/Office-Studio-1.0.2-mac-arm64-Setup.pkg
 ```
 
 표시된 값이 위 값과 정확히 같아야 합니다.

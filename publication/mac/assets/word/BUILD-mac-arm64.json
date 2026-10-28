@@ -1,19 +1,19 @@
 {
   "product": "Word Studio",
-  "version": "1.4.7",
-  "sourceCommit": "bb2fdecdf01c4cbbbe381c4e341d6b8f046b01e9",
+  "version": "1.4.8",
+  "sourceCommit": "2b5bd77091338e87a912ad3ad04e429b8133a25f",
   "platform": "darwin",
   "architecture": "arm64",
   "asset": {
-    "filename": "Word-Studio-1.4.7-mac-arm64.zip",
-    "bytes": 154953372,
-    "sha256": "c7fafe7dce6ddd986a04d07047bc3eeb43b78e3d35837a3e6af3083b1af00758",
-    "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.7/Word-Studio-1.4.7-mac-arm64.zip"
+    "filename": "Word-Studio-1.4.8-mac-arm64.zip",
+    "bytes": 155032413,
+    "sha256": "79ec7334a02f233a47348dd2b668bcf3ef6a252a3b0d97e29cf9cc5dea9e62fa",
+    "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.8/Word-Studio-1.4.8-mac-arm64.zip"
   },
   "signing": "ad-hoc; not Apple notarized",
   "checks": {
     "id": "word",
-    "version": "1.4.7",
+    "version": "1.4.8",
     "minimumMacOS": "12.0",
     "architecture": "arm64",
     "nativeStartup": true,
@@ -22,7 +22,7 @@
     "updateMenu": true,
     "disableUpdatesPersists": true,
     "rendererFiles": 1003,
-    "electronFiles": 24,
+    "electronFiles": 26,
     "rendererMatchesSource": true,
     "electronMatchesSource": true,
     "updaterSHA256": "7c18a130a3ef4f701d5a9c962a279994abf4d7f616000d3c6dc2f6eb7aeb402a",

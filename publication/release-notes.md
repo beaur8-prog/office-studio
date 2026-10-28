@@ -1,11 +1,7 @@
-Office Studio 1.0.1 · Windows x64
+Office Studio 1.0.2 · Windows 10/11 x64
 
-[설치·보안 경고 안내](https://sentence-durable-databases-toys.trycloudflare.com/s/b448bde7b88792d8776c7f6a908e88891c473d4b5f6cace2)
+Sheet Studio 0.7.27, Slide Studio 1.6.14, Word Studio 1.4.8을 선택해 한 번에 설치합니다. 최신 main 소스에서 다시 빌드했습니다.
 
-- Sheet Studio 0.7.26
-- Slide Studio 1.6.13
-- Word Studio 1.4.7
+Word의 HWP 편집·변환과 표·그림·각주, 책갈피·사용자 지정 탭·소수점 정렬의 보존을 개선했습니다. Slide에서 보기만 하거나 편집을 취소했을 때 불필요한 저장 경고가 나타나는 문제를 수정했습니다.
 
-세 앱의 운영체제 파일 열기 수정과 Slide 네이티브 차트 가져오기·저장 보존을 포함합니다. 기존 Windows 앱은 새 버전을 자동 확인·다운로드한 뒤 종료하고 업데이트할 수 있습니다. 설치 파일의 SHA-256과 원본 앱 출처를 검사합니다.
-
-격리된 Windows 환경의 설치·재설치·이전 앱에서 업데이트·정상 실행·제거·문서 및 사용자 데이터 보존 검증했습니다.
+Windows 앱은 새 버전을 자동 확인·다운로드하고, 문서를 저장한 뒤 종료하고 업데이트로 설치할 수 있습니다. 도움말에서 자동 확인·다운로드를 끌 수 있습니다. 설치 파일은 코드 서명이 없어 SmartScreen 경고가 표시될 수 있습니다. 공식 다운로드 파일을 확인한 뒤 추가 정보 → 실행을 선택하세요.
