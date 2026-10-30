@@ -1,33 +1,14 @@
 {
   "product": "Word Studio",
-  "version": "1.4.9",
-  "sourceCommit": "b374774c5993ef1c28d82b0ea1c5bdb93ff4b2fb",
-  "platform": "darwin",
-  "architecture": "arm64",
-  "asset": {
-    "filename": "Word-Studio-1.4.9-mac-arm64.zip",
-    "bytes": 155033767,
-    "sha256": "4ec3516624ec11d50fb555e1b388adae1d3bf3ef2f896e77f764f2a9467c05ce",
-    "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.9/Word-Studio-1.4.9-mac-arm64.zip"
-  },
-  "signing": "ad-hoc; not Apple notarized",
+  "version": "1.4.10",
+  "sourceCommit": "656fcc018eaed6da7b6788e42089d59f922a3d9c",
+  "target": "mac-arm64",
+  "filename": "Word-Studio-1.4.10-mac-arm64.zip",
+  "bytes": 155049185,
+  "sha256": "abd55ac95bf6aa01afdf5ae517f98ff7b93c88c1fbd87edbeb1661cb9860b920",
   "checks": {
-    "id": "word",
-    "version": "1.4.9",
-    "minimumMacOS": "12.0",
-    "architecture": "arm64",
-    "sourceCommit": "b374774c5993ef1c28d82b0ea1c5bdb93ff4b2fb",
-    "nativeStartup": true,
-    "packaged": true,
-    "profileIsolated": true,
-    "updateMenu": true,
-    "disableUpdatesPersists": true,
-    "rendererFiles": 1003,
-    "electronFiles": 27,
-    "rendererMatchesSource": true,
-    "electronMatchesSource": true,
-    "updaterSHA256": "7c18a130a3ef4f701d5a9c962a279994abf4d7f616000d3c6dc2f6eb7aeb402a",
-    "normalClose": true,
-    "profileSentinelPreserved": true
+    "zipCRC32": true,
+    "sourceBuild": true,
+    "codeSignature": "ad-hoc"
   }
 }

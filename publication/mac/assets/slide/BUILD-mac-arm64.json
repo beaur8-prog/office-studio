@@ -1,33 +1,14 @@
 {
   "product": "Slide Studio",
-  "version": "1.6.15",
-  "sourceCommit": "19314fa034513f42fb2570f388ab169c826c81b3",
-  "platform": "darwin",
-  "architecture": "arm64",
-  "asset": {
-    "filename": "Slide-Studio-mac-arm64.zip",
-    "bytes": 129838108,
-    "sha256": "688e30cf1f1dbd03e7a242adde9ec3fc9b0b0487763013e095969e038ea2ca20",
-    "url": "https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.15/Slide-Studio-mac-arm64.zip"
-  },
-  "signing": "ad-hoc; not Apple notarized",
+  "version": "1.6.16",
+  "sourceCommit": "d61eaed767b63141d1ee9a467ca6e9814f731d4a",
+  "target": "mac-arm64",
+  "filename": "Slide-Studio-mac-arm64.zip",
+  "bytes": 129874379,
+  "sha256": "4b83c275f4c2b238c5bfb44ed4e29061a70f40fc3336c85901927f0dd8007ef5",
   "checks": {
-    "id": "slide",
-    "version": "1.6.15",
-    "minimumMacOS": "12.0",
-    "architecture": "arm64",
-    "sourceCommit": "19314fa034513f42fb2570f388ab169c826c81b3",
-    "nativeStartup": true,
-    "packaged": true,
-    "profileIsolated": true,
-    "updateMenu": true,
-    "disableUpdatesPersists": true,
-    "rendererFiles": 47,
-    "electronFiles": 10,
-    "rendererMatchesSource": true,
-    "electronMatchesSource": true,
-    "updaterSHA256": "7c18a130a3ef4f701d5a9c962a279994abf4d7f616000d3c6dc2f6eb7aeb402a",
-    "normalClose": true,
-    "profileSentinelPreserved": true
+    "zipCRC32": true,
+    "sourceBuild": true,
+    "codeSignature": "ad-hoc"
   }
 }

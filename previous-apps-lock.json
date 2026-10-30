@@ -1,52 +1,52 @@
 {
   "schema": 1,
   "product": "Office Studio",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "apps": [
     {
       "id": "sheet",
       "product": "Sheet Studio",
-      "version": "0.7.27",
+      "version": "0.7.28",
       "bundleId": "local.lattice.sheetstudio",
       "assets": {
         "win-x64": {
-          "filename": "Sheet-Studio-0.7.27-Windows-x64-Setup.exe",
-          "bytes": 102829997,
-          "sha256": "915f8e2408388b250ea98848b6ec5e7b1b0675a27b37b0bc793fe581ac6b34d8",
-          "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.27/Sheet-Studio-0.7.27-Windows-x64-Setup.exe"
+          "filename": "Sheet-Studio-0.7.28-Windows-x64-Setup.exe",
+          "bytes": 102832340,
+          "sha256": "6783a3c82d94aacff594868eee17ca142e1ede5ebe1290ba6fc0bd819a443070",
+          "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.28/Sheet-Studio-0.7.28-Windows-x64-Setup.exe"
         }
       },
-      "sourceCommit": "61b2b761f058b15a81e3b553db763e18f09c41dd"
+      "sourceCommit": "0d3a05b8f06ddbefc7c01eea30e39927146cd5f8"
     },
     {
       "id": "slide",
       "product": "Slide Studio",
-      "version": "1.6.14",
+      "version": "1.6.15",
       "bundleId": "local.slidestudio.app",
       "assets": {
         "win-x64": {
           "filename": "Slide-Studio-Setup-x64.exe",
-          "bytes": 109634395,
-          "sha256": "9207470c5608aabf5d3b7dcdf679f87bb8f0e56a61f9a873bf7ac4c30d4d403c",
-          "url": "https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.14/Slide-Studio-Setup-x64.exe"
+          "bytes": 109658476,
+          "sha256": "cbb357c02544a8369f8274c27a9b09ad5109b61a9e6ff0a89050d553053093a8",
+          "url": "https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.15/Slide-Studio-Setup-x64.exe"
         }
       },
-      "sourceCommit": "56c58c0819b743902ac1d12fe71327973c5c95c9"
+      "sourceCommit": "19314fa034513f42fb2570f388ab169c826c81b3"
     },
     {
       "id": "word",
       "product": "Word Studio",
-      "version": "1.4.8",
+      "version": "1.4.9",
       "bundleId": "local.wordstudio.app",
       "assets": {
         "win-x64": {
-          "filename": "Word-Studio-1.4.8-windows-x64-setup.exe",
-          "bytes": 132770327,
-          "sha256": "a33bcbe853363faadf8bf651b93b3cb0ff815411a9dda10d68ee76261a24d9a1",
-          "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.8/Word-Studio-1.4.8-windows-x64-setup.exe"
+          "filename": "Word-Studio-1.4.9-windows-x64-setup.exe",
+          "bytes": 132771353,
+          "sha256": "75784ec4170a2b39e431bcde3f654e316e7dad27a11a0213ce7ce09ae4e9098e",
+          "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.9/Word-Studio-1.4.9-windows-x64-setup.exe"
         }
       },
-      "sourceCommit": "2b5bd77091338e87a912ad3ad04e429b8133a25f"
+      "sourceCommit": "b374774c5993ef1c28d82b0ea1c5bdb93ff4b2fb"
     }
   ],
   "target": "win-x64"
