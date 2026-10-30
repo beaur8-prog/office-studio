@@ -9,6 +9,16 @@
   "checks": {
     "zipCRC32": true,
     "sourceBuild": true,
-    "codeSignature": "ad-hoc"
+    "codeSignature": "ad-hoc",
+    "nativeStartup": true,
+    "profileIsolated": true,
+    "rendererMatchesSource": true,
+    "electronMatchesSource": true,
+    "updateMenu": true,
+    "disableUpdatesPersists": true,
+    "normalClose": true,
+    "bundleVersion": true,
+    "architecture": "arm64",
+    "strictCodeSignature": true
   }
 }
