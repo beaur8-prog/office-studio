@@ -1,5 +1,7 @@
 name: Verify Windows deployment
 on:
+  push:
+    branches: [fix/windows-updater-handoff]
   workflow_dispatch:
     inputs:
       tag:
@@ -12,7 +14,26 @@ on:
 permissions:
   contents: write
 jobs:
+  updater-handoff:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+      - run: npm test
+      - run: npm install --no-save --package-lock=false electron@42.11.15
+      - run: node scripts/test-windows-handoff.cjs
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: windows-updater-handoff
+          path: test-results/updater-handoff/
   install-update-uninstall:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: windows-latest
     timeout-minutes: 20
     steps:
