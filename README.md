@@ -1,6 +1,6 @@
 # Office Studio 배포
 
-[리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/b448bde7b88792d8776c7f6a908e88891c473d4b5f6cace2) · [Windows 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.6/Office-Studio-1.0.6-win-x64-Setup.exe)
+[리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/b448bde7b88792d8776c7f6a908e88891c473d4b5f6cace2) · [Windows 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.7/Office-Studio-1.0.7-win-x64-Setup.exe)
 
 [Mac 리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/7ef9c9402c857485a69bb9e8e0c441f57e1025bc8dd9d002) · [Mac Apple Silicon 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.5/Office-Studio-1.0.5-mac-arm64-Setup.pkg) · [Mac 배포 안내](publication/mac/downloads-ready.md)
 
@@ -8,16 +8,18 @@ Sheet Studio, Slide Studio, Word Studio를 묶어 설치하는 배포 프로젝�
 
 | 구성 | 포함 버전 |
 | --- | --- |
-| Office Studio | 1.0.6 |
-| Sheet Studio | 0.7.36 |
+| Office Studio | 1.0.7 |
+| Sheet Studio | 0.7.37 |
 | Slide Studio | 1.6.21 |
-| Word Studio | 1.4.12 |
+| Word Studio | 1.4.13 |
+
+Word 1.4.13·Sheet 0.7.37의 기존 설치 위치·범위 보존과 중복 설치·이중 실행 수정이 포함됩니다. Slide는 소스 변경 없는 최신 1.6.21을 유지합니다.
 
 ## 설치 파일
 
-결과물은 `release/1.0.6/`에 저장합니다.
+결과물은 `release/1.0.7/`에 저장합니다.
 
-- `Office-Studio-1.0.6-win-x64-Setup.exe`: Intel/AMD Windows 10·11 x64. 한 마법사에서 앱을 선택하고 현재 사용자 계정에 설치합니다. 세 앱 모두 기본 선택입니다. 시작 메뉴와 Windows의 앱별 제거 항목은 기존 설치 방식대로 생성됩니다.
+- `Office-Studio-1.0.7-win-x64-Setup.exe`: Intel/AMD Windows 10·11 x64. 한 마법사에서 앱을 선택하고 현재 사용자 계정에 설치합니다. 세 앱 모두 기본 선택입니다. 시작 메뉴와 Windows의 앱별 제거 항목은 기존 설치 방식대로 생성됩니다.
 
 먼저 문서를 저장하고 세 앱을 종료하세요. 설치 프로그램은 실행 중인 Studio 앱을 확인하고 종료를 안내합니다. Windows에서는 원래의 앱별 설치 파일을 순서대로 실행합니다. 중간에 실패하면 설치가 완료된 앱은 유지하고 오류를 표시하므로, 원인을 해결한 뒤 다시 실행하세요. 통합 설치 파일에는 앱별 제거 프로그램이 포함되며, 별도의 Office Studio 제거 항목은 생성하지 않습니다.
 
@@ -33,7 +35,7 @@ Sheet Studio, Slide Studio, Word Studio를 묶어 설치하는 배포 프로젝�
 
 공통 기준 구현은 `updater/`입니다. 앱별 업데이트 화면과 설치 진행 방식은 각 앱 소스에서 관리하며, 이번 배포에 포함한 정확한 버전·커밋·업데이터 체크섬은 `updater/app-sources.json`에 고정합니다. Mac의 검증 소스는 `mac/updater-sources.json`에 별도로 고정해 Windows 단독 배포와 독립적으로 유지합니다. 공통 파일을 `npm run updater:sync`로 옮길 때는 앱별 변경을 먼저 검토하고 병합한 뒤 각 앱 저장소에 커밋하세요. 기존 패키징 스크립트가 `electron/` 전체를 ASAR에 포함하므로 추가 런타임 의존성은 필요하지 않습니다. 이 프로젝트의 `npm test`로 업데이트 무결성·종료 취소·플랫폼별 동작을 검증합니다.
 
-**Office Studio 1.0.6에는 업데이트 코드가 포함된 세 Windows 앱을 묶습니다.** 업데이트 기능이 없거나 “종료하고 업데이트”에서 앱만 닫히는 이전 버전을 사용한다면 이 통합본을 한 번 직접 설치해야 하며, 이후의 새 버전을 앱의 업데이트 화면에서 받을 수 있습니다. 앱별 버전은 독립적으로 갱신됩니다.
+**Office Studio 1.0.7에는 업데이트 코드가 포함된 세 Windows 앱을 묶습니다.** 업데이트 기능이 없거나 “종료하고 업데이트”에서 앱만 닫히는 이전 버전을 사용한다면 이 통합본을 한 번 직접 설치해야 하며, 이후의 새 버전을 앱의 업데이트 화면에서 받을 수 있습니다. 앱별 버전은 독립적으로 갱신됩니다.
 
 ## 다시 빌드하기
 
@@ -60,6 +62,6 @@ Windows Setup 빌드에는 NSIS와 7-Zip이 필요합니다. 도구가 PATH에 �
 
 이 검증은 실제 시스템 설치·앱 실행 시험과 구분합니다. 빌드 보고서의 `nativeInstall: false`는 해당 통합본의 실제 설치 시험이 아직 남아 있음을 뜻합니다. 격리된 Windows CI에서 `scripts/test-windows.ps1`로 전체 설치·재설치·제거와 문서 보존을 확인한 뒤 Windows 통합본만 공개합니다.
 
-Windows 검증은 `previous-apps-lock.json`에 고정한 이전 앱에서 실제 업데이트 도우미로 새 앱을 설치하고, 새 창 실행·정상 종료·업데이트 모듈 포함 여부도 확인합니다. 결과와 정확한 설치 파일 SHA-256은 Actions 검증 기록으로 보관합니다.
+Windows 검증은 `previous-apps-lock.json`에 고정한 직전 정식 앱에서 실제 업데이트 도우미로 변경된 앱을 설치하고, 새 창 실행·정상 종료·업데이트 모듈 포함 여부도 확인합니다. 버전이 같은 앱은 통합 설치·재설치·제거 검사에 포함하고 업데이트 대상으로 표시하지 않습니다. 결과와 정확한 설치 파일 SHA-256은 Actions 검증 기록으로 보관합니다.
 
 공개 다운로드는 [Office Studio 릴리스](https://github.com/beaur8-prog/office-studio/releases)에서 제공합니다. 리토스 배포 문서 본문은 `publication/downloads-ready.md`에 보관하며 `node scripts/build-release-note.cjs`로 버전·파일 크기·체크섬을 반영합니다.

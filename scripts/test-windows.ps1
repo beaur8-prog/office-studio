@@ -37,7 +37,10 @@ function Assert-Installed {
     $executable = Join-Path $directory "$($app.product).exe"
     if (-not (Test-Path $executable)) { throw "Missing executable: $executable" }
     if ((Get-Item $executable).VersionInfo.ProductVersion -ne $app.version) { throw "Executable version mismatch: $executable" }
-    if (-not (Test-Path (Join-Path $directory 'resources/app.asar'))) { throw 'Missing app.asar' }
+    $asar = Join-Path $directory 'resources/app.asar'
+    if (-not (Test-Path $asar)) { throw 'Missing app.asar' }
+    & node (Join-Path $root 'scripts/verify-installed-updater.cjs') $asar $app.id $app.version
+    if ($LASTEXITCODE -ne 0) { throw 'Installed app updater differs from the pinned source.' }
     Assert-Preserved $app.product
   }
 }
@@ -85,10 +88,12 @@ try {
   & 7z x -y "-o$extracted" $setup | Out-Null
   if ($LASTEXITCODE -ne 0) { throw 'Payload extraction failed.' }
   $report.upgrades = @()
+  $report.unchangedApps = @()
   foreach ($app in $lock.apps) {
+    $old = @($previous.apps | Where-Object id -eq $app.id)[0]
+    if ($old.version -eq $app.version) { $report.unchangedApps += $app.id; continue }
     $entry = @(Entries $app.product)[0]
     $installDirectory = Install-Directory $entry
-    $old = @($previous.apps | Where-Object id -eq $app.id)[0]
     $directory = Join-Path $env:RUNNER_TEMP "office-studio-사용자 O'Brien 업데이트-$($app.id)"
     New-Item -ItemType Directory $directory -Force | Out-Null
     $oldSetup = Join-Path $directory 'previous.exe'

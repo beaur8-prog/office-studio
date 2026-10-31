@@ -4,7 +4,7 @@ const path=require('node:path');
 const {root,readLock}=require('./common.cjs');
 async function main(){
   const lock=await readLock();
-  const word=lock.apps.find(app=>app.id==='word');
+  const word=lock.apps.find(app=>app.id==='word'),sheet=lock.apps.find(app=>app.id==='sheet');
   const build=JSON.parse(await fs.readFile(path.join(root,'release',lock.version,'BUILD-win-x64.json'),'utf8'));
   const base=`https://github.com/beaur8-prog/office-studio/releases/download/v${lock.version}`;
   const date=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric'}).format(new Date());
@@ -29,7 +29,7 @@ async function main(){
 
 Windows에서 표, 발표 자료, 문서를 만드는 세 가지 독립 앱을 한 번에 설치합니다. 일상적인 오피스 작업을 위한 대안으로, **Sheet Studio·Slide Studio·Word Studio**를 함께 제공합니다. 설치 후에는 시작 메뉴에서 필요한 앱을 각각 실행합니다.
 
-이번 Windows 배포는 **Word ${word.version}의 설치 언어 자동 선택 개선**을 포함합니다. Sheet Studio와 Slide Studio는 이전 통합본의 버전을 유지합니다. 복잡한 문서는 변환·저장 후 원본과 비교해 확인하세요.
+이번 Windows 배포는 **Word ${word.version}·Sheet ${sheet.version}의 중복 설치·이중 실행 및 설치 언어 선택 개선**을 포함합니다. 기존 설치 위치를 유지하고 업데이트 후 앱을 한 번만 실행하도록 보완했습니다. Slide Studio는 최신 1.6.21을 함께 제공합니다. 복잡한 문서는 변환·저장 후 원본과 비교해 확인하세요.
 
 ## 1. Windows 통합 다운로드
 
@@ -54,7 +54,7 @@ ${rows}
 3. 설치 마법사에서 필요한 앱을 선택합니다. **기본값은 세 앱 모두 설치**이며, 필요한 앱만 선택할 수도 있습니다.
 4. 설치가 끝나면 시작 메뉴에서 **Sheet Studio**, **Slide Studio**, **Word Studio**를 실행합니다. 바로가기와 제거 항목도 앱별로 만들어집니다.
 
-현재 Windows 사용자 계정에 설치하며 관리자 권한을 요구하지 않습니다. 통합 설치 파일은 각 앱의 설치 프로그램을 순서대로 실행합니다. 기존 앱이 실행 중이면 저장·종료 후 다시 진행하도록 안내합니다.
+새 설치는 현재 Windows 사용자 계정에 진행합니다. 기존 설치를 갱신하면 해당 설치 위치와 범위를 유지하며, 전체 사용자 설치를 갱신할 때는 관리자 권한이 필요할 수 있습니다. 통합 설치 파일은 각 앱의 설치 프로그램을 순서대로 실행합니다. 기존 앱이 실행 중이면 저장·종료 후 다시 진행하도록 안내합니다.
 
 설치 중 한 앱에서 오류가 나면 앞서 설치를 마친 앱은 유지됩니다. 세 앱을 종료하고 디스크 여유 공간을 확인한 뒤 설치 파일을 다시 실행하세요.
 
@@ -122,7 +122,7 @@ ${build.sha256}
 
 ## 8. 이번 배포의 확인 결과
 
-세 앱 설치 파일과 통합 설치 파일의 SHA-256을 확인했습니다. 격리된 Windows 환경에서 **통합 설치·재설치·앱별 제거·문서 및 사용자 데이터 보존**을 검사하고, **이전 앱 버전에서 업데이트 도우미로 새 버전 설치·실행·정상 종료**를 확인했습니다. 자동 업데이트의 다운로드 검증과 문서 닫기 취소 처리도 시험했습니다. 한글·공백·작은따옴표가 포함된 업데이트 경로도 확인했습니다.
+세 앱 설치 파일과 통합 설치 파일의 SHA-256을 확인했습니다. 격리된 Windows 환경에서 **통합 설치·재설치·앱별 제거·문서 및 사용자 데이터 보존**을 검사하고, **Word·Sheet의 직전 정식 버전에서 업데이트 도우미로 새 버전 설치·실행·정상 종료**를 확인했습니다. 자동 업데이트의 다운로드 검증과 문서 닫기 취소 처리도 시험했습니다. 한글·공백·작은따옴표가 포함된 업데이트 경로도 확인했습니다.
 
 [Windows 배포 검증 기록](${build.nativeCI?.url || 'https://github.com/beaur8-prog/office-studio/actions/workflows/windows-install.yml'})
 

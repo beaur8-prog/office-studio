@@ -36,7 +36,12 @@ async function main(){
     const response=await fetch('https://api.github.com/repos/beaur8-prog/'+app.id+'-studio/releases/latest',{headers:{Accept:'application/vnd.github+json','User-Agent':'Office-Studio-Release-Verification'},signal:AbortSignal.timeout(20000)});
     assert.equal(response.status,200);
     const release=await response.json();
-    const update=selectRelease(release,{id:app.id,currentVersion:previous.apps.find(old=>old.id===app.id).version,platform:'win32',arch:'x64'});
+    const oldVersion=previous.apps.find(old=>old.id===app.id).version;
+    const options={id:app.id,currentVersion:oldVersion,platform:'win32',arch:'x64'};
+    const offered=selectRelease(release,options);
+    if(oldVersion===app.version)assert.equal(offered,null,'Unchanged apps must not prompt for an update');
+    else assert.ok(offered,'Existing users must be offered the new version');
+    const update=offered||selectRelease(release,{...options,currentVersion:'0.0.0'});
     assert.equal(update.version,app.version);assert.equal(update.sha256,app.assets['win-x64'].sha256);assert.equal(update.bytes,app.assets['win-x64'].bytes);
     updates.push({id:app.id,version:update.version,sha256:update.sha256});
   }
