@@ -1,18 +1,20 @@
 {
   "product": "Office Studio",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "title": "오피스 스튜디오 Mac 다운로드",
   "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ef9c9402c857485a69bb9e8e0c441f57e1025bc8dd9d002",
-  "contentSHA256": "a88bc039e3684022e78c0d5f6b895b1e076cb49c66bedcd49af84d72947ba23d",
+  "contentSHA256": "6ef9b07dcacaf6758d66163bc8d5d74ee1b744b9afee502501e67dd0e8d448e6",
   "platform": "mac-arm64",
-  "installer": "Office-Studio-1.0.4-mac-arm64-Setup.pkg",
-  "installerSHA256": "9e61114d2867a681fd6acdc2689c60a921b1da6da0c0715aaf9b120d9908e400",
-  "downloadURL": "https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.4/Office-Studio-1.0.4-mac-arm64-Setup.pkg",
-  "releaseURL": "https://github.com/beaur8-prog/office-studio/releases/tag/mac-v1.0.4",
+  "installer": "Office-Studio-1.0.5-mac-arm64-Setup.pkg",
+  "installerSHA256": "69d4fbfc897c5a99dc15153f9298871888f0028f971dc9725979c89c9f2c0adb",
+  "downloadURL": "https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.5/Office-Studio-1.0.5-mac-arm64-Setup.pkg",
+  "releaseURL": "https://github.com/beaur8-prog/office-studio/releases/tag/mac-v1.0.5",
   "shareURLPreserved": true,
   "privateVisitorTrackingPreserved": true,
-  "verifiedAt": "2026-10-30T12:18:48.744Z",
+  "verifiedAt": "2026-10-31T14:59:52.068Z",
   "verifiedLinks": 9,
   "verifiedMacUpdateFeeds": 3,
-  "windowsLatestPreserved": true
+  "windowsLatestPreserved": true,
+  "updateGuidanceFirst": true,
+  "securityWarningNearTop": true
 }
