@@ -49,4 +49,5 @@ try {
 } finally {
   Remove-Item -LiteralPath $JobFile -Force -ErrorAction SilentlyContinue
   Remove-Item -LiteralPath $readyFile -Force -ErrorAction SilentlyContinue
+  Remove-Item -LiteralPath "$JobFile.ps1" -Force -ErrorAction SilentlyContinue
 }

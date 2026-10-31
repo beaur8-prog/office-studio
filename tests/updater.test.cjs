@@ -32,16 +32,17 @@ async function fixture(t, { platform = 'win32', answer = 1, fetchImpl, helperMod
     dialog: { showMessageBox: async (...args) => { dialogs.push(args.at(-1)); return { response: answer }; } },
     shell: { showItemInFolder: file => opened.push(file), openExternal: async url => opened.push(url) },
     fetchImpl: fetchImpl || (async url => { requests.push(url); const item = release('word', platform, platform === 'darwin' ? 'arm64' : 'x64'); return url.includes('api.github.com') ? Response.json(platform === 'darwin' ? [item] : item) : new Response(bytes); }),
-    helperReadyTimeout: 150,
+    helperReadyTimeout: helperMode === 'timeout' ? 150 : 5000,
     launch: (...args) => {
       launched.push(args);
       const helper = new EventEmitter(); helper.unref = () => {};
-      const command = Buffer.from(args[1].at(-1), 'base64').toString('utf16le');
+      const command = Buffer.from(/-EncodedCommand ([A-Za-z0-9+/=]+)$/.exec(args[1].at(-1))[1], 'base64').toString('utf16le');
       const jobFile = /-JobFile '([^']*(?:''[^']*)*)'$/.exec(command)[1].replaceAll("''", "'");
       setImmediate(async () => {
         if (helperMode === 'error') { helper.emit('error', new Error('Helper launch blocked')); return; }
         if (helperMode === 'exit') { helper.emit('exit', 9); return; }
         if (helperMode === 'timeout') return;
+        if (helperMode === 'wrapperExit') helper.emit('exit', 0);
         const job = JSON.parse(await fs.readFile(jobFile, 'utf8'));
         await fs.writeFile(jobFile + '.ready', '\uFEFF' + JSON.stringify({ schema: 1, id: job.id, parentPid: job.parentPid }));
       });
@@ -128,10 +129,14 @@ test('Windows confirms helper startup before requesting a normal editor quit', a
   assert.equal(f.launched.length,1,'the waiting helper must be ready before the editor quits');
   f.app.emit('quit');
   assert.equal(f.launched.length,1,'quit must not launch a second helper');
-  const command = Buffer.from(f.launched[0][1].at(-1),'base64').toString('utf16le');
+  const command = await fs.readFile(path.join(f.directory, 'updates', sha256, (await fs.readdir(path.join(f.directory,'updates',sha256))).find(name => name.endsWith('.ps1'))), 'utf8');
   assert.ok(command.includes('WaitForExit(250)'));
   assert.ok(command.includes('Get-FileHash'));
   assert.ok(!command.includes('Stop-Process') && !command.includes('taskkill') && !command.includes('ExecutionPolicy'));
+  assert.equal(f.launched[0][2].detached, false);
+  assert.equal(f.launched[0][2].windowsHide, true);
+  assert.match(f.launched[0][1].at(-1), /^start "" \/b /);
+  assert(f.launched[0][1].at(-1).length < 8191);
 });
 test('canceling document close cancels installation even if the user quits later', async t => {
   const f = await fixture(t,{ answer:0 });
@@ -141,6 +146,12 @@ test('canceling document close cancels installation even if the user quits later
   assert.equal(f.launched.length,1);
   assert.deepEqual((await fs.readdir(path.join(f.directory,'updates',sha256))).filter(name => name.endsWith('.json') || name.endsWith('.ready')), []);
   assert.equal(f.updater.getState().phase,'ready');
+});
+test('a successful short-lived console wrapper still waits for the helper acknowledgement', async t => {
+  const f = await fixture(t, { answer: 0, helperMode: 'wrapperExit' });
+  await f.updater.check(true);
+  assert.equal(f.quitCalls(), 1); assert.equal(f.launched.length, 1);
+  assert.equal(f.opened.length, 0);
 });
 test('deferring an update never quits the app or launches an installer', async t => {
   const f = await fixture(t,{ answer:1 });

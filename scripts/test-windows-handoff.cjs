@@ -53,22 +53,26 @@ async function exists(file) { return fs.access(file).then(() => true, () => fals
         shell:{showItemInFolder:()=>{},openExternal:async()=>{}},
         fetchImpl:async url=>url.includes('api.github.com')?Response.json(item):new Response(bytes),
         launch:(exe,args,options)=>{
-          const command=Buffer.from(args.at(-1),'base64').toString('utf16le');
+          const command=Buffer.from(/-EncodedCommand ([A-Za-z0-9+/=]+)$/.exec(args.at(-1))[1],'base64').toString('utf16le');
           write('launch.json',{exe,commandLength:command.length,jobFile:command.slice(command.lastIndexOf('-JobFile '))});
           fs.writeFileSync(path.join(folder,'worker-command.txt'),command);
+          if(mode==='tampered'){
+            const jobFile=/-JobFile '([^']*(?:''[^']*)*)'$/.exec(command)[1].replaceAll("''", "'");
+            fs.appendFileSync(jobFile+'.ps1','\\n# modified after verification');
+          }
           const child=mode==='blocked'?spawn(process.env.ComSpec,['/d','/c','exit','9'],options):spawn(exe,args,options);
           child.on('exit',code=>write('worker-exit.json',{code}));return child;
         },
       });
       if(mode==='cancel') win.on('close', event=>{if(!canceled){event.preventDefault();canceled=true;void updater.cancelInstall().then(()=>{write('cancelled.json',{editorStillOpen:!win.isDestroyed()});setTimeout(()=>{win.destroy();app.quit();},1000);});}});
       await updater.check(true);
-      if(mode==='blocked'){write('blocked-complete.json',{phase:updater.getState().phase});win.destroy();app.quit();}
+      if(mode==='blocked'||mode==='tampered'){write('blocked-complete.json',{phase:updater.getState().phase});win.destroy();app.quit();}
     }).catch(error=>{write('fixture-error.json',{error:String(error.stack)});app.exit(1);});
   `;
   await fs.writeFile(path.join(appDirectory, 'main.cjs'), nativeMain);
   const results = [];
   try {
-    for (const [id, mode] of [['sheet', 'install'], ['slide', 'install'], ['word', 'install'], ['word', 'cancel'], ['word', 'blocked']]) {
+    for (const [id, mode] of [['sheet', 'install'], ['slide', 'install'], ['word', 'install'], ['word', 'cancel'], ['word', 'blocked'], ['word', 'tampered']]) {
       const name = id + '-' + mode, folder = path.join(directory, name), product = { sheet: 'Sheet Studio', slide: 'Slide Studio', word: 'Word Studio' }[id];
       await fs.mkdir(folder);
       for (const file of ['old.exe', 'payload.exe', 'installer.exe']) await fs.copyFile(path.join(directory, file), path.join(folder, file));

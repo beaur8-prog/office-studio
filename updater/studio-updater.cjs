@@ -142,6 +142,7 @@ function createStudioUpdater({ app, dialog, shell, Notification, id, getWindow, 
     if (job) {
       await fs.rm(job, { force: true }).catch(() => {});
       await fs.rm(job + '.ready', { force: true }).catch(() => {});
+      await fs.rm(job + '.ps1', { force: true }).catch(() => {});
     }
     if (ready) update({ phase: 'ready' });
   }
@@ -263,15 +264,26 @@ function createStudioUpdater({ app, dialog, shell, Notification, id, getWindow, 
     const log = path.join(cache, 'last-install.log');
     const startupLog = path.join(cache, 'helper-startup.log');
     await fs.writeFile(log, 'Preparing ' + id + ' update helper at ' + new Date().toISOString() + '\n', { mode: 0o600 });
-    let descriptor, helper, failure, exited = false;
+    let descriptor, helper, failure;
     try {
       const script = fsSync.readFileSync(path.join(__dirname, 'studio-update-windows.ps1'), 'utf8');
-      const encoded = powershellCommand(script, job);
+      await fs.writeFile(job + '.ps1', script, { flag: 'wx', mode: 0o600 });
+      const digest = createHash('sha256').update(script).digest('hex');
+      // Keep the cmd.exe command short and pass all user paths as encoded data.
+      // Authenticate the extracted helper before evaluating its script block.
+      const bootstrap = "param($JobFile)\n$bytes = [IO.File]::ReadAllBytes($JobFile + '.ps1')\n" +
+        "if ([BitConverter]::ToString([Security.Cryptography.SHA256]::Create().ComputeHash($bytes)).Replace('-','').ToLowerInvariant() -ne '" + digest + "') { throw 'Update helper checksum mismatch.' }\n" +
+        "& ([ScriptBlock]::Create([Text.Encoding]::UTF8.GetString($bytes))) -JobFile $JobFile";
+      const encoded = powershellCommand(bootstrap, job);
       descriptor = fsSync.openSync(startupLog, 'w', 0o600);
-      helper = launch(path.join(process.env.SystemRoot || 'C:\\Windows', 'System32/WindowsPowerShell/v1.0/powershell.exe'),
-        ['-NoLogo', '-NoProfile', '-NonInteractive', '-EncodedCommand', encoded], { detached: true, stdio: ['ignore', descriptor, descriptor], windowsHide: true });
+      // A detached PowerShell console can exit before executing any script.
+      // Give cmd.exe a hidden console and let its PowerShell child inherit it;
+      // start /b allows that child to outlive both the wrapper and the editor.
+      const command = 'start "" /b "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -NoLogo -NoProfile -NonInteractive -EncodedCommand ' + encoded;
+      helper = launch(path.join(process.env.SystemRoot || 'C:\\Windows', 'System32/cmd.exe'),
+        ['/d', '/s', '/c', command], { detached: false, stdio: ['ignore', descriptor, descriptor], windowsHide: true, windowsVerbatimArguments: true });
       helper.on('error', error => { failure = error; });
-      helper.on('exit', code => { exited = true; failure ||= new Error('업데이트 설치 도우미가 준비되기 전에 종료되었습니다. 종료 코드: ' + code); });
+      helper.on('exit', code => { if (code !== 0) failure ||= new Error('업데이트 설치 도우미를 실행하지 못했습니다. 종료 코드: ' + code); });
       helper.unref();
     } catch (error) {
       await fs.appendFile(log, 'Helper startup failed: ' + error.message + '\n');
@@ -280,7 +292,7 @@ function createStudioUpdater({ app, dialog, shell, Notification, id, getWindow, 
     const deadline = Date.now() + helperReadyTimeout;
     while (Date.now() < deadline) {
       if (pendingJob !== job || disposed) return false;
-      if (failure || exited) break;
+      if (failure) break;
       try {
         const acknowledgement = JSON.parse((await fs.readFile(job + '.ready', 'utf8')).replace(/^\uFEFF/, ''));
         if (acknowledgement.schema !== 1 || acknowledgement.parentPid !== pid || acknowledgement.id !== id) throw new Error('업데이트 설치 도우미 응답이 올바르지 않습니다.');
