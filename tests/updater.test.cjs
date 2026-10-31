@@ -131,7 +131,6 @@ test('Windows confirms helper startup before requesting a normal editor quit', a
   assert.equal(f.launched.length,1,'quit must not launch a second helper');
   const command = await fs.readFile(path.join(f.directory, 'updates', sha256, (await fs.readdir(path.join(f.directory,'updates',sha256))).find(name => name.endsWith('.ps1'))), 'utf8');
   assert.ok(command.includes('WaitForExit(250)'));
-  assert.ok(command.includes('Get-FileHash'));
   assert.ok(!command.includes('Stop-Process') && !command.includes('taskkill') && !command.includes('ExecutionPolicy'));
   assert.equal(f.launched[0][2].detached, false);
   assert.equal(f.launched[0][2].windowsHide, true);

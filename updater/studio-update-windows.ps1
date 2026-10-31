@@ -30,7 +30,13 @@ try {
   }
   if (@(Get-Process -Name ($names[$job.id]) -ErrorAction SilentlyContinue).Count -ne 0) { throw 'Another editor instance is still running. Close it and try the update again.' }
   if (-not (Test-Path -LiteralPath $JobFile)) { return }
-  if ((Get-Item -LiteralPath $installer).Length -ne $job.bytes -or (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant() -ne $job.sha256) { throw 'Installer checksum mismatch.' }
+  # Use .NET directly: GUI-launched Windows PowerShell may inherit a module
+  # search path that does not expose the Get-FileHash script cmdlet.
+  $stream = [IO.File]::OpenRead($installer)
+  $hasher = [Security.Cryptography.SHA256]::Create()
+  try { $digest = [BitConverter]::ToString($hasher.ComputeHash($stream)).Replace('-','').ToLowerInvariant() }
+  finally { $stream.Dispose(); $hasher.Dispose() }
+  if ((Get-Item -LiteralPath $installer).Length -ne $job.bytes -or $digest -ne $job.sha256) { throw 'Installer checksum mismatch.' }
   $arguments = if ($job.id -eq 'slide') { @('/S') } else { @('/S','/currentuser') }
   Add-Content -LiteralPath $job.log -Encoding UTF8 -Value 'Starting verified installer.'
   $process = Start-Process -FilePath $installer -ArgumentList $arguments -PassThru
