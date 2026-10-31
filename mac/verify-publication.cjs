@@ -11,7 +11,7 @@ async function main(){
   const lock=await readLock(),build=JSON.parse(await fs.readFile(path.join(root,'release/mac',lock.version,'BUILD-mac-arm64.json'),'utf8'));
   const data=await getJSON(published.url+'/data');
   assert.equal(data.content,expected);assert.equal(data.editingEnabled,false);assert.equal(data.expiresAt,null);
-  assert.ok(expected.startsWith('> **Mac 설치 안내'));assert.ok(expected.includes('그래도 열기'));assert.ok(expected.includes('Apple Silicon'));
+  assert.ok(expected.startsWith('> **Mac 업데이트 안내'));assert.ok(expected.includes('> **Mac 설치 안내'));assert.ok(expected.includes('그래도 열기'));assert.ok(expected.includes('Apple Silicon'));
   assert.doesNotMatch(expected,/\.exe(?:\)|`)|\.deb(?:\)|`)|Windows 설치/);
   const urls=[...new Set([...expected.matchAll(/\]\((https:\/\/[^)]+)\)/g)].map(m=>m[1]))],links=[];
   for(let i=0;i<urls.length;i+=4)links.push(...await Promise.all(urls.slice(i,i+4).map(async url=>{const r=await fetch(url,{method:'HEAD',signal:AbortSignal.timeout(25000)});assert.equal(r.status,200,url);if(url.endsWith(build.filename))assert.equal(Number(r.headers.get('content-length')),build.bytes);return {url,status:r.status};})));

@@ -1,6 +1,6 @@
 # Office Studio · Mac Apple Silicon
 
-[리토스 Mac 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/7ef9c9402c857485a69bb9e8e0c441f57e1025bc8dd9d002) · [Mac 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/mac-v1.0.4)
+[리토스 Mac 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/7ef9c9402c857485a69bb9e8e0c441f57e1025bc8dd9d002) · [Mac 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/mac-v1.0.5)
 
 Windows 배포와 별도로 관리하는 Apple Silicon(M1 이상) · macOS 12 이상용 통합 PKG입니다. `mac/suite-lock.json`은 Mac 입력만 고정하고, 기존 루트 `suite-lock.json`과 Windows 릴리스는 유지합니다.
 

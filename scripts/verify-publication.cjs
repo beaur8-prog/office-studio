@@ -15,7 +15,9 @@ async function main(){
   assert.equal(dataResponse.status,200);
   const data=await dataResponse.json();
   assert.equal(data.content,expected);assert.equal(data.editingEnabled,false);assert.equal(data.expiresAt,null);
-  assert.ok(data.content.startsWith('> **Windows 설치 안내'));
+  assert.ok(data.content.startsWith('> **자동 업데이트 안내'));
+  assert.ok(data.content.indexOf('> **Windows 설치 안내') > 0);
+  assert.ok(data.content.includes('한 번 직접 설치'));
   assert.doesNotMatch(data.content, /\b(?:Mac|macOS|Linux|Apple Silicon)\b|\.deb\)|-mac(?:OS)?-/i, 'The Office Studio page must describe Windows distribution only');
   const urls=[...new Set([...expected.matchAll(/\]\((https:\/\/[^)]+)\)/g)].map(match=>match[1]))];
   const checks=[];

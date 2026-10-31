@@ -108,7 +108,7 @@ try {
     $parent.WaitForExit()
     @{ schema=1; id=$app.id; parentPid=$parent.Id; installer=$newSetup; bytes=$app.assets.'win-x64'.bytes; sha256=$app.assets.'win-x64'.sha256; version=$app.version; executable=$executable; log=$log } | ConvertTo-Json | Set-Content -LiteralPath $jobFile
     & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $root 'updater/studio-update-windows.ps1') -JobFile $jobFile
-    if ($LASTEXITCODE -ne 0 -or (Get-Content $log -Raw) -notmatch '^Installed ') { throw "Real update failed: $($app.id)" }
+    if ($LASTEXITCODE -ne 0 -or (Get-Content $log -Raw) -notmatch '(?m)^Installed ') { throw "Real update failed: $($app.id)" }
     $deadline = (Get-Date).AddSeconds(45)
     do {
       Start-Sleep -Milliseconds 500

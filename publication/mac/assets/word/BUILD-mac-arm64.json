@@ -1,24 +1,29 @@
 {
   "product": "Word Studio",
-  "version": "1.4.10",
-  "sourceCommit": "656fcc018eaed6da7b6788e42089d59f922a3d9c",
+  "version": "1.4.11",
+  "sourceCommit": "18ae6fad1ebe4d6a54de9f897ff0640cff58a95b",
   "target": "mac-arm64",
-  "filename": "Word-Studio-1.4.10-mac-arm64.zip",
-  "bytes": 155049185,
-  "sha256": "abd55ac95bf6aa01afdf5ae517f98ff7b93c88c1fbd87edbeb1661cb9860b920",
-  "checks": {
-    "zipCRC32": true,
-    "sourceBuild": true,
-    "codeSignature": "ad-hoc",
+  "filename": "Word-Studio-1.4.11-mac-arm64.zip",
+  "bytes": 155060444,
+  "sha256": "ea7d9bed85c90750897a0483ea02d4fc33e665398d640c7a2eb7fab4258b8c77",
+  "signing": "ad-hoc; no Apple Developer ID or notarization",
+  "nativeVerification": {
+    "id": "word",
+    "version": "1.4.11",
+    "minimumMacOS": "12.0",
+    "architecture": "arm64",
+    "sourceCommit": "18ae6fad1ebe4d6a54de9f897ff0640cff58a95b",
     "nativeStartup": true,
+    "packaged": true,
     "profileIsolated": true,
-    "rendererMatchesSource": true,
-    "electronMatchesSource": true,
     "updateMenu": true,
     "disableUpdatesPersists": true,
+    "rendererFiles": 1003,
+    "electronFiles": 28,
+    "rendererMatchesSource": true,
+    "electronMatchesSource": true,
+    "updaterSHA256": "c7b6a15f5713468cf07d16c9a28be6f346e7ba94b4239830451317aaf0b2ce91",
     "normalClose": true,
-    "bundleVersion": true,
-    "architecture": "arm64",
-    "strictCodeSignature": true
+    "profileSentinelPreserved": true
   }
 }

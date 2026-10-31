@@ -211,12 +211,18 @@ test('PowerShell job paths are data, including apostrophes and command character
   assert.ok(command.endsWith("-JobFile 'C:\\O''Brien;$x\\job.json'"));
   assert.throws(() => powershellCommand('x','bad\npath'));
 });
-test('each local app packages the exact shared updater implementation', async t => {
+test('each local app packages its pinned updater implementation', async t => {
   const root = path.resolve(__dirname,'..');
   const available = await Promise.all(['sheet','slide','word'].map(id => fs.access(path.join(root,'..',id+'-studio/electron')).then(() => true, () => false)));
   if (!available.every(Boolean)) return t.skip('App source checkouts are required for the workspace integration check.');
-  for (const file of ['studio-updater.cjs','studio-update-windows.ps1']) {
-    const canonical = await fs.readFile(path.join(root,'updater',file),'utf8');
-    for (const id of ['sheet','slide','word']) assert.equal(await fs.readFile(path.join(root,'..',id+'-studio/electron',file),'utf8'),canonical);
+  const pins = JSON.parse(await fs.readFile(path.join(root,'updater/app-sources.json'),'utf8'));
+  const lock = JSON.parse(await fs.readFile(path.join(root,'suite-lock.json'),'utf8'));
+  for (const app of lock.apps) {
+    const pin = pins.apps[app.id];
+    assert.equal(pin.version, app.version); assert.equal(pin.sourceCommit, app.sourceCommit);
+    for (const [file, digest] of Object.entries(pin.files)) {
+      const source = await fs.readFile(path.join(root,'..',app.id+'-studio/electron',file),'utf8');
+      assert.equal(createHash('sha256').update(source.replaceAll('\r\n','\n')).digest('hex'),digest,app.id+': '+file);
+    }
   }
 });

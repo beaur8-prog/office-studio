@@ -16,13 +16,15 @@ async function main(){
   const destination=path.join(root,'test-results/mac');await fs.mkdir(destination,{recursive:true});
   try{
     const expanded=path.join(work,'expanded');run('/usr/sbin/pkgutil',['--expand-full',setup,expanded]);
-    const canonical=await fs.readFile(path.join(root,'updater/studio-updater.cjs'));
+    const sources=JSON.parse(await fs.readFile(path.join(root,'updater/app-sources.json'),'utf8'));
     const asar=require(require.resolve('@electron/asar',{paths:[path.join(root,'../slide-studio')]}));
     for(const metadata of lock.apps){
       const bundle=path.join(expanded,metadata.id+'.pkg/Payload/Applications',metadata.product+'.app');
       const info=checkBundle(bundle,metadata),archive=path.join(bundle,'Contents/Resources/app.asar');
       const actual=asar.extractFile(archive,'electron/studio-updater.cjs');
-      assert.deepEqual(actual,canonical,'Packaged updater must match canonical source');
+      const pinned=sources.apps[metadata.id];
+      assert.equal(pinned.version,metadata.version);assert.equal(pinned.sourceCommit,metadata.sourceCommit);
+      for(const [name,digest] of Object.entries(pinned.files))assert.equal(createHash('sha256').update(asar.extractFile(archive,'electron/'+name).toString('utf8').replaceAll('\r\n','\n')).digest('hex'),digest,'Packaged updater differs from pinned app source: '+name);
       assert.equal(JSON.parse(asar.extractFile(archive,'package.json')).version,metadata.version);
       assert.equal(await hashFile(archive),build.apps.find(a=>a.id===metadata.id).asarSHA256);
       const sourceRoot=process.env['OFFICE_STUDIO_'+metadata.id.toUpperCase()+'_SOURCE']||path.join(root,'..',metadata.id+'-studio');

@@ -1,24 +1,29 @@
 {
   "product": "Sheet Studio",
-  "version": "0.7.29",
-  "sourceCommit": "180522ee191575e1213e9f8abeb8c38ee362da9c",
+  "version": "0.7.36",
+  "sourceCommit": "0aba3913ff5f7148351ee2963d49e57159906d1a",
   "target": "mac-arm64",
-  "filename": "Sheet-Studio-0.7.29-macOS-arm64.zip",
-  "bytes": 120044885,
-  "sha256": "b26f6bb06a2e32730246eb3c234d86d13321485bbf4d2626c9651ca45ca36b79",
-  "checks": {
-    "zipCRC32": true,
-    "sourceBuild": true,
-    "codeSignature": "ad-hoc",
+  "filename": "Sheet-Studio-0.7.36-macOS-arm64.zip",
+  "bytes": 120089677,
+  "sha256": "c51a820794228f5a91a1938487a4c2dbfe9de9fefa95f610ae3b923a49bed5a9",
+  "signing": "ad-hoc; no Apple Developer ID or notarization",
+  "nativeVerification": {
+    "id": "sheet",
+    "version": "0.7.36",
+    "minimumMacOS": "12.0",
+    "architecture": "arm64",
+    "sourceCommit": "0aba3913ff5f7148351ee2963d49e57159906d1a",
     "nativeStartup": true,
+    "packaged": true,
     "profileIsolated": true,
-    "rendererMatchesSource": true,
-    "electronMatchesSource": true,
     "updateMenu": true,
     "disableUpdatesPersists": true,
+    "rendererFiles": 7,
+    "electronFiles": 11,
+    "rendererMatchesSource": true,
+    "electronMatchesSource": true,
+    "updaterSHA256": "0a4c2bf8a76eedda7e4a7e803e8efd611a95976de4c2c8887bab9159521205cf",
     "normalClose": true,
-    "bundleVersion": true,
-    "architecture": "arm64",
-    "strictCodeSignature": true
+    "profileSentinelPreserved": true
   }
 }
