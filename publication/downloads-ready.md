@@ -1,32 +1,32 @@
-> **자동 업데이트 안내 — 기존 사용자는 이번 버전을 한 번 직접 설치해 주세요**
+> **자동 업데이트 안내 — Word 1.4.11에서 1.4.12로 업데이트할 수 있습니다**
 >
-> 기존 버전에는 **‘종료하고 업데이트’를 눌러도 앱만 닫히고 설치가 시작되지 않는 문제**가 있었습니다. 버전이 1.0으로 표시되는 경우를 포함해, 기존 사용자는 문서를 저장하고 세 앱을 모두 종료한 뒤 아래의 최신 통합 설치 파일을 내려받아 한 번 직접 설치해 주세요.
+> Word 1.4.11 사용자는 **도움말 → 업데이트 확인…** 또는 앱의 업데이트 화면에서 1.4.12를 내려받은 뒤 **‘종료하고 업데이트’**를 선택하세요. 문서를 저장하고 설치 화면의 안내에 따라 진행하면 새 버전으로 다시 실행됩니다. 이번 Word 배포는 설치 때 언어 선택창이 반복해서 나타나지 않도록 개선했습니다.
 >
-> 이번 버전부터는 앱별로 새 버전을 확인·다운로드하고 **‘종료하고 업데이트’**에서 설치를 진행할 수 있습니다. 설치 도우미가 시작된 것을 확인한 뒤 앱을 종료하며, 표시되는 설치 화면의 안내를 따라 완료하세요. 자동 확인·다운로드는 각 앱의 도움말에서 끌 수 있고, 새 버전 설치도 나중으로 미룰 수 있습니다.
+> 업데이트 기능이 없거나 **버튼을 눌러도 앱만 닫히는 이전 버전**은 문서를 저장하고 세 앱을 모두 종료한 뒤 아래의 통합 설치 파일을 한 번 직접 설치해 주세요. 버전이 1.0으로 표시되는 앱도 여기에 해당합니다. 자동 확인·다운로드는 앱별로 끌 수 있으며, 설치를 나중으로 미룰 수도 있습니다.
 
 > **Windows 설치 안내 — ‘실행 안 함’ 버튼만 보일 때**
 >
 > **‘Windows의 PC 보호’ 화면에서 ‘실행 안 함’만 보이면, 창 안의 ‘추가 정보’를 누른 다음 새로 나타나는 ‘실행’을 선택하세요.** 영문 Windows에서는 **More info → Run anyway**입니다.
 >
-> 아래 GitHub 배포 주소에서 받은 **Office-Studio-1.0.5-win-x64-Setup.exe**인지 먼저 확인하세요. 현재 설치 파일은 배포용 코드 서명이 없어 경고가 나타날 수 있습니다. 브라우저의 ‘일반적으로 다운로드되지 않습니다’ 경고는 출처·파일명·아래 SHA-256을 확인한 뒤 해당 파일의 **유지/계속 다운로드**를 선택합니다.
+> 아래 GitHub 배포 주소에서 받은 **Office-Studio-1.0.6-win-x64-Setup.exe**인지 먼저 확인하세요. 현재 설치 파일은 배포용 코드 서명이 없어 경고가 나타날 수 있습니다. 브라우저의 ‘일반적으로 다운로드되지 않습니다’ 경고는 출처·파일명·아래 SHA-256을 확인한 뒤 해당 파일의 **유지/계속 다운로드**를 선택합니다.
 >
 > **‘실행’ 버튼이 없거나 회사·기관 정책으로 차단되면 관리자에게 설치 허용 여부를 확인하세요. 악성코드 탐지 경고가 나타나면 실행을 중단하세요.** [Microsoft의 SmartScreen 안내](https://learn.microsoft.com/windows/apps/package-and-deploy/smartscreen-reputation)
 
 # 오피스 스튜디오 Windows 다운로드 및 사용 안내
 
-**Office Studio 1.0.5 · 2026년 10월 31일 · Windows 통합 설치·앱별 자동 업데이트**
+**Office Studio 1.0.6 · 2026년 11월 1일 · Windows 통합 설치·앱별 자동 업데이트**
 
 Windows에서 표, 발표 자료, 문서를 만드는 세 가지 독립 앱을 한 번에 설치합니다. 일상적인 오피스 작업을 위한 대안으로, **Sheet Studio·Slide Studio·Word Studio**를 함께 제공합니다. 설치 후에는 시작 메뉴에서 필요한 앱을 각각 실행합니다.
 
-이번 버전은 세 앱의 업데이트 진행 안내와 Windows 설치 도우미 시작 문제 수정, 최신 편집·파일 열기 및 저장 개선을 포함합니다. 복잡한 문서는 변환·저장 후 원본과 비교해 확인하세요.
+이번 Windows 배포는 **Word 1.4.12의 설치 언어 자동 선택 개선**을 포함합니다. Sheet Studio와 Slide Studio는 이전 통합본의 버전을 유지합니다. 복잡한 문서는 변환·저장 후 원본과 비교해 확인하세요.
 
 ## 1. Windows 통합 다운로드
 
-### [오피스 스튜디오 Windows 설치 파일 다운로드](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.5/Office-Studio-1.0.5-win-x64-Setup.exe)
+### [오피스 스튜디오 Windows 설치 파일 다운로드](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.6/Office-Studio-1.0.6-win-x64-Setup.exe)
 
 **Windows 10/11 · Intel/AMD 64비트(x64) · 330.2 MiB**
 
-파일명: **Office-Studio-1.0.5-win-x64-Setup.exe**
+파일명: **Office-Studio-1.0.6-win-x64-Setup.exe**
 
 한 파일에 세 앱의 실행 환경이 포함되어 있습니다. 설치와 기본 편집에는 Microsoft Office·Node.js·인터넷 연결이 필요하지 않습니다. 자동 업데이트 확인과 다운로드에는 인터넷 연결이 필요합니다. Windows 32비트와 Windows ARM 전용 설치 파일은 이번 통합 배포에 포함하지 않습니다.
 
@@ -34,9 +34,9 @@ Windows에서 표, 발표 자료, 문서를 만드는 세 가지 독립 앱을 �
 | --- | --- | --- |
 | Sheet Studio | 0.7.36 | 표·수식·차트·XLSX/CSV |
 | Slide Studio | 1.6.21 | 슬라이드 편집·발표·PPTX |
-| Word Studio | 1.4.11 | 문서 작성·DOCX·PDF·HWP/HWPX |
+| Word Studio | 1.4.12 | 문서 작성·DOCX·PDF·HWP/HWPX |
 
-[SHA-256 확인 파일](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.5/Office-Studio-1.0.5-win-x64-Setup.exe.sha256) · [배포 구성·검증 기록](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.5/BUILD-win-x64.json) · [GitHub 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/v1.0.5)
+[SHA-256 확인 파일](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.6/Office-Studio-1.0.6-win-x64-Setup.exe.sha256) · [배포 구성·검증 기록](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.6/BUILD-win-x64.json) · [GitHub 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/v1.0.6)
 
 ## 2. Windows 설치와 실행
 
@@ -100,13 +100,13 @@ Windows에서 표, 발표 자료, 문서를 만드는 세 가지 독립 앱을 �
 PowerShell에서 내려받은 파일이 있는 폴더로 이동한 뒤 실행합니다.
 
 ~~~powershell
-Get-FileHash .\Office-Studio-1.0.5-win-x64-Setup.exe -Algorithm SHA256
+Get-FileHash .\Office-Studio-1.0.6-win-x64-Setup.exe -Algorithm SHA256
 ~~~
 
 아래 값과 일치하는지 확인하세요.
 
 ~~~text
-4c4dbcc823920b906ae4cc0904e7e803e7bcc57682f14caf875873afdecd08b2
+87c49921e67348bb37ac8588080a8784cbc06465128f487c7e1b3d075991169d
 ~~~
 
 체크섬은 다운로드 중 손상이나 파일 변경 여부를 확인하는 값입니다. 다운로드 주소도 함께 확인하세요.
@@ -115,7 +115,7 @@ Get-FileHash .\Office-Studio-1.0.5-win-x64-Setup.exe -Algorithm SHA256
 
 세 앱 설치 파일과 통합 설치 파일의 SHA-256을 확인했습니다. 격리된 Windows 환경에서 **통합 설치·재설치·앱별 제거·문서 및 사용자 데이터 보존**을 검사하고, **이전 앱 버전에서 업데이트 도우미로 새 버전 설치·실행·정상 종료**를 확인했습니다. 자동 업데이트의 다운로드 검증과 문서 닫기 취소 처리도 시험했습니다. 한글·공백·작은따옴표가 포함된 업데이트 경로도 확인했습니다.
 
-[Windows 배포 검증 기록](https://github.com/beaur8-prog/office-studio/actions/runs/41212105498)
+[Windows 배포 검증 기록](https://github.com/beaur8-prog/office-studio/actions/workflows/windows-install.yml)
 
 ## 공유 페이지 이용 안내
 

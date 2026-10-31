@@ -16,7 +16,7 @@ async function main(){
   const destination=path.join(root,'test-results/mac');await fs.mkdir(destination,{recursive:true});
   try{
     const expanded=path.join(work,'expanded');run('/usr/sbin/pkgutil',['--expand-full',setup,expanded]);
-    const sources=JSON.parse(await fs.readFile(path.join(root,'updater/app-sources.json'),'utf8'));
+    const sources=JSON.parse(await fs.readFile(path.join(root,'mac/updater-sources.json'),'utf8'));
     const asar=require(require.resolve('@electron/asar',{paths:[path.join(root,'../slide-studio')]}));
     for(const metadata of lock.apps){
       const bundle=path.join(expanded,metadata.id+'.pkg/Payload/Applications',metadata.product+'.app');

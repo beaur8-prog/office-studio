@@ -4,15 +4,17 @@ const path=require('node:path');
 const {root,readLock}=require('./common.cjs');
 async function main(){
   const lock=await readLock();
+  const previous=JSON.parse(await fs.readFile(path.join(root,'previous-apps-lock.json'),'utf8'));
+  const word=lock.apps.find(app=>app.id==='word'),previousWord=previous.apps.find(app=>app.id==='word');
   const build=JSON.parse(await fs.readFile(path.join(root,'release',lock.version,'BUILD-win-x64.json'),'utf8'));
   const base=`https://github.com/beaur8-prog/office-studio/releases/download/v${lock.version}`;
   const date=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric'}).format(new Date());
   const rows=lock.apps.map(app=>`| ${app.product} | ${app.version} | ${ {sheet:'표·수식·차트·XLSX/CSV',slide:'슬라이드 편집·발표·PPTX',word:'문서 작성·DOCX·PDF·HWP/HWPX'}[app.id]} |`).join('\n');
-  const body=`> **자동 업데이트 안내 — 기존 사용자는 이번 버전을 한 번 직접 설치해 주세요**
+  const body=`> **자동 업데이트 안내 — Word ${previousWord.version}에서 ${word.version}로 업데이트할 수 있습니다**
 >
-> 기존 버전에는 **‘종료하고 업데이트’를 눌러도 앱만 닫히고 설치가 시작되지 않는 문제**가 있었습니다. 버전이 1.0으로 표시되는 경우를 포함해, 기존 사용자는 문서를 저장하고 세 앱을 모두 종료한 뒤 아래의 최신 통합 설치 파일을 내려받아 한 번 직접 설치해 주세요.
+> Word ${previousWord.version} 사용자는 **도움말 → 업데이트 확인…** 또는 앱의 업데이트 화면에서 ${word.version}를 내려받은 뒤 **‘종료하고 업데이트’**를 선택하세요. 문서를 저장하고 설치 화면의 안내에 따라 진행하면 새 버전으로 다시 실행됩니다. 이번 Word 배포는 설치 때 언어 선택창이 반복해서 나타나지 않도록 개선했습니다.
 >
-> 이번 버전부터는 앱별로 새 버전을 확인·다운로드하고 **‘종료하고 업데이트’**에서 설치를 진행할 수 있습니다. 설치 도우미가 시작된 것을 확인한 뒤 앱을 종료하며, 표시되는 설치 화면의 안내를 따라 완료하세요. 자동 확인·다운로드는 각 앱의 도움말에서 끌 수 있고, 새 버전 설치도 나중으로 미룰 수 있습니다.
+> 업데이트 기능이 없거나 **버튼을 눌러도 앱만 닫히는 이전 버전**은 문서를 저장하고 세 앱을 모두 종료한 뒤 아래의 통합 설치 파일을 한 번 직접 설치해 주세요. 버전이 1.0으로 표시되는 앱도 여기에 해당합니다. 자동 확인·다운로드는 앱별로 끌 수 있으며, 설치를 나중으로 미룰 수도 있습니다.
 
 > **Windows 설치 안내 — ‘실행 안 함’ 버튼만 보일 때**
 >
@@ -28,7 +30,7 @@ async function main(){
 
 Windows에서 표, 발표 자료, 문서를 만드는 세 가지 독립 앱을 한 번에 설치합니다. 일상적인 오피스 작업을 위한 대안으로, **Sheet Studio·Slide Studio·Word Studio**를 함께 제공합니다. 설치 후에는 시작 메뉴에서 필요한 앱을 각각 실행합니다.
 
-이번 버전은 세 앱의 업데이트 진행 안내와 Windows 설치 도우미 시작 문제 수정, 최신 편집·파일 열기 및 저장 개선을 포함합니다. 복잡한 문서는 변환·저장 후 원본과 비교해 확인하세요.
+이번 Windows 배포는 **Word ${word.version}의 설치 언어 자동 선택 개선**을 포함합니다. Sheet Studio와 Slide Studio는 이전 통합본의 버전을 유지합니다. 복잡한 문서는 변환·저장 후 원본과 비교해 확인하세요.
 
 ## 1. Windows 통합 다운로드
 
