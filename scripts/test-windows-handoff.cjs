@@ -52,7 +52,13 @@ async function exists(file) { return fs.access(file).then(() => true, () => fals
         dialog:{showMessageBox:async(...args)=>{ const d=args.at(-1); if(d.type==='warning'){write('failure.json',{message:d.message,buttons:d.buttons,editorStillOpen:!win.isDestroyed()});return{response:1};}return{response:0};}},
         shell:{showItemInFolder:()=>{},openExternal:async()=>{}},
         fetchImpl:async url=>url.includes('api.github.com')?Response.json(item):new Response(bytes),
-        ...(mode==='blocked'?{launch:(_exe,_args,options)=>spawn(process.env.ComSpec,['/d','/c','exit','9'],options)}:{}),
+        launch:(exe,args,options)=>{
+          const command=Buffer.from(args.at(-1),'base64').toString('utf16le');
+          write('launch.json',{exe,commandLength:command.length,jobFile:command.slice(command.lastIndexOf('-JobFile '))});
+          fs.writeFileSync(path.join(folder,'worker-command.txt'),command);
+          const child=mode==='blocked'?spawn(process.env.ComSpec,['/d','/c','exit','9'],options):spawn(exe,args,options);
+          child.on('exit',code=>write('worker-exit.json',{code}));return child;
+        },
       });
       if(mode==='cancel') win.on('close', event=>{if(!canceled){event.preventDefault();canceled=true;void updater.cancelInstall().then(()=>{write('cancelled.json',{editorStillOpen:!win.isDestroyed()});setTimeout(()=>{win.destroy();app.quit();},1000);});}});
       await updater.check(true);
@@ -75,7 +81,12 @@ async function exists(file) { return fs.access(file).then(() => true, () => fals
       let output = ''; child.stdout.on('data', b => { output += b; }); child.stderr.on('data', b => { output += b; });
       let exit; child.on('exit', code => { exit = code; }); child.on('error', error => { output += error.stack; exit = -1; });
       try {
-        await poll(() => exit !== undefined, 45000); assert.equal(exit, 0, output);
+        await poll(async () => exit !== undefined || mode === 'install' && await exists(path.join(folder, 'failure.json')), 45000);
+        if (mode === 'install' && await exists(path.join(folder, 'failure.json'))) {
+          const startup = await fs.readFile(path.join(folder,'profile/updates/helper-startup.log'),'utf8');
+          throw Error('Native helper failed: ' + await fs.readFile(path.join(folder,'failure.json'),'utf8') + '\n' + startup);
+        }
+        assert.equal(exit, 0, output);
         const fixtureError = await exists(path.join(folder, 'fixture-error.json')); assert.equal(fixtureError, false, fixtureError ? await fs.readFile(path.join(folder, 'fixture-error.json'), 'utf8') : '');
         if (mode === 'install') {
           await poll(() => exists(path.join(folder, 'reopened')));
