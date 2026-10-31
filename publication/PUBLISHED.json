@@ -3,7 +3,7 @@
   "version": "1.0.6",
   "title": "오피스 스튜디오 다운로드",
   "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/b448bde7b88792d8776c7f6a908e88891c473d4b5f6cace2",
-  "contentSHA256": "73f6274b7d1279cf4aea9e408e1972f8c0980242f69ca46e606435717148ad17",
+  "contentSHA256": "65fa2e137fe070bc793bc3283766ec22325a56832fb8bf0ab66cf2d0c4da4474",
   "platform": "Windows x64",
   "installer": "Office-Studio-1.0.6-win-x64-Setup.exe",
   "installerSHA256": "87c49921e67348bb37ac8588080a8784cbc06465128f487c7e1b3d075991169d",
@@ -11,12 +11,10 @@
   "releaseURL": "https://github.com/beaur8-prog/office-studio/releases/tag/v1.0.6",
   "shareURLPreserved": true,
   "privateVisitorTrackingPreserved": true,
-  "verifiedAt": "2026-10-31T16:12:46.066Z",
+  "verifiedAt": "2026-10-31T16:20:51.468Z",
   "verifiedLinks": 8,
   "windowsVerification": "https://github.com/beaur8-prog/office-studio/actions/runs/41217960304",
   "verifiedUpdateFeeds": 3,
   "updateGuidanceFirst": true,
-  "securityWarningNearTop": true,
-  "updateTestFrom": "Word 1.4.11",
-  "updateTestTo": "Word 1.4.12"
+  "securityWarningNearTop": true
 }
