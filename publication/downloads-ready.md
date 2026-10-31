@@ -115,7 +115,7 @@ Get-FileHash .\Office-Studio-1.0.6-win-x64-Setup.exe -Algorithm SHA256
 
 세 앱 설치 파일과 통합 설치 파일의 SHA-256을 확인했습니다. 격리된 Windows 환경에서 **통합 설치·재설치·앱별 제거·문서 및 사용자 데이터 보존**을 검사하고, **이전 앱 버전에서 업데이트 도우미로 새 버전 설치·실행·정상 종료**를 확인했습니다. 자동 업데이트의 다운로드 검증과 문서 닫기 취소 처리도 시험했습니다. 한글·공백·작은따옴표가 포함된 업데이트 경로도 확인했습니다.
 
-[Windows 배포 검증 기록](https://github.com/beaur8-prog/office-studio/actions/workflows/windows-install.yml)
+[Windows 배포 검증 기록](https://github.com/beaur8-prog/office-studio/actions/runs/41217960304)
 
 ## 공유 페이지 이용 안내
 

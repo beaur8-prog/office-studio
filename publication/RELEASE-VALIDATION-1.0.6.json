@@ -1,0 +1,197 @@
+{
+  "suiteVersion": "1.0.6",
+  "windowsOnly": true,
+  "wordVersion": "1.4.12",
+  "wordSource": "21ed1e2a19c0a90105c9d7a592ce094355e87f2b",
+  "wordChange": "da46ee7c74bb1f38cd1dd7cd94378dccb8a562cb",
+  "wordNativeCI": "https://github.com/beaur8-prog/word-studio/actions/runs/41217010942",
+  "browserAndHandoffBaselineCI": "https://github.com/beaur8-prog/word-studio/actions/runs/41214999161",
+  "updaterImplementationUnchanged": true,
+  "macBefore": {
+    "product": "Office Studio",
+    "version": "1.0.5",
+    "title": "오피스 스튜디오 Mac 다운로드",
+    "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ef9c9402c857485a69bb9e8e0c441f57e1025bc8dd9d002",
+    "contentSHA256": "6ef9b07dcacaf6758d66163bc8d5d74ee1b744b9afee502501e67dd0e8d448e6",
+    "platform": "mac-arm64",
+    "installer": "Office-Studio-1.0.5-mac-arm64-Setup.pkg",
+    "installerSHA256": "69d4fbfc897c5a99dc15153f9298871888f0028f971dc9725979c89c9f2c0adb",
+    "downloadURL": "https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.5/Office-Studio-1.0.5-mac-arm64-Setup.pkg",
+    "releaseURL": "https://github.com/beaur8-prog/office-studio/releases/tag/mac-v1.0.5",
+    "shareURLPreserved": true,
+    "privateVisitorTrackingPreserved": true,
+    "verifiedAt": "2026-10-31T14:59:52.068Z",
+    "verifiedLinks": 9,
+    "verifiedMacUpdateFeeds": 3,
+    "windowsLatestPreserved": true,
+    "updateGuidanceFirst": true,
+    "securityWarningNearTop": true
+  },
+  "checks": {
+    "installer-test": {
+      "version": "1.4.12",
+      "passed": true,
+      "freshInstall": true,
+      "shortcuts": true,
+      "installedAppsEntry": true,
+      "registeredDocumentTypes": [
+        "wordstudio",
+        "docx",
+        "hwp",
+        "hwpx",
+        "html",
+        "htm",
+        "txt"
+      ],
+      "openWithAndDefaultApps": true,
+      "existingDefaultsPreserved": true,
+      "installedApplication": true,
+      "hwpReader": true,
+      "hwpEditing": true,
+      "reinstall": true,
+      "nativeSetupWithoutLanguageSelector": true,
+      "handlerUnregistration": true,
+      "uninstall": true,
+      "userDataPreserved": true
+    },
+    "installer-language-fresh": {
+      "stage": "fresh",
+      "passed": true,
+      "languageSelector": false,
+      "installed": true,
+      "finished": true
+    },
+    "installer-language-update": {
+      "stage": "update",
+      "passed": true,
+      "languageSelector": false,
+      "installed": true,
+      "finished": true
+    },
+    "windowsNative": {
+      "suiteVersion": "1.0.6",
+      "setupSHA256": "87c49921e67348bb37ac8588080a8784cbc06465128f487c7e1b3d075991169d",
+      "passed": true,
+      "freshInstall": true,
+      "reinstall": true,
+      "upgrades": [
+        {
+          "nativeWindow": true,
+          "helper": true,
+          "normalClose": true,
+          "from": "0.7.29",
+          "app": "sheet",
+          "to": "0.7.36"
+        },
+        {
+          "nativeWindow": true,
+          "helper": true,
+          "normalClose": true,
+          "from": "1.6.16",
+          "app": "slide",
+          "to": "1.6.21"
+        },
+        {
+          "nativeWindow": true,
+          "helper": true,
+          "normalClose": true,
+          "from": "1.4.11",
+          "app": "word",
+          "to": "1.4.12"
+        }
+      ],
+      "uninstall": true,
+      "userDataPreserved": true,
+      "runId": 41217960304,
+      "url": "https://github.com/beaur8-prog/office-studio/actions/runs/41217960304",
+      "sourceCommit": "edb04dbaf6a06ed2f573f61f612997fa238f89b1"
+    },
+    "updaterUnits": {
+      "suite": 29,
+      "word": 34
+    }
+  },
+  "passed": true,
+  "checkedAt": "2026-10-31T16:10:38.858Z",
+  "suiteSource": "edb04dbaf6a06ed2f573f61f612997fa238f89b1",
+  "suite": {
+    "filename": "Office-Studio-1.0.6-win-x64-Setup.exe",
+    "bytes": 346202946,
+    "sha256": "87c49921e67348bb37ac8588080a8784cbc06465128f487c7e1b3d075991169d"
+  },
+  "word": {
+    "id": "word",
+    "product": "Word Studio",
+    "version": "1.4.12",
+    "bundleId": "local.wordstudio.app",
+    "assets": {
+      "win-x64": {
+        "filename": "Word-Studio-1.4.12-windows-x64-setup.exe",
+        "bytes": 132785362,
+        "sha256": "b79557f5d2db716f98958336fe98cbad0be28ba4685cfc3d3afdc14973957bf6",
+        "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.12/Word-Studio-1.4.12-windows-x64-setup.exe"
+      }
+    },
+    "sourceCommit": "21ed1e2a19c0a90105c9d7a592ce094355e87f2b"
+  },
+  "publication": {
+    "windows": {
+      "product": "Office Studio",
+      "version": "1.0.6",
+      "title": "오피스 스튜디오 다운로드",
+      "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/b448bde7b88792d8776c7f6a908e88891c473d4b5f6cace2",
+      "contentSHA256": "73f6274b7d1279cf4aea9e408e1972f8c0980242f69ca46e606435717148ad17",
+      "platform": "Windows x64",
+      "installer": "Office-Studio-1.0.6-win-x64-Setup.exe",
+      "installerSHA256": "87c49921e67348bb37ac8588080a8784cbc06465128f487c7e1b3d075991169d",
+      "downloadURL": "https://github.com/beaur8-prog/office-studio/releases/download/v1.0.6/Office-Studio-1.0.6-win-x64-Setup.exe",
+      "releaseURL": "https://github.com/beaur8-prog/office-studio/releases/tag/v1.0.6",
+      "shareURLPreserved": true,
+      "privateVisitorTrackingPreserved": true,
+      "verifiedAt": "2026-10-31T16:12:46.066Z",
+      "verifiedLinks": 8,
+      "windowsVerification": "https://github.com/beaur8-prog/office-studio/actions/runs/41217960304",
+      "verifiedUpdateFeeds": 3,
+      "updateGuidanceFirst": true,
+      "securityWarningNearTop": true,
+      "updateTestFrom": "Word 1.4.11",
+      "updateTestTo": "Word 1.4.12"
+    },
+    "macUnchanged": true,
+    "macPageSHA256": "6ef9b07dcacaf6758d66163bc8d5d74ee1b744b9afee502501e67dd0e8d448e6",
+    "macInstallerSHA256": "69d4fbfc897c5a99dc15153f9298871888f0028f971dc9725979c89c9f2c0adb",
+    "macUpdateFeeds": [
+      {
+        "id": "sheet",
+        "macVersion": "0.7.36",
+        "macSHA256": "c51a820794228f5a91a1938487a4c2dbfe9de9fefa95f610ae3b923a49bed5a9",
+        "windowsVersion": "0.7.36"
+      },
+      {
+        "id": "slide",
+        "macVersion": "1.6.21",
+        "macSHA256": "ffa86a06becf3260c3737d8b85173e40285102bd6a2297bbcdf5b326856b5353",
+        "windowsVersion": "1.6.21"
+      },
+      {
+        "id": "word",
+        "macVersion": "1.4.11",
+        "macSHA256": "ea7d9bed85c90750897a0483ea02d4fc33e665398d640c7a2eb7fab4258b8c77",
+        "windowsVersion": "1.4.12"
+      }
+    ],
+    "github": {
+      "checkedAt": "2026-10-31T16:11:02.583Z",
+      "passed": true,
+      "windowsOnly": true,
+      "wordVersion": "1.4.12",
+      "suiteVersion": "1.0.6",
+      "verifiedNewAssets": 2,
+      "macSuiteVersion": "1.0.5",
+      "macWordVersion": "1.4.11",
+      "macInstallerUnchanged": true,
+      "macPublicationMetadataUnchanged": true
+    },
+    "privateVisitorTrackingPreserved": true
+  }
+}
