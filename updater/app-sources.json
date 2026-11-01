@@ -10,11 +10,11 @@
       }
     },
     "slide": {
-      "version": "1.6.21",
-      "sourceCommit": "6708d640f1b665435c11a02010a1042c65b3b533",
+      "version": "1.6.22",
+      "sourceCommit": "fd5a04cd77b49e70de5d1734f814e97a41b0e856",
       "files": {
-        "studio-updater.cjs": "a0456398eed837f90a1331bb3ffec99008201aa462230dbfaf2019595b03f0c3",
-        "studio-update-windows.ps1": "42be13c98f67f6b103510e3c3b7f5c2e9a1e648919c033cb9708c28a9cdeca7e"
+        "studio-updater.cjs": "b8f1eecbbd3a21bb65adcfbb2415139bd1e3ed8077bb162412b7a08112666593",
+        "studio-update-windows.ps1": "7e4f93a526a1dce848fcfedd49eac6176da4a7205597d84dfd5c00a63b746132"
       }
     },
     "word": {

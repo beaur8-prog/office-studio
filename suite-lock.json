@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "product": "Office Studio",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "apps": [
     {
       "id": "sheet",
@@ -21,17 +21,17 @@
     {
       "id": "slide",
       "product": "Slide Studio",
-      "version": "1.6.21",
+      "version": "1.6.22",
       "bundleId": "local.slidestudio.app",
       "assets": {
         "win-x64": {
           "filename": "Slide-Studio-Setup-x64.exe",
-          "bytes": 110297231,
-          "sha256": "0487a5b489f3761886809e855e0ca4e67d5bbd57172ba093d19cbfd14316bf1a",
-          "url": "https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.21/Slide-Studio-Setup-x64.exe"
+          "bytes": 110294811,
+          "sha256": "2c3c2eccc30e34af4fbcfb7a69215d6ca75293e95a9a09a6e96f4015ca51dab3",
+          "url": "https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.22/Slide-Studio-Setup-x64.exe"
         }
       },
-      "sourceCommit": "6708d640f1b665435c11a02010a1042c65b3b533"
+      "sourceCommit": "fd5a04cd77b49e70de5d1734f814e97a41b0e856"
     },
     {
       "id": "word",

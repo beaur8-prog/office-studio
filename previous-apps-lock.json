@@ -1,22 +1,22 @@
 {
   "schema": 1,
   "product": "Office Studio",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "apps": [
     {
       "id": "sheet",
       "product": "Sheet Studio",
-      "version": "0.7.36",
+      "version": "0.7.37",
       "bundleId": "local.lattice.sheetstudio",
       "assets": {
         "win-x64": {
-          "filename": "Sheet-Studio-0.7.36-Windows-x64-Setup.exe",
-          "bytes": 102980733,
-          "sha256": "2f985890dcd7492604b0f55d1a80d770a1e1aa64216cb9762f2c8d1ded055b9a",
-          "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.36/Sheet-Studio-0.7.36-Windows-x64-Setup.exe"
+          "filename": "Sheet-Studio-0.7.37-Windows-x64-Setup.exe",
+          "bytes": 102980374,
+          "sha256": "57d2bc10ce004863ba00f4d14c1ace3011764dc87dfadbc5fc3efa7b85f7dc57",
+          "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.37/Sheet-Studio-0.7.37-Windows-x64-Setup.exe"
         }
       },
-      "sourceCommit": "0aba3913ff5f7148351ee2963d49e57159906d1a"
+      "sourceCommit": "bbfd2905f6e538ab8e43525293fbbce0838b9f58"
     },
     {
       "id": "slide",
@@ -36,17 +36,17 @@
     {
       "id": "word",
       "product": "Word Studio",
-      "version": "1.4.12",
+      "version": "1.4.13",
       "bundleId": "local.wordstudio.app",
       "assets": {
         "win-x64": {
-          "filename": "Word-Studio-1.4.12-windows-x64-setup.exe",
-          "bytes": 132785362,
-          "sha256": "b79557f5d2db716f98958336fe98cbad0be28ba4685cfc3d3afdc14973957bf6",
-          "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.12/Word-Studio-1.4.12-windows-x64-setup.exe"
+          "filename": "Word-Studio-1.4.13-windows-x64-setup.exe",
+          "bytes": 132796452,
+          "sha256": "8e3ea6111f461416eb6747fe364facdfdf70f5f28b4a876a299d4c7b00c660c5",
+          "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.13/Word-Studio-1.4.13-windows-x64-setup.exe"
         }
       },
-      "sourceCommit": "21ed1e2a19c0a90105c9d7a592ce094355e87f2b"
+      "sourceCommit": "6a8ecd358b4be92cdae28d14ac2d6a787b6c9100"
     }
   ],
   "target": "win-x64"
