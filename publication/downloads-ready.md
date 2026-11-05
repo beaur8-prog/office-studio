@@ -14,7 +14,7 @@
 
 # 오피스 스튜디오 Windows 다운로드 및 사용 안내
 
-**Office Studio 1.0.9 · 2026년 11월 5일 · Windows 통합 설치·앱별 자동 업데이트**
+**Office Studio 1.0.9 · 2026년 11월 6일 · Windows 통합 설치·앱별 자동 업데이트**
 
 Windows에서 표, 발표 자료, 문서를 만드는 세 가지 독립 앱을 한 번에 설치합니다. 일상적인 오피스 작업을 위한 대안으로, **Sheet Studio·Slide Studio·Word Studio**를 함께 제공합니다. 설치 후에는 시작 메뉴에서 필요한 앱을 각각 실행합니다.
 
@@ -115,7 +115,7 @@ Get-FileHash .\Office-Studio-1.0.9-win-x64-Setup.exe -Algorithm SHA256
 
 세 앱 설치 파일과 통합 설치 파일의 SHA-256을 확인했습니다. 격리된 Windows 환경에서 **통합 설치·재설치·앱별 제거·문서 및 사용자 데이터 보존**을 검사하고, **세 앱의 직전 정식 버전에서 업데이트 도우미로 새 버전 설치·실행·정상 종료**를 확인했습니다. 자동 업데이트의 다운로드 검증과 문서 닫기 취소 처리도 시험했습니다. 한글·공백·작은따옴표가 포함된 업데이트 경로도 확인했습니다.
 
-[Windows 배포 검증 기록](https://github.com/beaur8-prog/office-studio/actions/workflows/windows-install.yml)
+[Windows 배포 검증 기록](https://github.com/beaur8-prog/office-studio/actions/runs/42050549294)
 
 ## 공유 페이지 이용 안내
 

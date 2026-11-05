@@ -1,0 +1,773 @@
+{
+  "product": "Office Studio",
+  "version": "1.0.9",
+  "target": "Windows x64",
+  "verifiedAt": "2026-11-05T15:07:00.228Z",
+  "sourceCommit": "11364c6dbba0ab37022e2b61f8911396083c79fc",
+  "apps": [
+    {
+      "id": "sheet",
+      "product": "Sheet Studio",
+      "version": "0.7.39",
+      "sourceCommit": "c057ecdaccd2ce3fcee7fc4191425cc524610535",
+      "input": {
+        "filename": "Sheet-Studio-0.7.39-Windows-x64-Setup.exe",
+        "bytes": 103391679,
+        "sha256": "90e55df8b6b2dff3b441257a3db4a90d7408d26043701bce9ef01ab190b3dc67",
+        "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.39/Sheet-Studio-0.7.39-Windows-x64-Setup.exe"
+      }
+    },
+    {
+      "id": "slide",
+      "product": "Slide Studio",
+      "version": "1.6.23",
+      "sourceCommit": "daf36f8aab79564e1e785a02ca65ad123ec8b634",
+      "input": {
+        "filename": "Slide-Studio-Setup-x64.exe",
+        "bytes": 110319371,
+        "sha256": "9c010c83f605ccd46c2fdc8a5f327131f4a26e2b64606363a0045ed94960006b",
+        "url": "https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.23/Slide-Studio-Setup-x64.exe"
+      }
+    },
+    {
+      "id": "word",
+      "product": "Word Studio",
+      "version": "1.4.14",
+      "sourceCommit": "d3fb0281c49286e593e1257cc1e0164b9aaeb165",
+      "input": {
+        "filename": "Word-Studio-1.4.14-windows-x64-setup.exe",
+        "bytes": 133026224,
+        "sha256": "cc6558ca6d3065356df74feb638892d3140a8afb5c95cdf3857822eed8bf64f4",
+        "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.14/Word-Studio-1.4.14-windows-x64-setup.exe"
+      }
+    }
+  ],
+  "installerSHA256": "29923bed4470a34e0727eeb151ade785adb7ef102f6c113c57e4521928418110",
+  "localUnitTests": {
+    "passed": 29,
+    "failed": 0,
+    "skipped": 0
+  },
+  "windowsCI": {
+    "runId": 42050549294,
+    "url": "https://github.com/beaur8-prog/office-studio/actions/runs/42050549294",
+    "sourceCommit": "11364c6dbba0ab37022e2b61f8911396083c79fc",
+    "passed": true
+  },
+  "nativeInstallation": {
+    "suiteVersion": "1.0.9",
+    "setupSHA256": "29923bed4470a34e0727eeb151ade785adb7ef102f6c113c57e4521928418110",
+    "passed": true,
+    "freshInstall": true,
+    "reinstall": true,
+    "upgrades": [
+      {
+        "to": "0.7.39",
+        "from": "0.7.37",
+        "normalClose": true,
+        "helper": true,
+        "nativeWindow": true,
+        "app": "sheet"
+      },
+      {
+        "to": "1.6.23",
+        "from": "1.6.22",
+        "normalClose": true,
+        "helper": true,
+        "nativeWindow": true,
+        "app": "slide"
+      },
+      {
+        "to": "1.4.14",
+        "from": "1.4.13",
+        "normalClose": true,
+        "helper": true,
+        "nativeWindow": true,
+        "app": "word"
+      }
+    ],
+    "unchangedApps": [],
+    "uninstall": true,
+    "userDataPreserved": true
+  },
+  "updaterHandoff": {
+    "platform": "win32",
+    "passed": true,
+    "results": [
+      {
+        "id": "sheet",
+        "mode": "install",
+        "nativeElectronQuit": true,
+        "helperAcknowledgedBeforeQuit": true,
+        "installed": true,
+        "versionVerified": true,
+        "reopened": true
+      },
+      {
+        "id": "slide",
+        "mode": "install",
+        "nativeElectronQuit": true,
+        "helperAcknowledgedBeforeQuit": true,
+        "installed": true,
+        "versionVerified": true,
+        "reopened": true
+      },
+      {
+        "id": "word",
+        "mode": "install",
+        "nativeElectronQuit": true,
+        "helperAcknowledgedBeforeQuit": true,
+        "installed": true,
+        "versionVerified": true,
+        "reopened": true
+      },
+      {
+        "id": "word",
+        "mode": "cancel",
+        "editorKeptOpen": true,
+        "noInstallation": true
+      },
+      {
+        "id": "word",
+        "mode": "blocked",
+        "editorKeptOpen": true,
+        "noInstallation": true
+      },
+      {
+        "id": "word",
+        "mode": "tampered",
+        "editorKeptOpen": true,
+        "noInstallation": true
+      }
+    ]
+  },
+  "appVerification": {
+    "sheet": {
+      "version": "0.7.39",
+      "sourceCommit": "c057ecdaccd2ce3fcee7fc4191425cc524610535",
+      "installer": {
+        "filename": "Sheet-Studio-0.7.39-Windows-x64-Setup.exe",
+        "bytes": 103391679,
+        "sha256": "90e55df8b6b2dff3b441257a3db4a90d7408d26043701bce9ef01ab190b3dc67"
+      },
+      "windowsCI": {
+        "runId": 42042059186,
+        "url": "https://github.com/beaur8-prog/sheet-studio/actions/runs/42042059186",
+        "passed": true
+      },
+      "installation": {
+        "version": "0.7.39",
+        "passed": true,
+        "shortcutTargetWSH": "C:\\Users\\runneradmin\\AppData\\Local\\Programs\\?? ?? ??\\Sheet Studio\\Sheet Studio.exe",
+        "shortcutTargetUnicode": "C:\\Users\\runneradmin\\AppData\\Local\\Programs\\한글 설치 경로\\Sheet Studio\\Sheet Studio.exe",
+        "openWith": [
+          "xlsx",
+          "xlsm",
+          "csv",
+          "tsv"
+        ],
+        "defaultAppsRegistration": true,
+        "previousDefaultsAndOtherAppsPreserved": true,
+        "quotedUnicodeInstallPath": true,
+        "previousSheetStudioHandlerPreserved": true,
+        "freshInstall": true,
+        "shortcuts": true,
+        "installedAppsEntry": true,
+        "installedApplication": true,
+        "reinstall": true,
+        "fileSupportRemovedOnUninstall": true,
+        "foreignRegistryValuesPreserved": 12,
+        "uninstall": true,
+        "userDataPreserved": true
+      },
+      "upgrade": {
+        "passed": true,
+        "scenarios": [
+          {
+            "scenario": "current-user",
+            "passed": true,
+            "originalDirectoryPreserved": true,
+            "originalScopePreserved": true,
+            "installedVersion": "0.7.39",
+            "desktopShortcuts": 1,
+            "mainProcesses": 1,
+            "noFailurePopup": true,
+            "documentAndRecoveryPreserved": true
+          },
+          {
+            "scenario": "all-users",
+            "passed": true,
+            "originalDirectoryPreserved": true,
+            "originalScopePreserved": true,
+            "installedVersion": "0.7.39",
+            "desktopShortcuts": 1,
+            "mainProcesses": 1,
+            "noFailurePopup": true,
+            "documentAndRecoveryPreserved": true
+          },
+          {
+            "scenario": "legacy-helper-with-duplicates",
+            "passed": true,
+            "originalDirectoryPreserved": true,
+            "originalScopePreserved": true,
+            "installedVersion": "0.7.39",
+            "desktopShortcuts": 1,
+            "mainProcesses": 1,
+            "noFailurePopup": true,
+            "documentAndRecoveryPreserved": true
+          }
+        ]
+      },
+      "handoff": {
+        "platform": "win32",
+        "passed": true,
+        "results": [
+          {
+            "id": "sheet",
+            "mode": "install",
+            "nativeElectronQuit": true,
+            "helperAcknowledgedBeforeQuit": true,
+            "installed": true,
+            "versionVerified": true,
+            "reopened": true
+          },
+          {
+            "id": "sheet",
+            "mode": "cancel",
+            "editorKeptOpen": true,
+            "noInstallation": true
+          },
+          {
+            "id": "sheet",
+            "mode": "blocked",
+            "editorKeptOpen": true,
+            "noInstallation": true
+          },
+          {
+            "id": "sheet",
+            "mode": "tampered",
+            "editorKeptOpen": true,
+            "noInstallation": true
+          },
+          {
+            "id": "sheet",
+            "mode": "unregistered",
+            "editorKeptOpen": true,
+            "noInstallation": true
+          }
+        ]
+      },
+      "documentClose": {
+        "ok": true,
+        "version": "0.7.39",
+        "results": [
+          {
+            "mode": "install",
+            "realSheetClose": true,
+            "helperAcknowledgedBeforeQuit": true,
+            "installed": true,
+            "reopened": true,
+            "documentRecovered": true,
+            "formulaResult": 3
+          },
+          {
+            "mode": "save-failure",
+            "realSheetCloseGuard": true,
+            "editorKeptOpen": true,
+            "cancelledHelper": true,
+            "noInstallationAfterLaterQuit": true,
+            "documentRecovered": true,
+            "formulaResult": 3
+          }
+        ]
+      },
+      "publicRelease": true,
+      "releaseURL": "https://github.com/beaur8-prog/sheet-studio/releases/tag/v0.7.39",
+      "publishedAt": "2026-11-05T15:13:28.006Z"
+    },
+    "slide": {
+      "version": "1.6.23",
+      "sourceCommit": "daf36f8aab79564e1e785a02ca65ad123ec8b634",
+      "installerSHA256": "9c010c83f605ccd46c2fdc8a5f327131f4a26e2b64606363a0045ed94960006b",
+      "portableSHA256": "24d4ea49cc3b1f21cdd3a655c9998684afbade9f792987635b9643a3222af524",
+      "installation": {
+        "version": "1.6.23",
+        "setupSHA256": "9c010c83f605ccd46c2fdc8a5f327131f4a26e2b64606363a0045ed94960006b",
+        "portableSHA256": "24d4ea49cc3b1f21cdd3a655c9998684afbade9f792987635b9643a3222af524",
+        "windows": "Microsoft Windows Server 2025 Datacenter",
+        "cleanInstall": true,
+        "allInstalledPayloadHashes": true,
+        "shortcuts": true,
+        "appsAndFeaturesRegistration": true,
+        "nativeAppSmoke": true,
+        "inPlaceReinstall": true,
+        "uninstall": true,
+        "userProfilePreserved": true,
+        "unrelatedFilePreserved": true
+      },
+      "installerCI": {
+        "runId": 42044271413,
+        "url": "https://github.com/beaur8-prog/slide-studio/actions/runs/42044271413",
+        "sourceCommit": "daf36f8aab79564e1e785a02ca65ad123ec8b634",
+        "passed": true
+      },
+      "updateCI": {
+        "conclusion": "success",
+        "headSha": "daf36f8aab79564e1e785a02ca65ad123ec8b634",
+        "status": "completed",
+        "url": "https://github.com/beaur8-prog/slide-studio/actions/runs/42042174574"
+      },
+      "upgrade": {
+        "version": "1.6.23",
+        "actualWindowsPowerShell": true,
+        "realSetup": true,
+        "initialInstall": true,
+        "progressWindowObserved": true,
+        "visibleStages": 5,
+        "versionVerified": true,
+        "userDataPreserved": true,
+        "restarted": true,
+        "fromVersion": "1.6.22",
+        "actualVersionUpgrade": true,
+        "registrationAndDirectoryPreserved": true,
+        "desktopShortcutTargetVerified": true,
+        "mainProcesses": 1
+      },
+      "handoff": {
+        "platform": "win32",
+        "passed": true,
+        "results": [
+          {
+            "id": "slide",
+            "mode": "install",
+            "nativeElectronQuit": true,
+            "helperAcknowledgedBeforeQuit": true,
+            "fiveVisibleStages": true,
+            "installed": true,
+            "versionVerified": true,
+            "reopened": true
+          },
+          {
+            "id": "slide",
+            "mode": "cancel",
+            "editorKeptOpen": true,
+            "noInstallation": true
+          },
+          {
+            "id": "slide",
+            "mode": "blocked",
+            "editorKeptOpen": true,
+            "noInstallation": true
+          },
+          {
+            "id": "slide",
+            "mode": "tampered",
+            "editorKeptOpen": true,
+            "noInstallation": true
+          },
+          {
+            "id": "slide",
+            "mode": "unregistered",
+            "editorKeptOpen": true,
+            "noInstallation": true
+          },
+          {
+            "id": "slide",
+            "mode": "wrong-path",
+            "editorKeptOpen": true,
+            "noInstallation": true
+          }
+        ]
+      },
+      "editorCoverage": {
+        "initialRun": {
+          "runId": 42042179684,
+          "url": "https://github.com/beaur8-prog/slide-studio/actions/runs/42042179684",
+          "conclusion": "failure",
+          "stats": {
+            "startTime": "2026-11-05T14:14:21.740Z",
+            "duration": 893910.529,
+            "expected": 277,
+            "skipped": 7,
+            "unexpected": 4,
+            "flaky": 0
+          }
+        },
+        "nativeRecheck": {
+          "runId": 42049563768,
+          "conclusion": "success",
+          "headSha": "2d8d614648db2fd824d97de7b39057080e622c3e",
+          "status": "completed",
+          "url": "https://github.com/beaur8-prog/slide-studio/actions/runs/42049563768",
+          "stats": {
+            "startTime": "2026-11-05T14:55:18.296Z",
+            "duration": 9730.013,
+            "expected": 4,
+            "skipped": 0,
+            "unexpected": 0,
+            "flaky": 0
+          }
+        },
+        "productionAndBuildInputsUnchanged": true,
+        "combinedPassed": 281,
+        "conditionalSkipped": 7,
+        "remainingFailed": 0,
+        "explanation": "The four native menu scenarios are rechecked unchanged; only test executable selection, diagnostics and disposable-process teardown changed. Original failed executions remain recorded as failures."
+      },
+      "publicRelease": true,
+      "releaseURL": "https://github.com/beaur8-prog/slide-studio/releases/tag/v1.6.23",
+      "publishedAt": "2026-11-05T15:13:28.007Z"
+    },
+    "word": {
+      "version": "1.4.14",
+      "sourceCommit": "d3fb0281c49286e593e1257cc1e0164b9aaeb165",
+      "installerSHA256": "cc6558ca6d3065356df74feb638892d3140a8afb5c95cdf3857822eed8bf64f4",
+      "windowsCI": {
+        "runId": 42048002721,
+        "url": "https://github.com/beaur8-prog/word-studio/actions/runs/42048002721",
+        "sourceCommit": "d3fb0281c49286e593e1257cc1e0164b9aaeb165",
+        "passed": true
+      },
+      "installation": {
+        "version": "1.4.14",
+        "passed": true,
+        "freshSetupRunAfterFinish": true,
+        "freshInstall": true,
+        "shortcuts": true,
+        "installedAppsEntry": true,
+        "registeredDocumentTypes": [
+          "wordstudio",
+          "docx",
+          "hwp",
+          "hwpx",
+          "html",
+          "htm",
+          "txt"
+        ],
+        "openWithAndDefaultApps": true,
+        "existingDefaultsPreserved": true,
+        "installedApplication": true,
+        "hwpReader": true,
+        "hwpEditing": true,
+        "reinstall": true,
+        "nativeSetupWithoutLanguageSelector": true,
+        "handlerUnregistration": true,
+        "uninstall": true,
+        "userDataPreserved": true
+      },
+      "upgrade": {
+        "passed": true,
+        "scenarios": [
+          {
+            "scenario": "current-user",
+            "passed": true,
+            "originalDirectoryPreserved": true,
+            "originalScopePreserved": true,
+            "installedVersion": "1.4.14",
+            "desktopShortcuts": 1,
+            "mainProcesses": 1,
+            "desktopShortcutLaunchedEditor": true,
+            "noFailurePopup": true,
+            "documentAndRecoveryPreserved": true
+          },
+          {
+            "scenario": "all-users",
+            "passed": true,
+            "originalDirectoryPreserved": true,
+            "originalScopePreserved": true,
+            "installedVersion": "1.4.14",
+            "desktopShortcuts": 1,
+            "mainProcesses": 1,
+            "desktopShortcutLaunchedEditor": true,
+            "noFailurePopup": true,
+            "documentAndRecoveryPreserved": true
+          },
+          {
+            "scenario": "legacy-helper-with-duplicates",
+            "passed": true,
+            "originalDirectoryPreserved": true,
+            "originalScopePreserved": true,
+            "installedVersion": "1.4.14",
+            "desktopShortcuts": 1,
+            "mainProcesses": 1,
+            "desktopShortcutLaunchedEditor": true,
+            "noFailurePopup": true,
+            "documentAndRecoveryPreserved": true
+          }
+        ],
+        "current": {
+          "identity": {
+            "same": true,
+            "shortcut": "D:\\a\\_temp\\Word Studio update O'Brien; & 한글\\legacy-helper-with-duplicates\\Word Studio 사용자 지정\\Word Studio.exe",
+            "expected": "D:\\a\\_temp\\Word Studio update O'Brien; & 한글\\legacy-helper-with-duplicates\\Word Studio 사용자 지정\\Word Studio.exe"
+          },
+          "entries": 1,
+          "expectedTarget": "D:\\a\\_temp\\Word Studio update O'Brien; & 한글\\legacy-helper-with-duplicates\\Word Studio 사용자 지정\\Word Studio.exe",
+          "scenario": "legacy-helper-with-duplicates",
+          "shortcutTarget": "D:\\a\\_temp\\Word Studio update O'Brien; & 한글\\legacy-helper-with-duplicates\\Word Studio 사용자 지정\\Word Studio.exe",
+          "mainProcesses": 1
+        }
+      },
+      "handoff": {
+        "platform": "win32",
+        "passed": true,
+        "results": [
+          {
+            "id": "sheet",
+            "mode": "install",
+            "nativeElectronQuit": true,
+            "helperAcknowledgedBeforeQuit": true,
+            "installed": true,
+            "versionVerified": true,
+            "reopened": true
+          },
+          {
+            "id": "slide",
+            "mode": "install",
+            "nativeElectronQuit": true,
+            "helperAcknowledgedBeforeQuit": true,
+            "installed": true,
+            "versionVerified": true,
+            "reopened": true
+          },
+          {
+            "id": "word",
+            "mode": "install",
+            "nativeElectronQuit": true,
+            "helperAcknowledgedBeforeQuit": true,
+            "installed": true,
+            "versionVerified": true,
+            "reopened": true
+          },
+          {
+            "id": "word",
+            "mode": "cancel",
+            "editorKeptOpen": true,
+            "noInstallation": true
+          },
+          {
+            "id": "word",
+            "mode": "blocked",
+            "editorKeptOpen": true,
+            "noInstallation": true
+          },
+          {
+            "id": "word",
+            "mode": "tampered",
+            "editorKeptOpen": true,
+            "noInstallation": true
+          },
+          {
+            "id": "word",
+            "mode": "unregistered",
+            "editorKeptOpen": true,
+            "noInstallation": true
+          }
+        ]
+      },
+      "publicRelease": true,
+      "browserUI": {
+        "runId": 42042161871,
+        "sourceCommit": "633fcd09fd35f45daa2dc74ce46dc7addb02db04",
+        "overallConclusion": "cancelled",
+        "stepName": "Browser update and document preservation scenarios (Windows)",
+        "stepConclusion": "success",
+        "url": "https://github.com/beaur8-prog/word-studio/actions/runs/42042161871",
+        "productionAndBuildInputsUnchanged": true
+      },
+      "includedFeatureSource": "ce80df5f940c7055a8870868ccbc50a3d5c61b15",
+      "includedHwpBranches": [
+        {
+          "branch": "codex/hwp-floating-section-reservation",
+          "ahead": 0,
+          "behind": 96
+        },
+        {
+          "branch": "codex/hwp-cell-metrics-followup",
+          "ahead": 0,
+          "behind": 133
+        },
+        {
+          "branch": "codex/hwp-eight-hour-layout",
+          "ahead": 0,
+          "behind": 123
+        }
+      ],
+      "releaseURL": "https://github.com/beaur8-prog/word-studio/releases/tag/v1.4.14",
+      "publishedAt": "2026-11-05T15:13:28.007Z"
+    }
+  },
+  "productionChecks": [
+    {
+      "id": "slide",
+      "base": "daf36f8aab79564e1e785a02ca65ad123ec8b634",
+      "testHead": "2d8d614648db2fd824d97de7b39057080e622c3e",
+      "changedFiles": [
+        ".github/workflows/verify-editor-core.yml",
+        "tests/native-menu-history.spec.ts"
+      ],
+      "productionAndBuildInputsUnchanged": true
+    },
+    {
+      "id": "word",
+      "base": "633fcd09fd35f45daa2dc74ce46dc7addb02db04",
+      "testHead": "d3fb0281c49286e593e1257cc1e0164b9aaeb165",
+      "changedFiles": [
+        ".github/workflows/update-validation.yml",
+        "scripts/test-windows-installer-language.ps1",
+        "scripts/test-windows-update-in-place.ps1"
+      ],
+      "productionAndBuildInputsUnchanged": true
+    }
+  ],
+  "ciAttempts": [
+    {
+      "repo": "word",
+      "runId": 42042161871,
+      "conclusion": "cancelled",
+      "reason": "25-minute execution limit during native upgrade; earlier browser and document-preservation step succeeded.",
+      "url": "https://github.com/beaur8-prog/word-studio/actions/runs/42042161871"
+    },
+    {
+      "repo": "word",
+      "runId": 42046161921,
+      "conclusion": "failure",
+      "reason": "HTTP 504 while acquiring NSIS packaging tools, before native installer verification.",
+      "url": "https://github.com/beaur8-prog/word-studio/actions/runs/42046161921"
+    },
+    {
+      "repo": "word",
+      "runId": 42048002721,
+      "conclusion": "success",
+      "reason": "Same production inputs, focused complete Windows installer/update recheck.",
+      "url": "https://github.com/beaur8-prog/word-studio/actions/runs/42048002721"
+    },
+    {
+      "repo": "slide",
+      "runId": 42042179684,
+      "conclusion": "failure",
+      "reason": "277 editor cases passed, 7 conditional exclusions; four native-history fixture startup/teardown failures.",
+      "url": "https://github.com/beaur8-prog/slide-studio/actions/runs/42042179684"
+    },
+    {
+      "repo": "slide",
+      "runId": 42047381991,
+      "conclusion": "failure",
+      "reason": "Native menu assertions completed; disposable fixture teardown timed out.",
+      "url": "https://github.com/beaur8-prog/slide-studio/actions/runs/42047381991"
+    },
+    {
+      "repo": "slide",
+      "runId": 42048650822,
+      "conclusion": "failure",
+      "reason": "Three native-history cases passed; the first fixture raced Electron exit against a second context close.",
+      "url": "https://github.com/beaur8-prog/slide-studio/actions/runs/42048650822"
+    },
+    {
+      "repo": "slide",
+      "runId": 42047563543,
+      "cancellationRequested": true,
+      "reason": "Superseded full retry still contained the confirmed fixture teardown race.",
+      "url": "https://github.com/beaur8-prog/slide-studio/actions/runs/42047563543"
+    },
+    {
+      "repo": "slide",
+      "runId": 42049563768,
+      "conclusion": "success",
+      "reason": "All four unchanged native-history scenarios and explicit process-exit checks passed.",
+      "url": "https://github.com/beaur8-prog/slide-studio/actions/runs/42049563768"
+    }
+  ],
+  "verificationLimits": "Actual version replacement uses short-lived disposable wait processes; real Electron quit/cancel/acknowledgement and document guards are verified separately. Document preservation checks use isolated test documents and profile markers.",
+  "macReleaseChanged": false,
+  "publicRelease": true,
+  "publishedAt": "2026-11-05T15:13:28.007Z",
+  "publication": {
+    "product": "Office Studio",
+    "version": "1.0.9",
+    "title": "오피스 스튜디오 다운로드",
+    "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/b448bde7b88792d8776c7f6a908e88891c473d4b5f6cace2",
+    "contentSHA256": "7a80c57a2cef17006e265b22f05991ea7b2928d9baee302f2001b80db5d45012",
+    "platform": "Windows x64",
+    "installer": "Office-Studio-1.0.9-win-x64-Setup.exe",
+    "installerSHA256": "29923bed4470a34e0727eeb151ade785adb7ef102f6c113c57e4521928418110",
+    "downloadURL": "https://github.com/beaur8-prog/office-studio/releases/download/v1.0.9/Office-Studio-1.0.9-win-x64-Setup.exe",
+    "releaseURL": "https://github.com/beaur8-prog/office-studio/releases/tag/v1.0.9",
+    "shareURLPreserved": true,
+    "privateVisitorTrackingPreserved": true,
+    "verifiedAt": "2026-11-05T15:13:28.005Z",
+    "verifiedLinks": 8,
+    "windowsVerification": "https://github.com/beaur8-prog/office-studio/actions/runs/42050549294",
+    "verifiedUpdateFeeds": 3,
+    "updateGuidanceFirst": true,
+    "securityWarningNearTop": true,
+    "bodyMatches": true,
+    "readOnly": true
+  },
+  "releaseState": {
+    "verifiedAt": "2026-11-05T15:09:33.887Z",
+    "windows": [
+      {
+        "id": "sheet",
+        "from": "0.7.37",
+        "version": "0.7.39",
+        "sha256": "90e55df8b6b2dff3b441257a3db4a90d7408d26043701bce9ef01ab190b3dc67",
+        "offeredToPreviousVersion": true
+      },
+      {
+        "id": "slide",
+        "from": "1.6.22",
+        "version": "1.6.23",
+        "sha256": "9c010c83f605ccd46c2fdc8a5f327131f4a26e2b64606363a0045ed94960006b",
+        "offeredToPreviousVersion": true
+      },
+      {
+        "id": "word",
+        "from": "1.4.13",
+        "version": "1.4.14",
+        "sha256": "cc6558ca6d3065356df74feb638892d3140a8afb5c95cdf3857822eed8bf64f4",
+        "offeredToPreviousVersion": true
+      }
+    ],
+    "mac": [
+      {
+        "id": "sheet",
+        "version": "0.7.36",
+        "sha256": "c51a820794228f5a91a1938487a4c2dbfe9de9fefa95f610ae3b923a49bed5a9",
+        "unchanged": true
+      },
+      {
+        "id": "slide",
+        "version": "1.6.21",
+        "sha256": "ffa86a06becf3260c3737d8b85173e40285102bd6a2297bbcdf5b326856b5353",
+        "unchanged": true
+      },
+      {
+        "id": "word",
+        "version": "1.4.11",
+        "sha256": "ea7d9bed85c90750897a0483ea02d4fc33e665398d640c7a2eb7fab4258b8c77",
+        "unchanged": true
+      }
+    ],
+    "macFilesPreserved": true,
+    "developmentWorkingCopiesPreserved": true,
+    "macPagePreserved": true,
+    "suite": {
+      "version": "1.0.9",
+      "sha256": "29923bed4470a34e0727eeb151ade785adb7ef102f6c113c57e4521928418110",
+      "macVersion": "1.0.5",
+      "macInstallerPreserved": true
+    }
+  },
+  "shareServicePreservation": {
+    "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/b448bde7b88792d8776c7f6a908e88891c473d4b5f6cace2",
+    "title": "오피스 스튜디오 다운로드",
+    "contentSHA256": "7a80c57a2cef17006e265b22f05991ea7b2928d9baee302f2001b80db5d45012",
+    "readOnly": true,
+    "expiresAt": null,
+    "shareURLPreserved": true,
+    "privateVisitorTrackingPreserved": true,
+    "handlerPreserved": true,
+    "tunnelPreserved": true
+  }
+}
