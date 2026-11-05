@@ -4,7 +4,7 @@ const path=require('node:path');
 const {root,readLock}=require('./common.cjs');
 async function main(){
   const lock=await readLock();
-  const slide=lock.apps.find(app=>app.id==='slide');
+  const slide=lock.apps.find(app=>app.id==='slide'),sheet=lock.apps.find(app=>app.id==='sheet'),word=lock.apps.find(app=>app.id==='word');
   const build=JSON.parse(await fs.readFile(path.join(root,'release',lock.version,'BUILD-win-x64.json'),'utf8'));
   const base=`https://github.com/beaur8-prog/office-studio/releases/download/v${lock.version}`;
   const date=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric'}).format(new Date());
@@ -29,7 +29,7 @@ async function main(){
 
 Windows에서 표, 발표 자료, 문서를 만드는 세 가지 독립 앱을 한 번에 설치합니다. 일상적인 오피스 작업을 위한 대안으로, **Sheet Studio·Slide Studio·Word Studio**를 함께 제공합니다. 설치 후에는 시작 메뉴에서 필요한 앱을 각각 실행합니다.
 
-이번 Windows 배포는 **Slide Studio ${slide.version}의 업데이트 설치 대상 확인과 설치 완료 확인 개선**을 포함합니다. 업데이트 전에 현재 설치 위치와 등록 정보를 확인하고, 설치 후 새 버전과 재실행을 확인하도록 보완했습니다. Word Studio와 Sheet Studio는 직전 배포 버전을 유지합니다. 복잡한 문서는 변환·저장 후 원본과 비교해 확인하세요.
+이번 Windows 배포는 세 앱의 최신 개선을 함께 제공합니다. **Sheet ${sheet.version}**은 차트·입력 검증·조건부 서식과 파일 호환성을, **Slide ${slide.version}**은 PPTX의 그림·도형·개체 표시와 편집을, **Word ${word.version}**는 문단·표의 페이지 나눔과 그림·문서 내용 보존을 개선했습니다. 복잡한 문서는 변환·저장 후 원본과 비교해 확인하세요.
 
 ## 1. Windows 통합 다운로드
 
@@ -122,7 +122,7 @@ ${build.sha256}
 
 ## 8. 이번 배포의 확인 결과
 
-세 앱 설치 파일과 통합 설치 파일의 SHA-256을 확인했습니다. 격리된 Windows 환경에서 **통합 설치·재설치·앱별 제거·문서 및 사용자 데이터 보존**을 검사하고, **Slide의 직전 정식 버전에서 업데이트 도우미로 새 버전 설치·실행·정상 종료**를 확인했습니다. 자동 업데이트의 다운로드 검증과 문서 닫기 취소 처리도 시험했습니다. 한글·공백·작은따옴표가 포함된 업데이트 경로도 확인했습니다.
+세 앱 설치 파일과 통합 설치 파일의 SHA-256을 확인했습니다. 격리된 Windows 환경에서 **통합 설치·재설치·앱별 제거·문서 및 사용자 데이터 보존**을 검사하고, **세 앱의 직전 정식 버전에서 업데이트 도우미로 새 버전 설치·실행·정상 종료**를 확인했습니다. 자동 업데이트의 다운로드 검증과 문서 닫기 취소 처리도 시험했습니다. 한글·공백·작은따옴표가 포함된 업데이트 경로도 확인했습니다.
 
 [Windows 배포 검증 기록](${build.nativeCI?.url || 'https://github.com/beaur8-prog/office-studio/actions/workflows/windows-install.yml'})
 
