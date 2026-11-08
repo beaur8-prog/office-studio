@@ -91,7 +91,7 @@ public class MainActivity extends Activity {
                 if(req.isForMainFrame()&&req.hasGesture()&&(u.getScheme().equals("https")||u.getScheme().equals("mailto")))try{startActivity(new Intent(Intent.ACTION_VIEW,u));}catch(Exception ignored){}
                 return true;
             }
-            @Override public void onPageFinished(WebView view,String url){web.evaluateJavascript("window.__studioHostConfig="+obj("studio",BuildConfig.STUDIO,"version",BuildConfig.VERSION_NAME)+";",null);if(BuildConfig.STUDIO.equals("word")){lastCutoutCss="";ViewCompat.requestApplyInsets(root);}}
+            @Override public void onPageFinished(WebView view,String url){web.evaluateJavascript("window.__studioHostConfig="+obj("studio",BuildConfig.STUDIO,"version",BuildConfig.VERSION_NAME,"tablet",getResources().getConfiguration().smallestScreenWidthDp>=600)+";window.dispatchEvent(new Event(\"studio-host-config\"));",null);if(BuildConfig.STUDIO.equals("word")){lastCutoutCss="";ViewCompat.requestApplyInsets(root);}}
         });
         web.setWebChromeClient(new WebChromeClient(){
             @Override public boolean onShowFileChooser(WebView v,ValueCallback<Uri[]> callback,FileChooserParams params){
@@ -176,16 +176,13 @@ public class MainActivity extends Activity {
     }
     void hideFullscreen(){if(fullscreen==null)return;root.removeView(fullscreen);fullscreen=null;web.setVisibility(View.VISIBLE);if(fullscreenCallback!=null)fullscreenCallback.onCustomViewHidden();fullscreenCallback=null;}
     @Override public boolean dispatchKeyEvent(KeyEvent event){
-        // Some Android WebViews consume Escape without a DOM keydown when the
-        // read-only page has no focused input. Route key-up to Word's viewer;
-        // outside that viewer keep normal Android/WebView handling intact.
-        if(BuildConfig.STUDIO.equals("word")&&web!=null&&!destroyed&&fullscreen==null
-            &&event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE&&event.getAction()==KeyEvent.ACTION_UP){
-            KeyEvent original=new KeyEvent(event);
-            web.evaluateJavascript("(()=>{const viewer=document.querySelector('.android-presentation');if(!viewer)return false;viewer.dispatchEvent(new Event('studio-presentation-edit'));return true;})()",handled->{
-                if(destroyed)return;
-                if("true".equals(handled))web.requestFocus();else super.dispatchKeyEvent(original);
-            });
+        // Own the whole Escape press, not only key-up. Passing either half to
+        // WebView/Android can turn the same press into a second back/close.
+        if(BuildConfig.STUDIO.equals("word")&&event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE){
+            if(event.getAction()==KeyEvent.ACTION_DOWN&&event.getRepeatCount()==0&&web!=null&&!destroyed){
+                web.evaluateJavascript("window.dispatchEvent(new Event('studio-native-escape',{cancelable:true}));",null);
+                web.requestFocus();
+            }
             return true;
         }
         return super.dispatchKeyEvent(event);

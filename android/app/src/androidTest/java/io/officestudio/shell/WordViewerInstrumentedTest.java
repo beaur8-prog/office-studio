@@ -17,6 +17,7 @@ import androidx.test.uiautomator.Until;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import java.io.File;
+import org.json.JSONArray;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -63,6 +64,11 @@ public class WordViewerInstrumentedTest {
             waitJS(scenario,"!!document.querySelector('.android-start button')");
             waitJS(scenario,"typeof window.wordAndroid.setImmersiveMode==='function'");
             SystemClock.sleep(700);dismissImmersiveGuide();
+            UiDevice keys=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+            assertTrue(keys.pressKeyCode(KeyEvent.KEYCODE_ESCAPE));
+            assertTrue(keys.pressKeyCode(KeyEvent.KEYCODE_ESCAPE));
+            assertEquals("RESUMED",scenario.getState().name());
+            waitJS(scenario,"!!document.querySelector('.android-start button')");
             scenario.onActivity(activity->{
                 WindowInsetsCompat insets=ViewCompat.getRootWindowInsets(activity.getWindow().getDecorView());
                 assertNotNull(insets);assertTrue(activity.immersive);
@@ -71,12 +77,12 @@ public class WordViewerInstrumentedTest {
             });
             js(scenario,"[...document.querySelectorAll('.android-start button')].find(b=>b.textContent==='새 문서').click()");
             waitJS(scenario,"!!document.querySelector('.tiptap[contenteditable=true]')");
-            assertEquals("true",js(scenario,"(()=>{const p=document.querySelector('.document-stack');const r=p.getBoundingClientRect();return p.offsetWidth>790&&Number(p.dataset.pageHeight)>1120&&r.width>window.innerWidth-40&&r.width<=window.innerWidth})()"));
+            assertEquals("true",js(scenario,"(()=>{const p=document.querySelector('.document-stack');const r=p.getBoundingClientRect();return p.offsetWidth>790&&Number(p.dataset.pageHeight)>1120&&(document.querySelector('.office-shell')?r.width>790:r.width>window.innerWidth-40)&&r.width<=window.innerWidth})()"));
             js(scenario,"(()=>{const e=document.querySelector('.tiptap');e.focus();document.execCommand('insertText',false,'ANDROID HORIZONTAL INPUT');})()");
             waitJS(scenario,"document.querySelector('.tiptap').textContent.includes('ANDROID HORIZONTAL INPUT')");
             assertEquals("true",js(scenario,"(()=>{const n=document.querySelector('.tiptap p').firstChild,a=document.createRange(),b=document.createRange();a.setStart(n,0);a.setEnd(n,1);b.setStart(n,1);b.setEnd(n,2);const x=a.getBoundingClientRect(),y=b.getBoundingClientRect();return Math.abs(x.y-y.y)<1&&y.x>x.x})()"));
-            assertEquals("true",js(scenario,"!!document.querySelector('.android-editor-ribbon [role=tab][aria-selected=true]')"));
-            js(scenario,"document.querySelector('.android-topbar [aria-label=\"전체 화면 뷰어\"]').click()");
+            assertEquals("true",js(scenario,"document.querySelector('.office-shell')?!!document.querySelector('.office-shell .ribbon'):!!document.querySelector('.android-editor-ribbon [role=tab][aria-selected=true]')"));
+            js(scenario,"[...document.querySelectorAll('[aria-label=\"전체 화면 뷰어\"]')].find(b=>b.getBoundingClientRect().height>0).click()");
             waitJS(scenario,"!!document.querySelector('.android-presentation-page .print-page')&&!document.querySelector('.android-presentation-loading')");
             waitJS(scenario,"document.querySelector('.android-presentation-page').textContent.includes('ANDROID HORIZONTAL INPUT')");
             waitJS(scenario,"document.querySelector('.android-presentation-controls').hidden");
@@ -88,6 +94,9 @@ public class WordViewerInstrumentedTest {
             waitJS(scenario,"document.activeElement===document.querySelector('.tiptap')");
             assertTrue(UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressKeyCode(KeyEvent.KEYCODE_X));
             waitJS(scenario,"document.querySelector('.tiptap').textContent.toLowerCase().endsWith('inputx')");
+            assertTrue(keys.pressKeyCode(KeyEvent.KEYCODE_ESCAPE));
+            assertEquals("RESUMED",scenario.getState().name());
+            waitJS(scenario,"!document.querySelector('.android-presentation')&&document.querySelector('.tiptap').textContent.toLowerCase().endsWith('inputx')");
             screenshot("new-page-horizontal-input");
         }
     }
@@ -111,6 +120,16 @@ public class WordViewerInstrumentedTest {
             waitJS(scenario,"document.querySelector('.android-presentation-page').getBoundingClientRect().width>"+(before*1.5));
             assertEquals("true",js(scenario,"document.querySelector('.android-presentation').dataset.page==='2'"));
             screenshot("docx-viewer-pinch");
+            double keptScale=Double.parseDouble(js(scenario,"Number(document.querySelector('.android-presentation').dataset.scale)"));
+            js(scenario,"document.querySelector('[aria-label=\"다음 페이지\"]').click()");
+            waitJS(scenario,"document.querySelector('.android-presentation').dataset.page==='3'");
+            assertEquals(keptScale,Double.parseDouble(js(scenario,"Number(document.querySelector('.android-presentation').dataset.scale)")),0.00001);
+            for(int n=0;n<6;n++){js(scenario,"document.querySelector('[aria-label=\"뷰어 축소\"]').click()");SystemClock.sleep(100);}
+            js(scenario,"document.querySelector('[aria-label=\"이전 페이지\"]').click()");SystemClock.sleep(100);
+            js(scenario,"document.querySelector('[aria-label=\"이전 페이지\"]').click()");
+            waitJS(scenario,"document.querySelector('.android-presentation').dataset.page==='1'");
+            waitJS(scenario,"(()=>{const v=document.querySelector('.android-presentation-viewport').getBoundingClientRect();return [...document.querySelectorAll('.android-presentation-slot')].filter(e=>{const r=e.getBoundingClientRect();return r.bottom>v.top+4&&r.top<v.bottom-4}).length>=2})()");
+            screenshot("docx-continuous-small");
             js(scenario,"document.querySelector('[aria-label=\"뷰어 닫기\"]').click()");
             waitJS(scenario,"!!document.querySelector('.android-paper-viewport')");
             openFixture(scenario,"landscape-pagination.hwp");waitJS(scenario,"!!document.querySelector('.hwp-reader [data-testid=hwp-page]')");
@@ -120,6 +139,24 @@ public class WordViewerInstrumentedTest {
             scenario.onActivity(activity->{assertTrue(activity.immersive);assertEquals(View.VISIBLE,activity.web.getVisibility());});
             waitJS(scenario,"!!document.querySelector('.android-presentation-page svg')");
             screenshot("hwp-viewer");
+            assertTrue(device.pressKeyCode(KeyEvent.KEYCODE_ESCAPE));
+            waitJS(scenario,"!document.querySelector('.android-presentation')&&!!document.querySelector('.hwp-reader [data-testid=hwp-page]')");
+            assertEquals("RESUMED",scenario.getState().name());
+            js(scenario,"document.querySelector('[aria-label=\"한글 원본 보기 닫기\"]').click()");
+            js(scenario,"document.querySelector('.android-topbar [aria-label=\"편집 모드\"]').click()");
+            waitJS(scenario,"!!document.querySelector('.tiptap[contenteditable=true]')");
+            waitJS(scenario,"document.querySelector('.tiptap').textContent.includes('QA PAGE 3')");
+            for(int n=0;n<8;n++){
+                js(scenario,"(document.querySelector('.android-tablet-editor [aria-label=\"축소\"]')||document.querySelector('[aria-label=\"편집 축소\"]')).click()");SystemClock.sleep(120);
+            }
+            waitJS(scenario,"(()=>{const v=document.querySelector('.android-tablet-editor[data-active=true] .document-workspace')||document.querySelector('.android-editor-scroll');const r=v.getBoundingClientRect();return [...v.querySelectorAll('.paper')].filter(p=>{const b=p.getBoundingClientRect();return b.bottom>r.top+4&&b.top<r.bottom-4}).length>=2})()");
+            screenshot("editor-continuous-small");
+            String scaleExpression="(()=>{const p=document.querySelector('.android-tablet-editor[data-active=true] .scaled-document');return p?p.getBoundingClientRect().width/p.offsetWidth:Number(document.querySelector('.android-editor-scroll').dataset.scale)})()";
+            double editorScale=Double.parseDouble(js(scenario,scaleExpression));
+            JSONArray point=new JSONArray(js(scenario,"(()=>{const v=document.querySelector('.android-tablet-editor[data-active=true] .document-workspace')||document.querySelector('.android-editor-scroll');const r=v.getBoundingClientRect(),d=devicePixelRatio;return [(r.x+r.width/2)*d,(r.y+r.height/2)*d,Math.min(r.width*.12,r.height*.2)*d]})()"));
+            pinchAt((float)point.getDouble(0),(float)point.getDouble(1),(float)point.getDouble(2));
+            waitJS(scenario,scaleExpression+">"+(editorScale*1.5));
+            screenshot("editor-pinch");
         }
     }
     void pinch(int width,int height){
@@ -131,6 +168,15 @@ public class WordViewerInstrumentedTest {
         for(int step=1;step<=12;step++){float t=step/12f;send(down,MotionEvent.ACTION_MOVE,2,props,width*(.4f-.15f*t),height*(.45f-.08f*t),width*(.6f+.15f*t),height*(.55f+.08f*t));SystemClock.sleep(16);}
         send(down,MotionEvent.ACTION_POINTER_UP|(1<<MotionEvent.ACTION_POINTER_INDEX_SHIFT),2,props,width*.25f,height*.37f,width*.75f,height*.63f);
         send(down,MotionEvent.ACTION_UP,1,props,width*.25f,height*.37f,width*.75f,height*.63f);
+    }
+    void pinchAt(float x,float y,float span){
+        long down=SystemClock.uptimeMillis();MotionEvent.PointerProperties[] props=new MotionEvent.PointerProperties[2];
+        for(int i=0;i<2;i++){props[i]=new MotionEvent.PointerProperties();props[i].id=i;props[i].toolType=MotionEvent.TOOL_TYPE_FINGER;}
+        send(down,MotionEvent.ACTION_DOWN,1,props,x-span,y,x+span,y);
+        send(down,MotionEvent.ACTION_POINTER_DOWN|(1<<MotionEvent.ACTION_POINTER_INDEX_SHIFT),2,props,x-span,y,x+span,y);
+        for(int n=1;n<=12;n++){float s=span*(1+n/12f);send(down,MotionEvent.ACTION_MOVE,2,props,x-s,y,x+s,y);SystemClock.sleep(16);}
+        send(down,MotionEvent.ACTION_POINTER_UP|(1<<MotionEvent.ACTION_POINTER_INDEX_SHIFT),2,props,x-span*2,y,x+span*2,y);
+        send(down,MotionEvent.ACTION_UP,1,props,x-span*2,y,x+span*2,y);
     }
     void send(long down,int action,int count,MotionEvent.PointerProperties[] props,float x,float y,float x2,float y2){
         MotionEvent.PointerCoords[] coords=new MotionEvent.PointerCoords[2];
