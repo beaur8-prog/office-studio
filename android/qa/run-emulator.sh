@@ -13,7 +13,7 @@ adb shell svc wifi disable
 adb shell svc data disable
 adb shell mkdir -p /sdcard/Download/OfficeStudioQA
 printf 'PRESERVE EXTERNAL OFFICE DOCUMENT' > "$out/external-original.txt"
-adb push "$out/external-original.txt" /sdcard/Download/OfficeStudioQA/original.txt
+adb shell "printf '%s' 'PRESERVE EXTERNAL OFFICE DOCUMENT' > /sdcard/Download/OfficeStudioQA/original.txt"
 adb shell getprop > "$out/device-properties.txt"
 for id in sheet slide word; do
   apk="$inputs/$id.apk"
@@ -42,7 +42,7 @@ for id in sheet slide word; do
 done
 python3 android/qa/summarize.py "$out"
 for id in sheet slide word; do adb uninstall "io.officestudio.$id"; done
-adb pull /sdcard/Download/OfficeStudioQA/original.txt "$out/external-after-uninstall.txt"
+adb shell cat /sdcard/Download/OfficeStudioQA/original.txt > "$out/external-after-uninstall.txt"
 cmp "$out/external-original.txt" "$out/external-after-uninstall.txt"
 python3 - "$out" <<'PY'
 import json,pathlib,sys
