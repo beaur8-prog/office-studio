@@ -331,8 +331,9 @@ public class SheetWindowInstrumentedTest {
                 assertEquals("Paper direction",landscape,page.getWidth()>page.getHeight());
                 if(letter){assertEquals(792,page.getWidth(),2);assertEquals(612,page.getHeight(),2);}
                 android.graphics.Bitmap bitmap=android.graphics.Bitmap.createBitmap(1000,Math.round(1000f*page.getHeight()/page.getWidth()),android.graphics.Bitmap.Config.ARGB_8888);bitmap.eraseColor(android.graphics.Color.WHITE);page.render(bitmap,null,null,android.graphics.pdf.PdfRenderer.Page.RENDER_MODE_FOR_PRINT);
-                int ink=0;for(int y=0;y<bitmap.getHeight();y+=2)for(int x=0;x<bitmap.getWidth();x+=2)if(((bitmap.getPixel(x,y)>>16)&255)<224||((bitmap.getPixel(x,y)>>8)&255)<224||(bitmap.getPixel(x,y)&255)<224)ink++;
+                int ink=0,red=0;for(int y=0;y<bitmap.getHeight();y+=2)for(int x=0;x<bitmap.getWidth();x+=2){int color=bitmap.getPixel(x,y),r=(color>>16)&255,g=(color>>8)&255,b=color&255;if(r<224||g<224||b<224)ink++;if(r>220&&g<50&&b<50)red++;}
                 assertTrue("No blank PDF page "+n,ink>50);
+                if(pages==4&&n==3)assertTrue("Embedded PNG retains red color in the saved PDF",red>500);
                 try(java.io.FileOutputStream output=new java.io.FileOutputStream(new File(folder,name+"-"+(n+1)+".png"))){bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,output);}bitmap.recycle();
             }
         }
