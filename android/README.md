@@ -1,6 +1,14 @@
 # Office Studio · Android
 
-현재 배포: Sheet 1.0.4 · Slide 1.0.5 · Word 1.0.2. Android 통합 ZIP은 제공을 중단했으며 개별 APK만 게시합니다.
+현재 배포: Sheet 1.0.4 · Slide 1.0.5 · Word 1.0.3. Android 통합 ZIP은 제공을 중단했으며 개별 APK만 게시합니다.
+
+## Android 1.0.9 · Word 갱신
+
+실제 Word 개발 작업본과 일치하는 원격 `codex/android-page-viewer`의 `f1d3c46`을 Word 1.0.3/versionCode 4로 빌드했습니다. 연속 페이지 확대 배율 유지와 태블릿에서 기존 데스크톱 편집 기능 재사용을 포함합니다. Word 호스트 `9bae920`의 실제 태블릿 구성 전달·변경 이벤트와 Esc down/up/repeat 소비를 병합했습니다. 기존 Sheet·Slide 네이티브 처리를 보존했습니다.
+
+Word의 기존 앱 ID·서명·아이콘을 유지합니다. `:app:assembleWordRelease`만 조립했고 설치·실행·기능·에뮬레이터 테스트 및 통합 ZIP 생성은 생략합니다. `android-v1.0.9`에는 Word APK·BUILD·SHA256SUMS 세 파일만 `--latest=false`로 게시합니다. Sheet 1.0.4와 Slide 1.0.5는 기존 APK URL과 체크섬을 그대로 유지합니다. 기존 Android 페이지·Windows latest·Mac 피드·비공개 방문 통계를 유지합니다.
+
+GitHub 웹 다운로드 경로가 간헐적으로 504를 반환해, 새 Word APK를 공개 릴리스 자산 API에서 실제 다운로드하고 전체 SHA-256 일치를 확인했습니다. 페이지 갱신에는 `--github-metadata-fallback`을 명시했습니다. 이 모드는 다운로드 경로의 5xx·시간 초과일 때만 공개 정식 릴리스의 정확한 다운로드 URL·파일 크기·SHA-256을 API로 대조하며, 404·비공개 자산·해시 불일치는 허용하지 않습니다. 일반 다운로드의 성공 여부와 구분해 `download-readiness.json`에 기록합니다.
 
 ## Android 1.0.8 · Sheet·Slide 갱신
 
