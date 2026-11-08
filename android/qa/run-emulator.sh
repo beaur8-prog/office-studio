@@ -40,7 +40,7 @@ for id in sheet slide word; do
   grep -q 'OK (' "$out/$id-reinstall.log"
   if grep -Eq 'FAILURES!!!|INSTRUMENTATION_FAILED|Process crashed' "$out/$id-reinstall.log"; then exit 1; fi
   adb shell am start -n "$package/io.officestudio.shell.MainActivity"
-  sleep 3
+  sleep 10
   adb exec-out screencap -p > "$out/$id-startup.png"
   adb shell am force-stop "$package"
   adb uninstall "$package.test"
