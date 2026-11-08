@@ -1,8 +1,12 @@
 # Office Studio Android · 로컬 첨부 배포
 
-현재 앱: Sheet 1.0.4 · Slide 1.0.5 · Word 1.0.3. 기존 Android 공유 주소를 유지합니다.
+현재 앱: Sheet 1.0.4 · Slide 1.0.6 · Word 1.0.3. 기존 Android 공유 주소를 유지합니다.
 
 Android는 **로컬에서 빌드·서명 → 파일·버전·서명·체크섬 확인 → 리토스 첨부 게시**로 배포합니다. GitHub 릴리스 생성, APK 업로드, APK 재다운로드는 하지 않습니다. 소스의 Git pull·commit·push와 버전 태그 관리는 그대로 사용합니다. `distribution-policy.json`으로 이 방식을 고정합니다.
+
+## Slide 1.0.6 · 로컬 첨부 갱신
+
+앱 main `e2644de`와 네이티브 호스트 `e06f20c`의 발표 창·IME·입력기 이전 Esc·Android 13 이상 Back 단일 전달 수정을 포함합니다. 기존 파일 입출력 어댑터와 Sheet·Word 호스트 처리를 유지합니다. Slide만 versionName 1.0.6/versionCode 7로 빌드합니다. 설치·실행·기능·에뮬레이터 검사는 이번 요청에서 생략하며, 개발 브랜치의 과거 검사 결과와 구분합니다. Sheet 1.0.4·Word 1.0.3의 기존 APK·주소·체크섬을 유지합니다. Office Android 문서 버전은 1.0.10입니다.
 
 ## 배포 순서
 

@@ -60,12 +60,12 @@
     "monochromeIcon": true
   },
   "slide": {
-    "version": "1.0.5",
+    "version": "1.0.6",
     "assetFiles": [
       {
-        "path": "assets/UTIF-CpHNU-mV.js",
+        "path": "assets/UTIF-iI_LyF-y.js",
         "bytes": 85484,
-        "sha256": "135cee6eed2819ce7358fadb1738ce7589f790b3e81abfafb2db82c4b849025a"
+        "sha256": "081dee2da0133a4724c65d0603d47b19194b23b2397644bc183ea76922dba44d"
       },
       {
         "path": "assets/__vite-browser-external-BIHI7g3E.js",
@@ -233,14 +233,14 @@
         "sha256": "e25d2d98eb5361bf9df83a5f53a73708042cf7d530d97d6b96ea7a2d831d65d5"
       },
       {
+        "path": "assets/index-B2xSizHt.js",
+        "bytes": 2111418,
+        "sha256": "10721f64cdea506ae8cfcf56947d883c4bfcc903afb8f4a34333aaf16491f146"
+      },
+      {
         "path": "assets/index-CJ2KTR6Z.css",
         "bytes": 112771,
         "sha256": "b6cd8187584b369b541878282d2163673a2c3d1fd54cc175bf57550aa323b2bf"
-      },
-      {
-        "path": "assets/index-CvJLkvKS.js",
-        "bytes": 2111265,
-        "sha256": "ee368b2219398a1796daa96f7b4f67bda217c5c8238f7abdba0be2bbf0dd2b83"
       },
       {
         "path": "assets/metafile.worker-CvWubWPQ.js",
@@ -264,8 +264,8 @@
       },
       {
         "path": "index.html",
-        "bytes": 483,
-        "sha256": "5f5d62ed829439da32eaebb4c3b4e50b8c7a087b813d501765a5b5f20ef2419d"
+        "bytes": 479,
+        "sha256": "73e05b0263c0aef86cdf6321b46416b5842ef336c4350f5f5a68da6467c20a73"
       },
       {
         "path": "licenses/Apache-POI-LICENSE.txt",

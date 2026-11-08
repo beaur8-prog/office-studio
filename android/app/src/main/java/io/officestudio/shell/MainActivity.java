@@ -70,6 +70,7 @@ public class MainActivity extends Activity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         root=new FrameLayout(this);web=new WebView(this){
             @Override public boolean onKeyPreIme(int keyCode,KeyEvent event){
+                if(handleSlideNavigationKey(event))return true;
                 if(BuildConfig.STUDIO.equals("sheet")&&keyCode==KeyEvent.KEYCODE_ESCAPE){sheetEscape(event,"pre-ime");return true;}
                 return super.onKeyPreIme(keyCode,event);
             }
@@ -266,7 +267,7 @@ public class MainActivity extends Activity {
         // Reclaim the status-bar row in home, viewer and editor as well. Leaving
         // a show restores navigation, while the status bar stays transient.
         bars.hide(WindowInsetsCompat.Type.statusBars());
-        if (hidden) bars.hide(WindowInsetsCompat.Type.navigationBars());
+        if (hidden) bars.hide(WindowInsetsCompat.Type.navigationBars() | WindowInsetsCompat.Type.ime());
         else bars.show(WindowInsetsCompat.Type.navigationBars());
         ViewCompat.requestApplyInsets(root);
     }
@@ -306,20 +307,25 @@ public class MainActivity extends Activity {
             web.evaluateJavascript("window.dispatchEvent(new Event('sheet-studio-android-escape',{cancelable:true}))",null);
         }
     }
-    @Override public boolean dispatchKeyEvent(KeyEvent event) {
-        if(BuildConfig.STUDIO.equals("slide")) {
-            if(event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE) {
-                if(event.getAction()==KeyEvent.ACTION_DOWN&&event.getRepeatCount()==0)requestSlideEscape();
-                return true;
-            }
-            // Some keyboard/DeX paths report Escape as Back. Consume both
-            // edges even if the first edge has already ended fullscreen.
-            if(event.getKeyCode()==KeyEvent.KEYCODE_BACK&&(slideBackKeyDown||immersive||fullscreen!=null)) {
-                if(event.getAction()==KeyEvent.ACTION_DOWN&&event.getRepeatCount()==0){slideBackKeyDown=true;requestSlideEscape();}
-                if(event.getAction()==KeyEvent.ACTION_UP)slideBackKeyDown=false;
-                return true;
-            }
+    boolean handleSlideNavigationKey(KeyEvent event) {
+        if(!BuildConfig.STUDIO.equals("slide"))return false;
+        if(event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE) {
+            if(event.getAction()==KeyEvent.ACTION_DOWN&&event.getRepeatCount()==0)requestSlideEscape();
+            return true;
         }
+        // Android 13+ routes Back through OnBackInvokedCallback, including
+        // keyboard Escape mapped to Back. Intercepting KEYCODE_BACK as well
+        // can run two commands for one press (show -> viewer -> home).
+        // Older Android still needs both edges consumed, even after exit.
+        if(Build.VERSION.SDK_INT<33&&event.getKeyCode()==KeyEvent.KEYCODE_BACK&&(slideBackKeyDown||immersive||fullscreen!=null)) {
+            if(event.getAction()==KeyEvent.ACTION_DOWN&&event.getRepeatCount()==0){slideBackKeyDown=true;requestSlideEscape();}
+            if(event.getAction()==KeyEvent.ACTION_UP)slideBackKeyDown=false;
+            return true;
+        }
+        return false;
+    }
+    @Override public boolean dispatchKeyEvent(KeyEvent event) {
+        if(handleSlideNavigationKey(event))return true;
         if(BuildConfig.STUDIO.equals("sheet")&&event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE){sheetEscape(event,"activity");return true;}
         // Own the whole Escape press, not only key-up. Passing either half to
         // WebView/Android can turn the same press into a second back/close.
