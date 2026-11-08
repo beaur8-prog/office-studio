@@ -1,0 +1,29 @@
+plugins { id 'com.android.application' }
+android {
+ namespace 'io.officestudio.shell'
+ compileSdk 36
+ buildToolsVersion '36.0.0'
+ defaultConfig { minSdk 29; targetSdk 36; versionCode 1; versionName '1.0.0'; testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner' }
+ signingConfigs { release { storeFile file(System.getenv('OFFICE_ANDROID_KEYSTORE') ?: '/nonexistent/release.p12'); storePassword System.getenv('OFFICE_ANDROID_PASSWORD'); keyAlias 'office-studio-android'; keyPassword System.getenv('OFFICE_ANDROID_PASSWORD') } }
+ buildTypes { release { debuggable false; minifyEnabled false; signingConfig signingConfigs.release } }
+ testBuildType 'release'
+ flavorDimensions += 'studio'
+ productFlavors {
+  sheet { dimension 'studio'; applicationId 'io.officestudio.sheet'; resValue 'string','app_name','Sheet Studio'; buildConfigField 'String','STUDIO','"sheet"' }
+  slide { dimension 'studio'; applicationId 'io.officestudio.slide'; resValue 'string','app_name','Slide Studio'; buildConfigField 'String','STUDIO','"slide"' }
+  word { dimension 'studio'; applicationId 'io.officestudio.word'; resValue 'string','app_name','Word Studio'; buildConfigField 'String','STUDIO','"word"' }
+ }
+ buildFeatures { buildConfig true }
+ compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+ packaging { resources { excludes += ['META-INF/LICENSE*','META-INF/NOTICE*'] } }
+}
+dependencies {
+ implementation 'androidx.webkit:webkit:1.14.0'
+ implementation 'androidx.core:core:1.13.1'
+ androidTestImplementation 'androidx.test:runner:1.6.2'
+ androidTestImplementation 'androidx.test:rules:1.6.1'
+ androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+ androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.3.0'
+ androidTestImplementation 'junit:junit:4.13.2'
+}
+

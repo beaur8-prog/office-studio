@@ -1,0 +1,22 @@
+import pathlib,subprocess,json,os,hashlib,zipfile,shutil,re
+s=pathlib.Path(__file__).resolve().parent.parent;r=s.parent;out=s/'release/android/1.0.0';out.mkdir(parents=True,exist_ok=True);sdk=r/'android-sdk/build-tools/36.0.0';env=os.environ.copy();env['JAVA_HOME']='/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home';sources=json.loads((s/'android/source-lock.json').read_text());web=json.loads((s/'android/manifests/web-assets.json').read_text());reports=[];validation=r/'ANDROID-VALIDATION-INPUTS.zip'
+with zipfile.ZipFile(validation,'w',compression=zipfile.ZIP_STORED) as inputs:
+ for id in ['sheet','slide','word']:
+  apk=s/'android/app/build/outputs/apk'/id/'release'/f'app-{id}-release.apk';test=s/'android/app/build/outputs/apk/androidTest'/id/'release'/f'app-{id}-release-androidTest.apk'
+  cert=subprocess.check_output([str(sdk/'apksigner'),'verify','--print-certs',str(apk)],env=env,text=True);digest=re.search(r'certificate SHA-256 digest: ([0-9a-f]+)',cert)[1];assert digest=='c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b';assert 'Android Debug' not in cert
+  badging=subprocess.check_output([str(sdk/'aapt2'),'dump','badging',str(apk)],text=True);assert f"name='io.officestudio.{id}'" in badging and "versionCode='1'" in badging and "versionName='1.0.0'" in badging;assert "minSdkVersion:'29'" in badging and "targetSdkVersion:'36'" in badging;assert 'application-debuggable' not in badging;assert 'MANAGE_EXTERNAL_STORAGE' not in badging and 'WRITE_EXTERNAL_STORAGE' not in badging
+  with zipfile.ZipFile(apk) as z:
+   names=z.namelist();assert not any(n.startswith('lib/') and n.endswith('.so') for n in names)
+   for f in web[id]['assetFiles']:assert hashlib.sha256(z.read('assets/public/'+f['path'])).hexdigest()==f['sha256'],(id,f['path'])
+   assert z.read('assets/studio-host.js')==(s/'android/app/src/main/assets/studio-host.js').read_bytes()
+   resources=subprocess.check_output([str(sdk/'aapt2'),'dump','resources',str(apk)],text=True);iconBlock=resources.split('mipmap/ic_launcher\n',1)[1].split('    resource',1)[0]
+   import struct
+   for density,size in [('mdpi',48),('hdpi',72),('xhdpi',96),('xxhdpi',144),('xxxhdpi',192)]:
+    resourcePath=re.search(r'\('+density+r'\) \(file\) (\S+)',iconBlock)[1];pixels=z.read(resourcePath);assert struct.unpack('>II',pixels[16:24])==(size,size),(id,density)
+   assert 'drawable/ic_launcher_monochrome' in resources and 'drawable/ic_launcher_foreground' in resources and 'mipmap/ic_launcher_round' in resources
+  filename=id.title()+'-Studio-1.0.0-Android.apk';shutil.copy2(apk,out/filename);sha=hashlib.file_digest(apk.open('rb'),'sha256').hexdigest();reports.append({'id':id,'name':id.title()+' Studio','version':'1.0.0','versionCode':1,'applicationId':'io.officestudio.'+id,'filename':filename,'bytes':apk.stat().st_size,'sha256':sha,'certificateSHA256':digest,'minSdk':29,'targetSdk':36,'universalBytecodeAPK':True,'debuggable':False,'sourceCommit':sources['apps'][id]['sourceCommit'],'offlineAssetsVerified':len(web[id]['assetFiles']),'launcherDensities':5,'adaptiveIcon':True,'roundIcon':True,'monochromeIcon':True})
+  (r/'proofs'/(id+'-apk-badging.txt')).write_text(badging);(r/'proofs'/(id+'-apk-signature.txt')).write_text(cert);inputs.write(apk,id+'.apk');inputs.write(test,id+'-test.apk')
+  shutil.copy2(s/'android/app/src'/id/'res/mipmap-mdpi/ic_launcher.png',out/(id.title()+'-Studio-Android-icon.png'))
+lock={'schema':1,'tag':'android-v1.0.0','filename':validation.name,'sha256':hashlib.file_digest(validation.open('rb'),'sha256').hexdigest(),'certificateSHA256':reports[0]['certificateSHA256'],'productionApks':[{k:a[k] for k in ['id','sha256','bytes']} for a in reports]};(s/'android/verification-inputs.json').write_text(json.dumps(lock,indent=2)+'\n')
+report={'product':'Office Studio','version':'1.0.0','target':'android','sourceCommit':subprocess.check_output(['git','rev-parse','android-v1.0.0^{commit}'],cwd=s,text=True).strip(),'apps':reports,'checks':{'signature':True,'releaseKey':True,'compiledManifest':True,'launcherIcons':True,'roundAdaptiveMonochromeIcons':True,'exactOfflineAssets':True,'universalBytecode':True,'nativeDeviceTests':False},'physicalDeviceTested':False,'publicRelease':False};(out/'BUILD-android.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps({'version':'1.0.0','apps':[{'id':a['id'],'MiB':round(a['bytes']/1024**2,2),'sha256':a['sha256']} for a in reports],'validationInputsSHA256':lock['sha256'],'iconsAndAllAssetsVerified':True},indent=2))
