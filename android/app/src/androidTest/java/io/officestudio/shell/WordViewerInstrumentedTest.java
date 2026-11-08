@@ -10,6 +10,9 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject2;
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.Until;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import java.io.File;
@@ -34,7 +37,13 @@ public class WordViewerInstrumentedTest {
     void openFixture(ActivityScenario<MainActivity> scenario,String name) throws Exception {
         js(scenario,"fetch('/assets/qa/"+name+"').then(r=>r.blob()).then(b=>{const d=new DataTransfer();d.items.add(new File([b],'"+name+"'));const i=document.querySelector('input[type=file]');i.files=d.files;i.dispatchEvent(new Event('change',{bubbles:true}));})");
     }
+    void dismissImmersiveGuide(){
+        UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        UiObject2 gotIt=device.wait(Until.findObject(By.text("Got it")),1200);
+        if(gotIt!=null){gotIt.click();device.waitForIdle();}
+    }
     void screenshot(String name){
+        dismissImmersiveGuide();
         File dir=new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null),"viewer-qa");
         assertTrue(dir.isDirectory()||dir.mkdirs());
         assertTrue(UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).takeScreenshot(new File(dir,name+".png")));
@@ -44,12 +53,12 @@ public class WordViewerInstrumentedTest {
         try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(MainActivity.class)){
             waitJS(scenario,"!!document.querySelector('.android-start button')");
             waitJS(scenario,"typeof window.wordAndroid.setImmersiveMode==='function'");
-            SystemClock.sleep(700);
+            SystemClock.sleep(700);dismissImmersiveGuide();
             scenario.onActivity(activity->{
                 WindowInsetsCompat insets=ViewCompat.getRootWindowInsets(activity.getWindow().getDecorView());
                 assertNotNull(insets);assertTrue(activity.immersive);
                 assertFalse("Word status bar should be hidden",insets.isVisible(WindowInsetsCompat.Type.statusBars()));
-                assertEquals(insets.getInsets(WindowInsetsCompat.Type.displayCutout()).top,activity.root.getPaddingTop());
+                assertEquals("Document viewport must extend under the cutout; controls use CSS safe insets",0,activity.root.getPaddingTop());
             });
             js(scenario,"[...document.querySelectorAll('.android-start button')].find(b=>b.textContent==='새 문서').click()");
             waitJS(scenario,"!!document.querySelector('.tiptap[contenteditable=true]')");

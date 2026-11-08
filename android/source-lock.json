@@ -20,7 +20,7 @@
     "word": {
       "repository": "beaur8-prog/word-studio",
       "ref": "codex/android-page-viewer",
-      "sourceCommit": "9f1c4def34a47fe888e1b66cec6323ae39ecf5ed",
+      "sourceCommit": "1677fb7a0c0166c3510b17bd5180eed45db5bd54",
       "version": "1.0.0"
     }
   },

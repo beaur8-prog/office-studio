@@ -37,6 +37,7 @@ public class MainActivity extends Activity {
     Integer orientationBefore;
     View fullscreen;
     WebChromeClient.CustomViewCallback fullscreenCallback;
+    String lastCutoutCss="";
     String shareAction;
     BroadcastReceiver shareReceiver;
     static class Pending { String id, method, transferToken; JavaScriptReplyProxy reply; File file; Pending(String i, String m, JavaScriptReplyProxy r, File f) { id=i;method=m;reply=r;file=f; } }
@@ -48,7 +49,22 @@ public class MainActivity extends Activity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         root=new FrameLayout(this);web=new WebView(this);root.addView(web,new FrameLayout.LayoutParams(-1,-1));setContentView(root);
-        ViewCompat.setOnApplyWindowInsetsListener(root,(v,insets)->{Insets b=insets.getInsets((immersive?0:WindowInsetsCompat.Type.systemBars())|WindowInsetsCompat.Type.displayCutout());Insets k=insets.getInsets(WindowInsetsCompat.Type.ime());v.setPadding(b.left,b.top,b.right,Math.max(b.bottom,k.bottom));return insets;});
+        ViewCompat.setOnApplyWindowInsetsListener(root,(v,insets)->{
+            Insets b=insets.getInsets((immersive?0:WindowInsetsCompat.Type.systemBars())|WindowInsetsCompat.Type.displayCutout());
+            Insets k=insets.getInsets(WindowInsetsCompat.Type.ime());
+            boolean wordEdge=immersive&&BuildConfig.STUDIO.equals("word");
+            v.setPadding(wordEdge?0:b.left,wordEdge?0:b.top,wordEdge?0:b.right,Math.max(wordEdge?0:b.bottom,k.bottom));
+            if(BuildConfig.STUDIO.equals("word"))publishWordCutout(wordEdge?insets.getInsets(WindowInsetsCompat.Type.displayCutout()):Insets.NONE);
+            return insets;
+        });
+        if(BuildConfig.STUDIO.equals("word")){
+            root.setBackgroundColor(0xff14161b);
+            WindowManager.LayoutParams attributes=getWindow().getAttributes();
+            attributes.layoutInDisplayCutoutMode=WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            getWindow().setAttributes(attributes);
+            WindowInsetsControllerCompat bars=WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView());
+            bars.setAppearanceLightStatusBars(false);bars.setAppearanceLightNavigationBars(false);
+        }
         if(Build.VERSION.SDK_INT>=33)getOnBackInvokedDispatcher().registerOnBackInvokedCallback(android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT,this::onBackPressed);
         shareAction=getPackageName()+".SHARE_TARGET."+UUID.randomUUID();
         shareReceiver=new BroadcastReceiver(){@Override public void onReceive(Context c,Intent i){if(shareAction.equals(i.getAction())&&pending!=null&&pending.method.equals("share")&&Objects.equals(pending.transferToken,i.getStringExtra("transferToken"))){Pending p=pending;pending=null;success(p.id,p.reply,obj("completed",true));}}};
@@ -75,7 +91,7 @@ public class MainActivity extends Activity {
                 if(req.isForMainFrame()&&req.hasGesture()&&(u.getScheme().equals("https")||u.getScheme().equals("mailto")))try{startActivity(new Intent(Intent.ACTION_VIEW,u));}catch(Exception ignored){}
                 return true;
             }
-            @Override public void onPageFinished(WebView view,String url){web.evaluateJavascript("window.__studioHostConfig="+obj("studio",BuildConfig.STUDIO,"version",BuildConfig.VERSION_NAME)+";",null);}
+            @Override public void onPageFinished(WebView view,String url){web.evaluateJavascript("window.__studioHostConfig="+obj("studio",BuildConfig.STUDIO,"version",BuildConfig.VERSION_NAME)+";",null);if(BuildConfig.STUDIO.equals("word")){lastCutoutCss="";ViewCompat.requestApplyInsets(root);}}
         });
         web.setWebChromeClient(new WebChromeClient(){
             @Override public boolean onShowFileChooser(WebView v,ValueCallback<Uri[]> callback,FileChooserParams params){
@@ -150,6 +166,14 @@ public class MainActivity extends Activity {
     static Uri intentUri(Intent i){if(i==null)return null;if(Intent.ACTION_SEND.equals(i.getAction()))return i.getParcelableExtra(Intent.EXTRA_STREAM);if(Intent.ACTION_VIEW.equals(i.getAction()))return i.getData();return null;}
     @Override protected void onNewIntent(Intent i){super.onNewIntent(i);setIntent(i);Uri u=intentUri(i);if(u!=null){if(incoming!=null){Toast.makeText(this,"다른 파일을 읽고 있습니다. 잠시 뒤 다시 열어 주세요",Toast.LENGTH_LONG).show();return;}incoming=u;deliverIncoming();}}
     void deliverIncoming(){if(!ready||incoming==null)return;Uri uri=incoming;incoming=null;io.execute(()->{try{JSONObject f=importUri(uri);runOnUiThread(()->{if(!destroyed)web.evaluateJavascript("window.OfficeStudioHost&&window.OfficeStudioHost.receive("+f+")",null);});}catch(Exception e){runOnUiThread(()->Toast.makeText(this,"파일을 열지 못했습니다. 앱의 열기에서 다시 선택해 주세요",Toast.LENGTH_LONG).show());}});}
+    void publishWordCutout(Insets cutout){
+        float density=getResources().getDisplayMetrics().density;
+        String css="document.documentElement&&["+
+            "['top',"+(cutout.top/density)+"],['right',"+(cutout.right/density)+"],"+
+            "['bottom',"+(cutout.bottom/density)+"],['left',"+(cutout.left/density)+"]"+
+            "].forEach(p=>document.documentElement.style.setProperty('--office-cutout-'+p[0],p[1]+'px'));";
+        if(!css.equals(lastCutoutCss)){lastCutoutCss=css;web.evaluateJavascript(css,null);}
+    }
     void hideFullscreen(){if(fullscreen==null)return;root.removeView(fullscreen);fullscreen=null;web.setVisibility(View.VISIBLE);if(fullscreenCallback!=null)fullscreenCallback.onCustomViewHidden();fullscreenCallback=null;}
     @Override public void onBackPressed(){if(fullscreen!=null){hideFullscreen();return;}if(web==null){finish();return;}web.evaluateJavascript("window.OfficeStudioHost?window.OfficeStudioHost.back():false",value->{if("false".equals(value)||"null".equals(value))finish();});}
     @Override public void onWindowFocusChanged(boolean focused){
