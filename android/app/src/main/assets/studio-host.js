@@ -28,9 +28,11 @@
  const nativePlugins=window.__studioHostConfig?.studio==='slide'?{
   SystemBars:{hide:()=>request('systemBars',{hidden:true}),show:()=>request('systemBars',{hidden:false})},
   ScreenOrientation:{lock:({orientation})=>request('orientation',{orientation}),unlock:()=>request('orientation',{orientation:'unlock'})}
+ }:window.__studioHostConfig?.studio==='word'?{
+  SystemBars:{hide:()=>request('systemBars',{hidden:true}),show:()=>request('systemBars',{hidden:false})}
  }:{};
  window.Capacitor={getPlatform:()=> 'android',isNativePlatform:()=>true,Plugins:nativePlugins,isPluginAvailable:name=>Object.hasOwn(nativePlugins,name),registerPlugin:name=>nativePlugins[name]};
- window.wordAndroid={openFile,saveFile:async file=>(await save(file)).completed?'completed':'cancelled',shareFile:async file=>(await share(file)).completed?'completed':'cancelled',onOpenFile:subscribe,onBack:fn=>{backListeners.add(fn);return()=>backListeners.delete(fn);},close:()=>{void request('close');}};
+ window.wordAndroid={...(window.__studioHostConfig?.studio==='word'?{setImmersiveMode:enabled=>request('systemBars',{hidden:!!enabled})}:{}),openFile,saveFile:async file=>(await save(file)).completed?'completed':'cancelled',shareFile:async file=>(await share(file)).completed?'completed':'cancelled',onOpenFile:subscribe,onBack:fn=>{backListeners.add(fn);return()=>backListeners.delete(fn);},close:()=>{void request('close');}};
  window.sheetStudioAndroid={protocolVersion:1,platform:'android',resumeSession:true,setFullscreen:options=>request('sheetFullscreen',options),openFile,saveCopy:save,shareFile:share,writeClipboard:clipboard,onOpenFile:subscribe,takeRequestedFile:async()=>null};
  window.slideStudioAndroid={openFile,saveFile:async file=>(await save(file)).completed===true,shareFile:share,onOpenFile:subscribe,print:async()=>request('print')};
  Object.defineProperty(navigator,'canShare',{configurable:true,value:({files}={})=>!!files&&files.length===1&&files[0].size<=limit});
