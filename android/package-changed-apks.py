@@ -81,7 +81,7 @@ build = {
 changes = {
     'sheet': '전체화면 셀 입력·수식 참조, 태블릿 편집과 키보드·Esc·Back 처리 개선',
     'slide': '태블릿 편집과 발표 종료·Esc·Back 처리 개선',
-    'word': 'Android 편집 리본과 읽기 화면에서 편집으로 돌아오는 Esc 처리 개선',
+    'word': '연속 페이지 확대 배율 유지, 태블릿 편집과 안전한 네이티브 Esc 처리 개선',
 }
 day = datetime.datetime.now(ZoneInfo('Asia/Seoul')).strftime('%Y년 %m월 %d일')
 summary = ', '.join(a['name'] + ' **' + a['version'] + '**' for a in apps if a['rebuilt'])
@@ -116,10 +116,9 @@ for a in apps:
     if a['rebuilt']:
         old = next(x for x in prior['apps'] if x['id'] == a['id'])
         body = body.replace(old['sha256'] + '  ' + old['filename'], a['sha256'] + '  ' + a['filename'])
-body = body.replace('1.0.4에는 편집 리본과 문서 안에서 동작하는 Esc 처리를 포함합니다.',
-                    '1.0.5에는 태블릿 편집 화면 개선과 발표 종료·Esc·Back 처리를 포함합니다.')
-body = body.replace('사본 저장에서 XLSX 등 필요한 형식을 선택합니다.',
-                    '사본 저장에서 XLSX 등 필요한 형식을 선택합니다. 1.0.4에는 전체화면 셀 입력·수식 참조와 태블릿 편집 개선을 포함합니다.')
+if 'word' in changed:
+    body = body.replace('1.0.2에는 편집 리본과 읽기 화면에서 편집으로 돌아오는 Esc 처리를 포함합니다.',
+                        '1.0.3에는 연속 페이지 확대 배율 유지와 태블릿 편집, 안전한 Esc 처리를 포함합니다.')
 start = body.index('## 7. 이번 배포의 확인 범위')
 end = body.index('이 문서는 리토스의 읽기 전용 공유 페이지입니다.', start)
 details = '\n'.join(f"- **{a['name']} {a['version']}**: {changes[a['id']]} · versionCode {a['versionCode']}"
