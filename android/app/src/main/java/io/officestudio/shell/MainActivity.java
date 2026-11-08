@@ -69,7 +69,10 @@ public class MainActivity extends Activity {
                 // The WebView fills the window, including the camera cutout.
                 // Only controls receive safe insets through CSS. Padding the
                 // native parent would leave a light strip beside a landscape show.
-                slideSafeInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+                // Status icons are hidden throughout Slide, not just in shows.
+                // A transient status-bar swipe must not reserve that row again.
+                // Keep camera, desktop caption and visible navigation protection.
+                slideSafeInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars() | WindowInsetsCompat.Type.captionBar() | WindowInsetsCompat.Type.displayCutout());
                 v.setPadding(0, 0, 0, keyboard.bottom);
                 publishSlideInsets(false);
                 return WindowInsetsCompat.CONSUMED;
@@ -118,6 +121,7 @@ public class MainActivity extends Activity {
             @Override public void onShowCustomView(View v,CustomViewCallback callback){if(fullscreen!=null){callback.onCustomViewHidden();return;}fullscreen=v;fullscreenCallback=callback;web.setVisibility(View.GONE);root.addView(v,new FrameLayout.LayoutParams(-1,-1));}
             @Override public void onHideCustomView(){hideFullscreen();}
         });
+        if (BuildConfig.STUDIO.equals("slide")) setSlideImmersive(false);
         incoming=intentUri(getIntent());
         web.loadUrl(ORIGIN+"/assets/public/index.html");
     }
@@ -202,13 +206,16 @@ public class MainActivity extends Activity {
         getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(background));
         WindowInsetsControllerCompat bars = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
         bars.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-        if (hidden) bars.hide(WindowInsetsCompat.Type.systemBars());
-        else bars.show(WindowInsetsCompat.Type.systemBars());
+        // Reclaim the status-bar row in home, viewer and editor as well. Leaving
+        // a show restores navigation, while the status bar stays transient.
+        bars.hide(WindowInsetsCompat.Type.statusBars());
+        if (hidden) bars.hide(WindowInsetsCompat.Type.navigationBars());
+        else bars.show(WindowInsetsCompat.Type.navigationBars());
         ViewCompat.requestApplyInsets(root);
     }
     @Override public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus && immersive && root != null && web != null) setSlideImmersive(true);
+        if (hasFocus && root != null && web != null && BuildConfig.STUDIO.equals("slide")) setSlideImmersive(immersive);
     }
     void hideFullscreen(){if(fullscreen==null)return;root.removeView(fullscreen);fullscreen=null;web.setVisibility(View.VISIBLE);if(fullscreenCallback!=null)fullscreenCallback.onCustomViewHidden();fullscreenCallback=null;}
     @Override public void onBackPressed(){if(fullscreen!=null){hideFullscreen();return;}if(web==null){finish();return;}web.evaluateJavascript("window.OfficeStudioHost?window.OfficeStudioHost.back():false",value->{if("false".equals(value)||"null".equals(value))finish();});}

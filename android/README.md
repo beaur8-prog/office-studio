@@ -37,3 +37,9 @@ Office Android 릴리스 `android-v1.0.2`는 Sheet APK, 빌드 기록, 체크섬
 최신 앱 main `1ee351b`의 발표 확대·이름 있는 터치 도구·안전 여백 CSS와 호스트 브랜치 `584be72`의 창·카메라 영역 수정을 함께 포함합니다. Sheet의 상태바 API는 유지하고 Slide만 versionName 1.0.2/versionCode 3으로 빌드합니다. 기존 앱 ID와 서명 키를 재사용합니다.
 
 SDK·Gradle·npm 캐시는 `/private/tmp/office-studio-android-build-cache`를 재사용하며 `:app:assembleSlideRelease`만 실행합니다. 설치·실행·브라우저·에뮬레이터 테스트와 ZIP 생성은 생략합니다. `android-v1.0.3`에는 Slide APK·빌드 기록·체크섬 세 파일을 게시하고 기존 공유 주소를 갱신합니다. Sheet 1.0.1과 Word 1.0.0은 기존 파일을 유지합니다.
+
+## Slide 상태바·뷰어 편집 후속 개발 (2026-11-08)
+
+`codex/android-reader-fullscreen-20261108`은 현재 배포된 Slide 1.0.2를 기준으로 일반 뷰어·편집·시작 화면에서도 상단 상태바를 숨깁니다. 발표 종료 시 하단 탐색바만 복원하고 포커스 복귀 시에도 정책을 유지합니다. 앱 소스의 같은 이름 브랜치에는 뷰어 상단 `편집` 버튼이 포함되어 있습니다. 상태바를 잠시 펼쳐도 그 높이를 CSS 여백으로 다시 예약하지 않으며 카메라·창 제목줄·하단 탐색/키보드의 보호 여백을 유지합니다. Sheet의 상태바 API와 Word는 변경하지 않습니다.
+
+Android 브라우저 검사 32개, main/Android 브랜치 웹 빌드와 `:app:compileSlideReleaseJavaWithJavac :app:compileSlideReleaseAndroidTestJavaWithJavac` Gradle 컴파일이 통과했습니다. 실제 기기/에뮬레이터 네이티브 검사 실행과 새 APK 조립·서명·배포는 수행하지 않았습니다. `source-lock.json`의 `development`는 이번 변경을, 상단 버전/테스트 필드는 기준 공개 배포를 설명합니다. 이후 별도 배포 시 Android 버전과 versionCode를 올리고 변경된 웹 자산과 네이티브 호스트를 함께 빌드해야 합니다.

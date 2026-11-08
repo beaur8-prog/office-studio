@@ -60,7 +60,7 @@ public class ReleaseInstrumentedTest {
     void status(JSONObject record){Bundle bundle=new Bundle();bundle.putString("stream","OFFICE_RESULT "+record+"\n");inst.sendStatus(2,bundle);}
     @Test public void packagedIdentityIconsAndOfflineAssets()throws Exception{
         PackageInfo info=target.getPackageManager().getPackageInfo(target.getPackageName(),PackageManager.GET_SIGNING_CERTIFICATES);
-        assertEquals("1.0.0",info.versionName);assertEquals(0,info.applicationInfo.flags&ApplicationInfo.FLAG_DEBUGGABLE);
+        assertEquals(BuildConfig.VERSION_NAME,info.versionName);assertEquals(0,info.applicationInfo.flags&ApplicationInfo.FLAG_DEBUGGABLE);
         String cert=hex(MessageDigest.getInstance("SHA-256").digest(info.signingInfo.getApkContentsSigners()[0].toByteArray()));String expected=InstrumentationRegistry.getArguments().getString("certificate");if(expected!=null)assertEquals(expected.toLowerCase(Locale.ROOT),cert);
         Drawable icon=target.getPackageManager().getApplicationIcon(target.getPackageName());assertTrue(icon instanceof AdaptiveIconDrawable);Bitmap bitmap=Bitmap.createBitmap(192,192,Bitmap.Config.ARGB_8888);icon.setBounds(0,0,192,192);icon.draw(new Canvas(bitmap));assertNotEquals(0,bitmap.getPixel(96,96));ByteArrayOutputStream png=new ByteArrayOutputStream();bitmap.compress(Bitmap.CompressFormat.PNG,100,png);
         Bundle bundle=new Bundle();bundle.putString("stream","OFFICE_ICON "+BuildConfig.STUDIO+" "+android.util.Base64.encodeToString(png.toByteArray(),android.util.Base64.NO_WRAP)+"\n");inst.sendStatus(2,bundle);

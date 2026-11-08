@@ -13,11 +13,11 @@
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",
-      "ref": "codex/android-1.0.2",
-      "sourceCommit": "656b54417f1f66f43698c73ce318374ead8ff635",
+      "ref": "codex/android-reader-fullscreen-20261108",
+      "sourceCommit": "a68f521393fcbb7bdea5f78bea8b124773ae2453",
       "version": "1.0.2",
       "versionCode": 3,
-      "upstreamCommit": "1ee351b9398c99a5f411e3e9dd941ce5707fbb21"
+      "upstreamCommit": "80e04b9fc84f7970d2498e9d8aa1eb3ce8e03d4a"
     },
     "word": {
       "repository": "beaur8-prog/word-studio",
@@ -40,5 +40,25 @@
     "reason": "Fast publication without application tests per established user preference"
   },
   "combinedZIP": false,
-  "nativeSlideHostUpstreamCommit": "584be72a8d8cc57a493f00eeea3c847d9d9f8cbb"
+  "nativeSlideHostUpstreamCommit": "584be72a8d8cc57a493f00eeea3c847d9d9f8cbb",
+  "development": {
+    "status": "source-only; not packaged, installed or published",
+    "baselineAppVersion": "1.0.2",
+    "baselineHostCommit": "8146a96f4fd847a3b3d757d175a6f641604724b2",
+    "requiresVersionBumpBeforeRelease": true,
+    "changes": [
+      "keep Slide status bar hidden in viewer, editor and home",
+      "restore only navigation bar after presentation",
+      "ignore transient status-bar row in safe insets",
+      "direct viewer edit action"
+    ],
+    "verification": {
+      "browserAndroidTests": 32,
+      "browserFailures": 0,
+      "webBuild": "passed: main and Android branch",
+      "gradleCompile": "passed: compileSlideReleaseJavaWithJavac and compileSlideReleaseAndroidTestJavaWithJavac",
+      "nativeRuntime": "not run"
+    },
+    "note": "Top-level version/tests describe the baseline published release; current development checks are recorded here."
+  }
 }
