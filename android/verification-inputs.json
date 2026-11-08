@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "tag": "android-v1.0.0",
+  "filename": "ANDROID-VALIDATION-INPUTS.zip",
+  "sha256": "ca6d9c4521213cef89a539e4a5c55bf935341b5e03b686d599989eb6382f6965",
+  "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b",
+  "productionApks": [
+    {
+      "id": "sheet",
+      "sha256": "0c463ca836198810dccf929ead33836c720bb9550b9f95673d2e6cdda1fe29cd",
+      "bytes": 6137453
+    },
+    {
+      "id": "slide",
+      "sha256": "80d97a19bbe328ba2af2b7eb914bbd091649a34a120bbf53019c2f0264bea236",
+      "bytes": 13481499
+    },
+    {
+      "id": "word",
+      "sha256": "e87a5505e7f98559fec446794d84737d887e6869427b41e463b1f405b51fa4ac",
+      "bytes": 38099869
+    }
+  ]
+}
