@@ -66,7 +66,12 @@ public class MainActivity extends Activity {
             window.setNavigationBarContrastEnforced(false);
         }
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        root=new FrameLayout(this);web=new WebView(this);root.addView(web,new FrameLayout.LayoutParams(-1,-1));setContentView(root);
+        root=new FrameLayout(this);web=new WebView(this){
+            @Override public boolean onKeyPreIme(int keyCode,KeyEvent event){
+                if(BuildConfig.STUDIO.equals("sheet")&&keyCode==KeyEvent.KEYCODE_ESCAPE){sheetEscape(event,"pre-ime");return true;}
+                return super.onKeyPreIme(keyCode,event);
+            }
+        };root.addView(web,new FrameLayout.LayoutParams(-1,-1));setContentView(root);
         ViewCompat.setOnApplyWindowInsetsListener(root,(v,insets)->{
             Insets keyboard = insets.getInsets(WindowInsetsCompat.Type.ime());
             if (BuildConfig.STUDIO.equals("slide")) {
@@ -277,10 +282,17 @@ public class MainActivity extends Activity {
         if(!css.equals(lastCutoutCss)){lastCutoutCss=css;web.evaluateJavascript(css,null);}
     }
     void hideFullscreen(){if(fullscreen==null)return;root.removeView(fullscreen);fullscreen=null;web.setVisibility(View.VISIBLE);if(fullscreenCallback!=null)fullscreenCallback.onCustomViewHidden();fullscreenCallback=null;}
+    void sheetEscape(KeyEvent event,String route){
+        if(event.getAction()==KeyEvent.ACTION_DOWN&&event.getRepeatCount()==0&&web!=null&&!destroyed){
+            if(BuildConfig.DEBUG)android.util.Log.d("SheetInput","Escape via "+route);
+            web.evaluateJavascript("window.dispatchEvent(new Event('sheet-studio-android-escape',{cancelable:true}))",null);
+        }
+    }
     @Override public boolean dispatchKeyEvent(KeyEvent event) {
-        if ((BuildConfig.STUDIO.equals("sheet") || BuildConfig.STUDIO.equals("slide")) && event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE) {
-            if(event.getAction()==KeyEvent.ACTION_DOWN && event.getRepeatCount()==0 && web!=null && !destroyed)
-                web.evaluateJavascript(BuildConfig.STUDIO.equals("sheet")?"window.dispatchEvent(new Event('sheet-studio-android-escape',{cancelable:true}))":"window.OfficeStudioHost?.escape?.()",null);
+        if(BuildConfig.STUDIO.equals("sheet")&&event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE){sheetEscape(event,"activity");return true;}
+        if(BuildConfig.STUDIO.equals("slide")&&event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE){
+            if(event.getAction()==KeyEvent.ACTION_DOWN&&event.getRepeatCount()==0&&web!=null&&!destroyed)
+                web.evaluateJavascript("window.OfficeStudioHost?.escape?.()",null);
             return true;
         }
         // Word's read-only page can lack a focused input. Keep Escape in the

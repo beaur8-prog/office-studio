@@ -148,7 +148,7 @@ public class SheetWindowInstrumentedTest {
     @Test public void fullscreenEntryKeepsImeAndEscapePreservesUncommittedDraft() throws Exception {
         AtomicReference<MainActivity> activity=new AtomicReference<>();
         try(ActivityScenario<MainActivity> s=ActivityScenario.launch(MainActivity.class)){
-            ready(s);s.onActivity(activity::set);tap(s,".android-header [data-mobile=mode]");waitJS(s,"sheetStudio.isViewer()");
+            ready(s);s.onActivity(activity::set);tap(s,".android-header [data-mobile=mode]");waitJS(s,"sheetStudio.isViewer()");settle(s);SystemClock.sleep(400);
             tap(s,"#android-cell-0-0");waitJS(s,"document.activeElement.id==='formula'");waitIme(s);setDraft(s,"111");
             UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressKeyCode(KeyEvent.KEYCODE_ENTER);
             waitJS(s,"sheetStudio.getSelection().r===1 && sheetStudio.getCell('A1')?.raw==='111' && sheetStudio.isViewer() && document.activeElement.id==='formula'");

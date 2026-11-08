@@ -6,10 +6,10 @@
     "sheet": {
       "repository": "beaur8-prog/sheet-studio",
       "ref": "main",
-      "sourceCommit": "01c99a380079d6b0f123df5c4cc2b3b497e2e992",
+      "sourceCommit": "8d433b8db31c1c1efd7d4ae1a3b217b8787660d3",
       "version": "1.0.4",
       "versionCode": 5,
-      "upstreamCommit": "01c99a380079d6b0f123df5c4cc2b3b497e2e992"
+      "upstreamCommit": "8d433b8db31c1c1efd7d4ae1a3b217b8787660d3"
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",
@@ -47,12 +47,13 @@
   "nativeSheetHostUpstreamCommit": "04fc43a285c29669fcdcbdef3069cac71092f46b",
   "development": {
     "sheetRendererVersion": "0.7.45",
-    "sheetSourceCommit": "01c99a380079d6b0f123df5c4cc2b3b497e2e992",
+    "sheetSourceCommit": "8d433b8db31c1c1efd7d4ae1a3b217b8787660d3",
     "nativeBaselineCommit": "7c3f7f87e1c914671e46d7f846805dcede8d677d",
     "changes": [
       "fullscreen layout independent of read-only permissions",
       "Sheet native Escape and Back direct events; never finish on missing bridge",
-      "wide Android tablet mouse/keyboard commands share desktop editing engine"
+      "wide Android tablet mouse/keyboard commands share desktop editing engine",
+      "consume Escape before IME and at Activity; do not arm phone input from keyboard capability alone"
     ],
     "verification": "see android/qa/SHEET-RUNTIME-20261108.md"
   }
