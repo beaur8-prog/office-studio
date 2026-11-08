@@ -39,6 +39,12 @@ public class WordPrintInstrumentedTest {
         System.out.println("PRINT-DIAGNOSTIC "+ui.js(scenario,"JSON.stringify({events:window.printKeyQA||[],body:document.body.innerText.slice(-1200),focus:document.activeElement?.outerHTML.slice(0,150)})"));
         scenario.onActivity(activity->System.out.println("PRINT-NATIVE pending="+activity.pending+" printSession="+(activity.wordPrint!=null)+" webFocus="+activity.web.hasFocus()));
         until(()->"com.android.printspooler".equals(device.getCurrentPackageName()),90000,"System print window did not open");
+        // A fresh Android system has no selected destination. The action
+        // button appears only after the user chooses a printer or PDF.
+        if(!device.hasObject(By.text("Save as PDF"))){
+            UiObject2 destination=device.wait(Until.findObject(By.res("com.android.printspooler:id/destination_spinner")),10000);assertNotNull(destination);destination.click();
+            UiObject2 pdf=device.wait(Until.findObject(By.text("Save as PDF")),10000);assertNotNull(pdf);pdf.click();
+        }
         until(()->{UiObject2 button=device.findObject(By.res("com.android.printspooler:id/print_button"));return button!=null&&button.isEnabled();},90000,"Print preview did not become ready");
     }
     void returned()throws Exception {
@@ -54,8 +60,9 @@ public class WordPrintInstrumentedTest {
         shot("print-system-preview-"+filename);
         device.findObject(By.res("com.android.printspooler:id/print_button")).click();
         until(()->device.getCurrentPackageName()!=null&&device.getCurrentPackageName().contains("documentsui"),30000,"System PDF save picker did not open");
-        if(!device.hasObject(By.text("Downloads"))){
-            UiObject2 roots=device.findObject(By.desc("Show roots"));if(roots!=null){roots.click();UiObject2 downloads=device.wait(Until.findObject(By.text("Downloads")),5000);if(downloads!=null)downloads.click();}
+        UiObject2 downloads=device.findObject(By.text("Downloads"));
+        if(downloads!=null)downloads.click();else{
+            UiObject2 roots=device.findObject(By.desc("Show roots"));if(roots!=null){roots.click();downloads=device.wait(Until.findObject(By.text("Downloads")),5000);if(downloads!=null)downloads.click();}
         }
         UiObject2 name=device.wait(Until.findObject(By.clazz("android.widget.EditText")),10000);assertNotNull(name);name.setText(filename);
         UiObject2 save=device.findObject(By.res("android:id/button1"));if(save==null)save=device.findObject(By.text(Pattern.compile("(?i)save")));assertNotNull("No system Save button",save);save.click();

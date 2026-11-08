@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
     WordPrintSession wordPrint;
     ValueCallback<Uri[]> chooser;
     Uri incoming;
-    boolean ready, destroyed, immersive;
+    boolean ready, destroyed, immersive, wordPrintKeyDown;
     Integer orientationBefore;
     View fullscreen;
     WebChromeClient.CustomViewCallback fullscreenCallback;
@@ -192,6 +192,18 @@ public class MainActivity extends Activity {
     }
     void hideFullscreen(){if(fullscreen==null)return;root.removeView(fullscreen);fullscreen=null;web.setVisibility(View.VISIBLE);if(fullscreenCallback!=null)fullscreenCallback.onCustomViewHidden();fullscreenCallback=null;}
     @Override public boolean dispatchKeyEvent(KeyEvent event){
+        // WebView can consume Ctrl+P as a browser shortcut without delivering
+        // a DOM key event. Word owns this shortcut and opens its document print
+        // path once, including a hardware keyboard's held-key/release events.
+        if(BuildConfig.STUDIO.equals("word")&&event.getKeyCode()==KeyEvent.KEYCODE_P&&
+            (event.isCtrlPressed()||event.isMetaPressed()||wordPrintKeyDown)){
+            if(event.getAction()==KeyEvent.ACTION_DOWN){
+                if(event.getRepeatCount()==0&&web!=null&&!destroyed)
+                    web.evaluateJavascript("window.dispatchEvent(new Event('studio-native-print'));",null);
+                wordPrintKeyDown=true;
+            }else if(event.getAction()==KeyEvent.ACTION_UP)wordPrintKeyDown=false;
+            return true;
+        }
         // Own the whole Escape press, not only key-up. Passing either half to
         // WebView/Android can turn the same press into a second back/close.
         if(BuildConfig.STUDIO.equals("word")&&event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE){
@@ -206,6 +218,9 @@ public class MainActivity extends Activity {
     @Override public void onBackPressed(){if(fullscreen!=null){hideFullscreen();return;}if(web==null){finish();return;}web.evaluateJavascript("window.OfficeStudioHost?window.OfficeStudioHost.back():false",value->{if("false".equals(value)||"null".equals(value))finish();});}
     @Override public void onWindowFocusChanged(boolean focused){
         super.onWindowFocusChanged(focused);
+        // DOM editor focus does not imply native WebView keyboard focus.
+        // Restore the latter after a print/file system window returns too.
+        if(focused&&BuildConfig.STUDIO.equals("word")&&web!=null&&!destroyed)web.requestFocus();
         // File pickers, the keyboard and share sheets may reveal system bars.
         // Only Word opts into this focus restoration; other apps keep their policy.
         if(focused&&immersive&&BuildConfig.STUDIO.equals("word")&&root!=null){
