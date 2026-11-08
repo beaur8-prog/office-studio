@@ -1,6 +1,6 @@
 {
   "sheet": {
-    "version": "1.0.2",
+    "version": "1.0.3",
     "assetFiles": [
       {
         "path": "THIRD-PARTY-NOTICES.txt",
@@ -20,17 +20,17 @@
       {
         "path": "app-version.json",
         "bytes": 20,
-        "sha256": "9c95b15ebede9992876d1e9964fc4f9b7d9faed4a4387aa187dec630702aeb68"
+        "sha256": "ec1aafd8760183ae2760f2dad9ee6f61f12a68d1e580938b986c8cc28e58063a"
       },
       {
-        "path": "assets/index-BPSPmnXi.js",
-        "bytes": 1018046,
-        "sha256": "2f8dc86882751f1c2aa2a42c3e069ffe3ad8b8ebbc3b7ef544e9a1eefe50866f"
+        "path": "assets/index-Cy2s3v54.js",
+        "bytes": 1025045,
+        "sha256": "fd406bb47aea71600603c10b0a66d62e6603452853f09943923595bc32fffe2a"
       },
       {
-        "path": "assets/index-DlajnCYf.css",
-        "bytes": 55052,
-        "sha256": "9da99e2cb48803faf73464d966ce3233f378edb735dd9460f4c04fac83f76b99"
+        "path": "assets/index-Dtz8jvFN.css",
+        "bytes": 61404,
+        "sha256": "3cf355774b4d4c39aac02e17c5f65a501bbfcee2a890db4689ae82613231d704"
       },
       {
         "path": "assets/spreadsheet-BTv7Xkas.js",
@@ -49,8 +49,8 @@
       },
       {
         "path": "index.html",
-        "bytes": 784,
-        "sha256": "7cde1ecbbc8be02b58731cf22145b1b3c8a6de23b19108c2e4c1e88a3d273081"
+        "bytes": 788,
+        "sha256": "9f0be70789f1c78bf6704a083de934adfb735b15da85d1a179bbcd5f4fcbba8e"
       }
     ],
     "iconSourceSHA256": "180827929304256408d440428f7f736266be150b939270ea08efe92f332c864f",
@@ -60,12 +60,12 @@
     "monochromeIcon": true
   },
   "slide": {
-    "version": "1.0.3",
+    "version": "1.0.4",
     "assetFiles": [
       {
-        "path": "assets/UTIF-C83o0onw.js",
+        "path": "assets/UTIF-yhbrxgBO.js",
         "bytes": 85484,
-        "sha256": "778f039f0b068702df03c7e5d8fcd06715a1c1ec682cd9596091858dc2981c20"
+        "sha256": "d1d59c7b292749aa1adbcfa09498c89d7663a8838c401a127d558b9e3a261046"
       },
       {
         "path": "assets/__vite-browser-external-BIHI7g3E.js",
@@ -233,14 +233,14 @@
         "sha256": "e25d2d98eb5361bf9df83a5f53a73708042cf7d530d97d6b96ea7a2d831d65d5"
       },
       {
-        "path": "assets/index-DEwgFSMy.css",
-        "bytes": 110103,
-        "sha256": "d70d4702a541bc52325767816f88885b9292785578e4b07d8eba7ab7e0cda734"
+        "path": "assets/index-BJ5ft-ur.css",
+        "bytes": 111535,
+        "sha256": "407797023b4905eccd13d35a94ae681b31ed5564804a4c96d35667e261bcd67b"
       },
       {
-        "path": "assets/index-DciBdKCB.js",
-        "bytes": 2106485,
-        "sha256": "193b911ae7afaae63e9abd81ed0e36edcfd632f48e947421afd8d6835601e07b"
+        "path": "assets/index-Bdlsc228.js",
+        "bytes": 2109795,
+        "sha256": "6f4a14abb98445ebabe159f750d220e366673c998651432fd670b6c968b80bb5"
       },
       {
         "path": "assets/metafile.worker-CvWubWPQ.js",
@@ -264,8 +264,8 @@
       },
       {
         "path": "index.html",
-        "bytes": 479,
-        "sha256": "f87321f65d3a6a979a7a0437f7ce6dcb4fbef71222d36e86aa2ee4bb3dcc50b0"
+        "bytes": 483,
+        "sha256": "717d324ee8be3119c79a52a1ffae5d7047534176a511b531ef952c8b022516be"
       },
       {
         "path": "licenses/Apache-POI-LICENSE.txt",
@@ -310,17 +310,17 @@
     "monochromeIcon": true
   },
   "word": {
-    "version": "1.0.1",
+    "version": "1.0.2",
     "assetFiles": [
       {
-        "path": "assets/AndroidApp-DTWURNqf.js",
-        "bytes": 27384,
-        "sha256": "63d4cdada30f63e2f4181b2f4023a60989c9becc1fe97087b4d08e84a9b972b3"
+        "path": "assets/AndroidApp-14HqvJRa.js",
+        "bytes": 34470,
+        "sha256": "cd0bf2336e56f2e7f6d2bf2ef188bf1fe49df5bbd1c3cdc49bb5f2f084840104"
       },
       {
-        "path": "assets/AndroidApp-DppVvPWO.css",
-        "bytes": 9037,
-        "sha256": "8c0fa174f03b328c0aa927062df199e3a82181a058a3f9b8368c4b4e7622bcfc"
+        "path": "assets/AndroidApp-DN5O_Ueq.css",
+        "bytes": 11978,
+        "sha256": "5440868be4070b1d7e813cffa56d65409401a38ac03b6e1c4a11c244c270dbd3"
       },
       {
         "path": "assets/NotoEmoji-DS29qjIq.ttf",
@@ -353,14 +353,14 @@
         "sha256": "7d5fb73b7ca67a6798101741f5d280a3d016a56a197afcd4199dbb57b4b82a21"
       },
       {
+        "path": "assets/index-C1tZ9zeq.js",
+        "bytes": 1996599,
+        "sha256": "7b926c2a4f5edcaaa1a2a1130e10fb1e8cff0d47274ed4e5831126396264eb2e"
+      },
+      {
         "path": "assets/index-DdiRe8Us.css",
         "bytes": 394499,
         "sha256": "336318b4482741aaac5a1abd845512e62848018e50cab63d7339fa896166fc04"
-      },
-      {
-        "path": "assets/index-DhOcRHz3.js",
-        "bytes": 1994579,
-        "sha256": "0141a727e7931f2a3979bb16d169741cc577bda21bcd52d9cd8b843d73b81f1f"
       },
       {
         "path": "assets/noto-sans-kr-0-400-normal-Dk1zEwO4.woff",
@@ -5354,8 +5354,8 @@
       },
       {
         "path": "index.html",
-        "bytes": 473,
-        "sha256": "d58147125a88791dace94cd66aa2e46af96ec9dc184097c88f0cdd0d0ce06f9b"
+        "bytes": 477,
+        "sha256": "b18edda367a384a4036f6674c12877e016e536aea577e17e8c4a7f46f02ba7de"
       }
     ],
     "iconSourceSHA256": "45cd6cf1932e22c86ac0c975f73165ea164534cf2c9c57aa02b25897af63058f",

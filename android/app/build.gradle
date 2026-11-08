@@ -9,9 +9,9 @@ android {
  testBuildType 'release'
  flavorDimensions += 'studio'
  productFlavors {
-  sheet { dimension 'studio'; versionCode 3; versionName '1.0.2'; applicationId 'io.officestudio.sheet'; resValue 'string','app_name','Sheet Studio'; buildConfigField 'String','STUDIO','"sheet"' }
-  slide { dimension 'studio'; versionCode 4; versionName '1.0.3'; applicationId 'io.officestudio.slide'; resValue 'string','app_name','Slide Studio'; buildConfigField 'String','STUDIO','"slide"' }
-  word { dimension 'studio'; versionCode 2; versionName '1.0.1'; applicationId 'io.officestudio.word'; resValue 'string','app_name','Word Studio'; buildConfigField 'String','STUDIO','"word"' }
+  sheet { dimension 'studio'; versionCode 4; versionName '1.0.3'; applicationId 'io.officestudio.sheet'; resValue 'string','app_name','Sheet Studio'; buildConfigField 'String','STUDIO','"sheet"' }
+  slide { dimension 'studio'; versionCode 5; versionName '1.0.4'; applicationId 'io.officestudio.slide'; resValue 'string','app_name','Slide Studio'; buildConfigField 'String','STUDIO','"slide"' }
+  word { dimension 'studio'; versionCode 3; versionName '1.0.2'; applicationId 'io.officestudio.word'; resValue 'string','app_name','Word Studio'; buildConfigField 'String','STUDIO','"word"' }
  }
  buildFeatures { buildConfig true }
  compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }

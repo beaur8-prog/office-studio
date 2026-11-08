@@ -33,7 +33,7 @@
  }:{};
  window.Capacitor={getPlatform:()=> 'android',isNativePlatform:()=>true,Plugins:nativePlugins,isPluginAvailable:name=>Object.hasOwn(nativePlugins,name),registerPlugin:name=>nativePlugins[name]};
  window.wordAndroid={...(window.__studioHostConfig?.studio==='word'?{setImmersiveMode:enabled=>request('systemBars',{hidden:!!enabled})}:{}),openFile,saveFile:async file=>(await save(file)).completed?'completed':'cancelled',shareFile:async file=>(await share(file)).completed?'completed':'cancelled',onOpenFile:subscribe,onBack:fn=>{backListeners.add(fn);return()=>backListeners.delete(fn);},close:()=>{void request('close');}};
- window.sheetStudioAndroid={protocolVersion:1,platform:'android',resumeSession:true,setFullscreen:options=>request('sheetFullscreen',options),openFile,saveCopy:save,shareFile:share,writeClipboard:clipboard,onOpenFile:subscribe,takeRequestedFile:async()=>null};
+ window.sheetStudioAndroid={protocolVersion:1,platform:'android',resumeSession:true,closeApp:()=>request('close'),setFullscreen:options=>request('sheetFullscreen',options),openFile,saveCopy:save,shareFile:share,writeClipboard:clipboard,onOpenFile:subscribe,takeRequestedFile:async()=>null};
  window.slideStudioAndroid={openFile,saveFile:async file=>(await save(file)).completed===true,shareFile:share,onOpenFile:subscribe,print:async()=>request('print')};
  Object.defineProperty(navigator,'canShare',{configurable:true,value:({files}={})=>!!files&&files.length===1&&files[0].size<=limit});
  Object.defineProperty(navigator,'share',{configurable:true,value:async({files})=>{if(!files||files.length!==1)throw new Error('한 번에 파일 하나를 공유할 수 있습니다');const file=files[0],result=await share({name:file.name,mime:file.type,data:new Uint8Array(await file.arrayBuffer())});if(!result.completed)throw new DOMException('공유를 취소했습니다','AbortError');}});
@@ -45,6 +45,13 @@
  URL.createObjectURL=blob=>{const url=create(blob);urls.set(url,blob);return url;};
  URL.revokeObjectURL=url=>{urls.delete(url);revoke(url);};
  HTMLAnchorElement.prototype.click=function(){const blob=urls.get(this.href);if(blob&&this.download){const name=this.download;void blob.arrayBuffer().then(data=>save({name,mime:blob.type,data:new Uint8Array(data)})).catch(error=>alert(error.message));return;}return click.call(this);};
+ // Escape stays in the document; native consumes both hardware key edges.
+ if (['sheet','slide'].includes(window.__studioHostConfig?.studio)) window.OfficeStudioHost.escape=()=>{
+  const event=new KeyboardEvent('keydown',{key:'Escape',code:'Escape',bubbles:true,cancelable:true});
+  const target=window.__studioHostConfig.studio==='sheet'?(document.activeElement||document):window;
+  target.dispatchEvent(event);
+  return event.defaultPrevented;
+ };
  const ready=()=>{void request('ready').catch(error=>alert(error.message));};
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready,{once:true});else ready();
 })();
