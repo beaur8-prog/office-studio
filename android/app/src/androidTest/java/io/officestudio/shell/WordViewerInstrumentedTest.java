@@ -115,6 +115,11 @@ public class WordViewerInstrumentedTest {
             waitJS(scenario,"!!document.querySelector('.android-presentation-page .print-page')&&!document.querySelector('.android-presentation-loading')");
             dismissImmersiveGuide();
             scenario.onActivity(activity->assertTrue("Word must own input focus before real gestures",activity.hasWindowFocus()));
+            // A landscape tablet's width fit makes a portrait sheet taller
+            // than the screen. Test page-turn swipes at whole-page fit;
+            // zoomed sheets intentionally pan inside the current page.
+            js(scenario,"document.querySelector('.android-presentation-options > button').click()");
+            waitJS(scenario,"document.querySelector('.android-presentation-page').getBoundingClientRect().height<=innerHeight+2");
             UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
             int w=device.getDisplayWidth(),h=device.getDisplayHeight();
             assertTrue(device.swipe(w*4/5,h/2,w/5,h/2,10));waitJS(scenario,"document.querySelector('.android-presentation').dataset.page==='2'");
