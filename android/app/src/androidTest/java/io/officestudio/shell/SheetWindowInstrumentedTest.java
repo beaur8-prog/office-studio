@@ -310,7 +310,10 @@ public class SheetWindowInstrumentedTest {
         if(!device.hasObject(androidx.test.uiautomator.By.text("Save as PDF"))){clickPrint(androidx.test.uiautomator.By.res("com.android.printspooler","destination_spinner"),"destination");clickPrint(androidx.test.uiautomator.By.text("Save as PDF"),"pdf-destination");}
         if(letter){
             if(!device.hasObject(androidx.test.uiautomator.By.res("com.android.printspooler","paper_size_spinner")))clickPrint(androidx.test.uiautomator.By.res("com.android.printspooler","expand_collapse_handle"),"options");
-            clickPrint(androidx.test.uiautomator.By.res("com.android.printspooler","paper_size_spinner"),"paper");clickPrint(androidx.test.uiautomator.By.text(java.util.regex.Pattern.compile("(?i)(?:NA )?Letter.*")),"letter");
+            clickPrint(androidx.test.uiautomator.By.res("com.android.printspooler","paper_size_spinner"),"paper");
+            String letterLabel="(?i)(?:NA )?Letter.*";
+            if(!device.hasObject(androidx.test.uiautomator.By.text(java.util.regex.Pattern.compile(letterLabel))))assertTrue("Find Letter in the scrollable system paper list",new androidx.test.uiautomator.UiScrollable(new androidx.test.uiautomator.UiSelector().scrollable(true)).setAsVerticalList().setMaxSearchSwipes(20).scrollIntoView(new androidx.test.uiautomator.UiSelector().textMatches(letterLabel)));
+            clickPrint(androidx.test.uiautomator.By.text(java.util.regex.Pattern.compile(letterLabel)),"letter");
         }
         long end=SystemClock.uptimeMillis()+45000;androidx.test.uiautomator.UiObject2 button=null;
         do{button=device.findObject(androidx.test.uiautomator.By.res("com.android.printspooler","print_button"));try{if(button!=null&&button.isEnabled())break;}catch(androidx.test.uiautomator.StaleObjectException replacingWindow){button=null;}SystemClock.sleep(200);}while(SystemClock.uptimeMillis()<end);
