@@ -266,7 +266,7 @@ public class MainActivity extends Activity {
         // Reclaim the status-bar row in home, viewer and editor as well. Leaving
         // a show restores navigation, while the status bar stays transient.
         bars.hide(WindowInsetsCompat.Type.statusBars());
-        if (hidden) bars.hide(WindowInsetsCompat.Type.navigationBars());
+        if (hidden) bars.hide(WindowInsetsCompat.Type.navigationBars() | WindowInsetsCompat.Type.ime());
         else bars.show(WindowInsetsCompat.Type.navigationBars());
         ViewCompat.requestApplyInsets(root);
     }
