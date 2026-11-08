@@ -10,7 +10,7 @@ android {
  flavorDimensions += 'studio'
  productFlavors {
   sheet { dimension 'studio'; versionCode 2; versionName '1.0.1'; applicationId 'io.officestudio.sheet'; resValue 'string','app_name','Sheet Studio'; buildConfigField 'String','STUDIO','"sheet"' }
-  slide { dimension 'studio'; versionCode 2; versionName '1.0.1'; applicationId 'io.officestudio.slide'; resValue 'string','app_name','Slide Studio'; buildConfigField 'String','STUDIO','"slide"' }
+  slide { dimension 'studio'; versionCode 3; versionName '1.0.2'; applicationId 'io.officestudio.slide'; resValue 'string','app_name','Slide Studio'; buildConfigField 'String','STUDIO','"slide"' }
   word { dimension 'studio'; applicationId 'io.officestudio.word'; resValue 'string','app_name','Word Studio'; buildConfigField 'String','STUDIO','"word"' }
  }
  buildFeatures { buildConfig true }
