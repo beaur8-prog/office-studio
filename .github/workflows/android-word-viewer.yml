@@ -10,6 +10,9 @@ on:
       - android/qa/run-word-viewer.sh
       - .github/workflows/android-word-viewer.yml
   workflow_dispatch:
+concurrency:
+  group: word-android-viewer-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
@@ -63,6 +66,7 @@ jobs:
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;36.0.0'
+          bash gradlew :app:compileWordReleaseJavaWithJavac --no-daemon
           bash gradlew :app:assembleWordDebug :app:assembleWordDebugAndroidTest -PstudioTestBuildType=debug --no-daemon
       - name: Enable isolated emulator acceleration
         run: |

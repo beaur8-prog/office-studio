@@ -23,3 +23,12 @@ Android 릴리스는 `android-v<version>` 태그와 `--latest=false`로 게시�
 이번 요청은 추가 테스트 없이 배포하도록 명시되어 설치·실행·기능·에뮬레이터·브라우저 테스트를 수행하지 않았습니다. APK 조립과 서명·매니페스트·자산 포함·체크섬 기록만 수행하며 `BUILD-android.json`의 테스트 상태는 `skipped`입니다. 이전 1.0.0 검사 결과와 별도로 기록합니다.
 
 앱 소스를 잠금 커밋에 맞춘 뒤 `npm run build`, `node android/prepare-web.cjs slide`, `cd android && ./gradlew :app:assembleSlideRelease`로 Slide만 빌드합니다. `package-slide-update.py`는 인접 `baseline/`에 내려받은 기존 Sheet·Word APK, `BUILD-android-1.0.0.json` 및 운영 기록을 사용해 새 APK·ZIP·체크섬을 만듭니다. `build-slide-update-page.py`로 기존 페이지 갱신안을 만들고 공개 배포 후 `node android/publish-lithos.cjs --publish --update --skip-tests`로 같은 공유 주소를 갱신합니다. `--skip-tests`는 명시적으로 승인된 테스트 생략 기록이 있을 때만 허용합니다.
+
+
+## Word 원고 용지·전체 화면 뷰어 수정
+
+`codex/android-word-viewer`는 Word 프런트엔드의 A4 mm→CSS px 수정, 화면 폭 맞춤, 한 쪽씩 보기·핀치·스와이프 UI를 네이티브 셸에 연결한다. 잠금 소스는 `android/source-lock.json`의 Word 커밋을 따른다. `wordAndroid.setImmersiveMode`와 Word의 `SystemBars` 브리지는 시스템 바 표시/숨김 완료 응답을 반환하며, Word에 한해 파일 선택창·공유창에서 돌아와 창 포커스를 얻을 때 몰입 상태를 복원한다. 키보드·디스플레이 잘림 inset 처리는 유지한다. Sheet의 동작과 Slide의 기존 SystemBars/ScreenOrientation 연결은 바꾸지 않는다.
+
+`node --test android/qa/word-immersive.test.cjs`는 앱별 브리지 경계를 검사한다. `.github/workflows/android-word-viewer.yml`은 기본 release Java 컴파일과 격리된 debug APK/test APK를 조립한 뒤 Android 35 에뮬레이터의 휴대폰/태블릿 창 크기에서 실제 WebView A4 크기·가로 입력·상태 표시줄 숨김·DOCX/HWP 쪽 넘김·핀치를 검사한다. 시험용 원본은 공개/합성 자료이며 debug assets에만 넣는다. 검증용 APK는 공개 릴리스로 게시하지 않는다. `studioTestBuildType=debug`는 이 격리된 검사에만 사용하며 기본 release 설정은 유지한다.
+
+구현 근거: [Android 몰입 모드](https://developer.android.com/develop/ui/views/layout/immersive), [Capacitor SystemBars](https://capacitorjs.com/docs/apis/system-bars). 실제 제조사 단말의 IME·S Pen·DeX 검증은 에뮬레이터 결과와 구분한다. 이 작업은 공개 배포·리토스 갱신을 수행하지 않는다.
