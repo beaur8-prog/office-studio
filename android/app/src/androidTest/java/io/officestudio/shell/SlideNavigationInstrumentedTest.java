@@ -32,6 +32,11 @@ public class SlideNavigationInstrumentedTest {
     }
     void waitFor(String expression){long end=SystemClock.uptimeMillis()+30000;do{if("true".equals(js(expression)))return;SystemClock.sleep(100);}while(SystemClock.uptimeMillis()<end);fail("Not ready: "+expression);}
     void settle(){SystemClock.sleep(600);inst.waitForIdleSync();}
+    void waitForNativePresentation(){
+        long end=SystemClock.uptimeMillis()+15000;boolean[] ready={false};
+        do{inst.runOnMainSync(()->ready[0]=activity.hasWindowFocus()&&activity.immersive);if(ready[0])return;SystemClock.sleep(100);}while(SystemClock.uptimeMillis()<end);
+        fail("Native presentation window is not focused and immersive");
+    }
     void tap(String selector)throws Exception{
         JSONArray point=new JSONArray(js("(()=>{const r=document.querySelector("+JSONObject.quote(selector)+").getBoundingClientRect();return [(r.x+r.width/2)*devicePixelRatio,(r.y+r.height/2)*devicePixelRatio]})()"));
         int[] origin=new int[2];inst.runOnMainSync(()->activity.web.getLocationOnScreen(origin));
@@ -42,6 +47,7 @@ public class SlideNavigationInstrumentedTest {
         waitFor("!!document.querySelector('.android-editor')");
         tap(".android-editor [aria-label='슬라이드 쇼 시작'], .android-editor-tablet .document-actions .button.primary");
         waitFor("!!document.querySelector('.android-presentation')");
+        waitForNativePresentation();
     }
     void exitedToEditor(){waitFor("!document.querySelector('.android-presentation') && !!document.querySelector('.android-editor')");settle();assertFalse(activity.isFinishing());assertFalse(activity.isDestroyed());}
     void createViewer()throws Exception{
@@ -52,7 +58,7 @@ public class SlideNavigationInstrumentedTest {
     }
     void viewerPresent()throws Exception{
         tap(".android-topbar [aria-label='현재 슬라이드에서 발표']");
-        waitFor("!!document.querySelector('.android-presentation')");settle();
+        waitFor("!!document.querySelector('.android-presentation')");settle();waitForNativePresentation();
     }
     @Test public void viewerPresentationNeverCreatesSeparateFullscreenView()throws Exception{
         createViewer();viewerPresent();
@@ -116,12 +122,51 @@ public class SlideNavigationInstrumentedTest {
         createAndPresent();inst.sendKeyDownUpSync(KeyEvent.KEYCODE_ESCAPE);exitedToEditor();
         inst.sendKeyDownUpSync(KeyEvent.KEYCODE_ESCAPE);settle();assertEquals("true",js("!!document.querySelector('.android-editor')"));assertFalse(activity.isFinishing());
     }
-    @Test public void escapeMappedToBackConsumesReleaseAfterShowExit()throws Exception{
+    @Test public void preImeEscapeEndsOnlyPresentationAndConsumesBothEdges()throws Exception{
         createAndPresent();
-        inst.runOnMainSync(()->activity.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_BACK)));
+        js("window.nativeEscapeCount=0;window.originalNativeEscape=window.OfficeStudioHost.escape;window.OfficeStudioHost.escape=()=>{nativeEscapeCount++;return originalNativeEscape()}");
+        boolean[] consumed={false,false,false};
+        long down=SystemClock.uptimeMillis();
+        inst.runOnMainSync(()->consumed[0]=activity.web.dispatchKeyEventPreIme(new KeyEvent(down,down,KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_ESCAPE,0)));
+        assertTrue("Esc must be consumed before the input method",consumed[0]);
         exitedToEditor();
-        inst.runOnMainSync(()->activity.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,KeyEvent.KEYCODE_BACK)));
-        settle();assertEquals("true",js("!!document.querySelector('.android-editor')"));assertFalse(activity.isFinishing());
+        inst.runOnMainSync(()->{
+            consumed[1]=activity.web.dispatchKeyEventPreIme(new KeyEvent(down,SystemClock.uptimeMillis(),KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_ESCAPE,1));
+            consumed[2]=activity.web.dispatchKeyEventPreIme(new KeyEvent(down,SystemClock.uptimeMillis(),KeyEvent.ACTION_UP,KeyEvent.KEYCODE_ESCAPE,0));
+        });
+        settle();assertTrue("Repeated Esc down must be consumed",consumed[1]);assertTrue("Esc release must be consumed",consumed[2]);
+        assertEquals("1",js("window.nativeEscapeCount"));
+        assertEquals("true",js("!!document.querySelector('.android-editor')"));assertFalse(activity.isFinishing());
+    }
+    @Test public void systemBackEndsOnlyViewerPresentation()throws Exception{
+        createViewer();viewerPresent();
+        js("window.nativeNavigationCount=0;['escape','slideBack'].forEach(key=>{const original=window.OfficeStudioHost[key];window.OfficeStudioHost[key]=()=>{nativeNavigationCount++;return original()}})");
+        assertTrue(UiDevice.getInstance(inst).pressBack());
+        settle();
+        assertEquals("One Back must run one document command; state="+js("JSON.stringify({show:!!document.querySelector('.android-presentation'),viewer:!!document.querySelector('.android-slide-viewport'),home:!!document.querySelector('.android-home')})"),"1",js("window.nativeNavigationCount"));
+        waitFor("!document.querySelector('.android-presentation')&&!!document.querySelector('.android-slide-viewport')");
+        settle();assertFalse(activity.isFinishing());assertFalse(activity.isDestroyed());
+    }
+    @Test public void keyboardBackPressAndReleaseEndsOnlyPresentation()throws Exception{
+        createAndPresent();
+        // Send through the OS input queue so Android's predictive Back
+        // dispatcher participates; direct Activity calls bypass that path.
+        long down=SystemClock.uptimeMillis();
+        inst.sendKeySync(new KeyEvent(down,down,KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_BACK,0,0,android.view.KeyCharacterMap.VIRTUAL_KEYBOARD,0,KeyEvent.FLAG_FROM_SYSTEM,android.view.InputDevice.SOURCE_KEYBOARD));
+        SystemClock.sleep(150);
+        inst.sendKeySync(new KeyEvent(down,SystemClock.uptimeMillis(),KeyEvent.ACTION_UP,KeyEvent.KEYCODE_BACK,0,0,android.view.KeyCharacterMap.VIRTUAL_KEYBOARD,0,KeyEvent.FLAG_FROM_SYSTEM,android.view.InputDevice.SOURCE_KEYBOARD));
+        exitedToEditor();
+    }
+    @Test public void legacyPreImeBackConsumesReleaseAfterShowExit()throws Exception{
+        Assume.assumeTrue(android.os.Build.VERSION.SDK_INT<33);
+        createAndPresent();
+        boolean[] consumed={false,false};
+        inst.runOnMainSync(()->consumed[0]=activity.web.dispatchKeyEventPreIme(new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_BACK)));
+        assertTrue("Presentation Back must be consumed before IME",consumed[0]);
+        exitedToEditor();
+        inst.runOnMainSync(()->consumed[1]=activity.web.dispatchKeyEventPreIme(new KeyEvent(KeyEvent.ACTION_UP,KeyEvent.KEYCODE_BACK)));
+        settle();assertTrue("Back release must not leak after show exit",consumed[1]);
+        assertEquals("true",js("!!document.querySelector('.android-editor')"));assertFalse(activity.isFinishing());
     }
     @Test public void sharedCloseRequestCannotClosePresentation()throws Exception{
         createAndPresent();js("window.OfficeStudioHost.request('close')");exitedToEditor();
