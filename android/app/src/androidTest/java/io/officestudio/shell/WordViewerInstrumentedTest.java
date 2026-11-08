@@ -252,6 +252,42 @@ public class WordViewerInstrumentedTest {
             else device.executeShellCommand("settings delete secure show_ime_with_hard_keyboard");
         }
     }
+    @Test public void controlMouseWheelZoomsEveryWordAndHwpSurface() throws Exception {
+        try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(MainActivity.class)){
+            waitJS(scenario,"!!document.querySelector('.android-start button')");dismissImmersiveGuide();
+            openFixture(scenario,"viewer.docx");waitJS(scenario,"!!document.querySelector('.android-paper-viewport .print-page')");
+            wheelZoom(scenario,".android-paper-viewport");
+            js(scenario,"document.querySelector('[aria-label=\"알림 닫기\"]')?.click();document.querySelector('.android-topbar [aria-label=\"편집 모드\"]').click()");
+            waitJS(scenario,"!!document.querySelector('.tiptap[contenteditable=true]')");
+            boolean tablet="tablet".equals(InstrumentationRegistry.getArguments().getString("studioQaProfile","phone"));
+            wheelZoom(scenario,tablet?".office-shell .document-workspace":".android-editor-scroll");
+            js(scenario,"[...document.querySelectorAll('[aria-label=\"전체 화면 뷰어\"]')].find(b=>b.getBoundingClientRect().height>0).click()");
+            waitJS(scenario,"!!document.querySelector('.android-presentation-page .print-page')");
+            wheelZoom(scenario,".android-presentation-viewport");
+            assertTrue(UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressKeyCode(KeyEvent.KEYCODE_ESCAPE));
+            waitJS(scenario,"!document.querySelector('.android-presentation')");
+            openFixture(scenario,"landscape-pagination.hwp");waitJS(scenario,"!!document.querySelector('.hwp-reader [data-testid=hwp-page]')");
+            wheelZoom(scenario,".hwp-viewport");
+            js(scenario,"document.querySelector('[aria-label=\"한글 전체 화면 뷰어\"]').click()");
+            waitJS(scenario,"!!document.querySelector('.android-presentation-page svg')");
+            wheelZoom(scenario,".android-presentation-viewport");
+            scenario.onActivity(activity->{assertFalse(activity.isFinishing());assertFalse(activity.isDestroyed());});
+            screenshot("control-wheel-hwp-viewer");
+        }
+    }
+    void wheelZoom(ActivityScenario<MainActivity> scenario,String selector)throws Exception {
+        String query=JSONObject.quote(selector);
+        SystemClock.sleep(250);
+        String scale="(()=>{const v=document.querySelector("+query+");return v?.dataset.scale?Number(v.dataset.scale):v?.querySelector('.scaled-document')?new DOMMatrix(getComputedStyle(v.querySelector('.scaled-document')).transform).a:0})()";
+        JSONObject point=new JSONObject(js(scenario,"(()=>{const r=document.querySelector("+query+").getBoundingClientRect();return {x:(r.left+r.width/2)*devicePixelRatio,y:(r.top+r.height/2)*devicePixelRatio}})()"));
+        double before=Double.parseDouble(js(scenario,scale));assertTrue("Initial display scale missing for "+selector,before>0);
+        MotionEvent.PointerProperties prop=new MotionEvent.PointerProperties();prop.id=0;prop.toolType=MotionEvent.TOOL_TYPE_MOUSE;
+        MotionEvent.PointerCoords pos=new MotionEvent.PointerCoords();pos.x=(float)point.getDouble("x");pos.y=(float)point.getDouble("y");pos.setAxisValue(MotionEvent.AXIS_VSCROLL,1);
+        long now=SystemClock.uptimeMillis();MotionEvent event=MotionEvent.obtain(now,now,MotionEvent.ACTION_SCROLL,1,new MotionEvent.PointerProperties[]{prop},new MotionEvent.PointerCoords[]{pos},KeyEvent.META_CTRL_ON,0,1,1,-1,0,InputDevice.SOURCE_MOUSE,0);
+        assertTrue(InstrumentationRegistry.getInstrumentation().getUiAutomation().injectInputEvent(event,true));event.recycle();
+        waitJS(scenario,scale+">"+(before*1.05));
+        assertEquals("Native page zoom must stay off","1",js(scenario,"window.visualViewport.scale"));
+    }
     void injectKeyboard(int device,int code,int action,int repeat,long down){
         KeyEvent event=new KeyEvent(down,SystemClock.uptimeMillis(),action,code,repeat,0,device,code==KeyEvent.KEYCODE_ESCAPE?1:0,
             KeyEvent.FLAG_FROM_SYSTEM|(repeat>0?KeyEvent.FLAG_LONG_PRESS:0),InputDevice.SOURCE_KEYBOARD);

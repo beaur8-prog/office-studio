@@ -29,5 +29,5 @@ adb pull /sdcard/Download/WordStudio-Print-QA-docx.pdf "$out/$profile-pdfs/docx.
 adb pull /sdcard/Download/WordStudio-Print-QA-hwp.pdf "$out/$profile-pdfs/hwp.pdf" || true
 adb logcat -d > "$out/$profile-logcat.txt"
 adb exec-out screencap -p > "$out/$profile.png"
-grep -q 'OK (5 tests)' "$out/$profile.log"
+grep -q 'OK (6 tests)' "$out/$profile.log"
 if grep -Eq 'FAILURES!!!|INSTRUMENTATION_FAILED|Process crashed' "$out/$profile.log"; then exit 1; fi
