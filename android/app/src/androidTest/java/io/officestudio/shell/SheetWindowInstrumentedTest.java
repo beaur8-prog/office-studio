@@ -49,10 +49,10 @@ public class SheetWindowInstrumentedTest {
             if(device.hasObject(androidx.test.uiautomator.By.text("Pixel Launcher isn't responding"))){
                 screenshot("launcher-anr-interruption");
                 androidx.test.uiautomator.UiObject2 close=device.findObject(androidx.test.uiautomator.By.res("android","aerr_close"));
-                if(close!=null){android.util.Log.w("SheetQA","Closing cold emulator Pixel Launcher ANR");close.click();}
+                if(close!=null){try{android.util.Log.w("SheetQA","Closing cold emulator Pixel Launcher ANR");close.click();}catch(androidx.test.uiautomator.StaleObjectException closedSystemAlert){/* The system already removed this named Launcher dialog. */}}
             }
             androidx.test.uiautomator.UiObject2 guide=device.findObject(androidx.test.uiautomator.By.text("Got it"));
-            if(guide!=null)guide.click();device.waitForIdle(1000);
+            if(guide!=null)try{guide.click();}catch(androidx.test.uiautomator.StaleObjectException closedSystemGuide){/* Recheck actual Activity focus below. */}device.waitForIdle(1000);
             s.onActivity(a->focused[0]=a.hasWindowFocus());if(!focused[0])SystemClock.sleep(200);
         }while(!focused[0]&&SystemClock.uptimeMillis()<end);
         if(!focused[0])screenshot("startup-window-focus");
