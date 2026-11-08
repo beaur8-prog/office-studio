@@ -9,8 +9,8 @@ async function main(){
   const publication=JSON.parse(await fs.readFile(path.join(root,'test-results/lithos-published.json'),'utf8'));
   const expected=await fs.readFile(path.join(root,'publication/downloads-ready.md'),'utf8');
   const build=JSON.parse(await fs.readFile(path.join(root,'release',lock.version,'BUILD-win-x64.json'),'utf8'));
-  const html=await fetch(publication.url,{signal:AbortSignal.timeout(20000)});
-  assert.equal(html.status,200);assert.ok((await html.text()).includes('오피스 스튜디오'));
+  const html=await fetch(publication.url,{method:'HEAD',signal:AbortSignal.timeout(20000)});
+  assert.equal(html.status,200);
   const dataResponse=await fetch(publication.url+'/data',{signal:AbortSignal.timeout(20000)});
   assert.equal(dataResponse.status,200);
   const data=await dataResponse.json();

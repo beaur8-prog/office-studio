@@ -1,29 +1,44 @@
 {
   "product": "Sheet Studio",
-  "version": "0.7.36",
-  "sourceCommit": "0aba3913ff5f7148351ee2963d49e57159906d1a",
+  "version": "0.7.40",
   "target": "mac-arm64",
-  "filename": "Sheet-Studio-0.7.36-macOS-arm64.zip",
-  "bytes": 120089677,
-  "sha256": "c51a820794228f5a91a1938487a4c2dbfe9de9fefa95f610ae3b923a49bed5a9",
-  "signing": "ad-hoc; no Apple Developer ID or notarization",
-  "nativeVerification": {
+  "sourceCommit": "69aae3e5ba4c2a5033cbf79eda66d388c242e5d5",
+  "filename": "Sheet-Studio-0.7.40-macOS-arm64.zip",
+  "bytes": 120625531,
+  "sha256": "4e8fcbb5f413242d9ac3cd008e02a87e1db79a23ccaa5b7da5a6ec96802177b4",
+  "signing": "ad-hoc; no Developer ID signing or Apple notarization",
+  "verification": {
     "id": "sheet",
-    "version": "0.7.36",
+    "version": "0.7.40",
     "minimumMacOS": "12.0",
     "architecture": "arm64",
-    "sourceCommit": "0aba3913ff5f7148351ee2963d49e57159906d1a",
+    "sourceCommit": "69aae3e5ba4c2a5033cbf79eda66d388c242e5d5",
     "nativeStartup": true,
     "packaged": true,
     "profileIsolated": true,
     "updateMenu": true,
     "disableUpdatesPersists": true,
-    "rendererFiles": 7,
-    "electronFiles": 11,
+    "rendererFiles": 8,
+    "electronFiles": 12,
     "rendererMatchesSource": true,
     "electronMatchesSource": true,
     "updaterSHA256": "0a4c2bf8a76eedda7e4a7e803e8efd611a95976de4c2c8887bab9159521205cf",
     "normalClose": true,
     "profileSentinelPreserved": true
-  }
+  },
+  "systemInstallationTested": false,
+  "additionalAppScenarios": [
+    {
+      "id": "sheet",
+      "scenario": "editor-and-native-files",
+      "passed": true,
+      "exitCode": 0
+    },
+    {
+      "id": "sheet",
+      "scenario": "formulas",
+      "passed": true,
+      "exitCode": 0
+    }
+  ]
 }

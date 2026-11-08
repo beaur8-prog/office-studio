@@ -1,48 +1,48 @@
 {
   "schema": 1,
   "product": "Office Studio",
-  "version": "1.0.5",
-  "tag": "mac-v1.0.5",
+  "version": "1.0.6",
+  "tag": "mac-v1.0.6",
   "target": "mac-arm64",
   "apps": [
     {
       "id": "sheet",
       "product": "Sheet Studio",
-      "version": "0.7.36",
+      "version": "0.7.40",
       "bundleId": "local.lattice.sheetstudio",
       "asset": {
-        "filename": "Sheet-Studio-0.7.36-macOS-arm64.zip",
-        "bytes": 120089677,
-        "sha256": "c51a820794228f5a91a1938487a4c2dbfe9de9fefa95f610ae3b923a49bed5a9",
-        "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.36/Sheet-Studio-0.7.36-macOS-arm64.zip"
+        "filename": "Sheet-Studio-0.7.40-macOS-arm64.zip",
+        "bytes": 120625531,
+        "sha256": "4e8fcbb5f413242d9ac3cd008e02a87e1db79a23ccaa5b7da5a6ec96802177b4",
+        "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.40/Sheet-Studio-0.7.40-macOS-arm64.zip"
       },
-      "sourceCommit": "0aba3913ff5f7148351ee2963d49e57159906d1a"
+      "sourceCommit": "69aae3e5ba4c2a5033cbf79eda66d388c242e5d5"
     },
     {
       "id": "slide",
       "product": "Slide Studio",
-      "version": "1.6.21",
+      "version": "1.6.24",
       "bundleId": "local.slidestudio.app",
       "asset": {
         "filename": "Slide-Studio-mac-arm64.zip",
-        "bytes": 130625026,
-        "sha256": "ffa86a06becf3260c3737d8b85173e40285102bd6a2297bbcdf5b326856b5353",
-        "url": "https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.21/Slide-Studio-mac-arm64.zip"
+        "bytes": 130635912,
+        "sha256": "e371d0ea32bfb8bc59ca007e9cada8049721b5cde8dd2017f926d98caa9da5a8",
+        "url": "https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.24/Slide-Studio-mac-arm64.zip"
       },
-      "sourceCommit": "6708d640f1b665435c11a02010a1042c65b3b533"
+      "sourceCommit": "766fb2df3ac4e751b408d9bfd9eb04c5ccbbe753"
     },
     {
       "id": "word",
       "product": "Word Studio",
-      "version": "1.4.11",
+      "version": "1.4.15",
       "bundleId": "local.wordstudio.app",
       "asset": {
-        "filename": "Word-Studio-1.4.11-mac-arm64.zip",
-        "bytes": 155060444,
-        "sha256": "ea7d9bed85c90750897a0483ea02d4fc33e665398d640c7a2eb7fab4258b8c77",
-        "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.11/Word-Studio-1.4.11-mac-arm64.zip"
+        "filename": "Word-Studio-1.4.15-mac-arm64.zip",
+        "bytes": 155470814,
+        "sha256": "101c1f4372c4daf668f62c95dfaa9dbd0cbc1c4862fd2f4ab3bfc44d713dd11b",
+        "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.15/Word-Studio-1.4.15-mac-arm64.zip"
       },
-      "sourceCommit": "18ae6fad1ebe4d6a54de9f897ff0640cff58a95b"
+      "sourceCommit": "0bc3b5391f4e7bc2fe105596eb9f9d1810d5f319"
     }
   ]
 }

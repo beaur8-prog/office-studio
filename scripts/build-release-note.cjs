@@ -29,7 +29,7 @@ async function main(){
 
 Windows에서 표, 발표 자료, 문서를 만드는 세 가지 독립 앱을 한 번에 설치합니다. 일상적인 오피스 작업을 위한 대안으로, **Sheet Studio·Slide Studio·Word Studio**를 함께 제공합니다. 설치 후에는 시작 메뉴에서 필요한 앱을 각각 실행합니다.
 
-이번 Windows 배포는 세 앱의 최신 개선을 함께 제공합니다. **Sheet ${sheet.version}**은 차트·입력 검증·조건부 서식과 파일 호환성을, **Slide ${slide.version}**은 PPTX의 그림·도형·개체 표시와 편집을, **Word ${word.version}**는 문단·표의 페이지 나눔과 그림·문서 내용 보존을 개선했습니다. 복잡한 문서는 변환·저장 후 원본과 비교해 확인하세요.
+이번 Windows 배포는 세 앱의 최신 개선을 함께 제공합니다. **Sheet ${sheet.version}**은 차트·입력 검증·조건부 서식과 파일 호환성을, **Slide ${slide.version}**은 PPTX의 그림·도형·개체 표시와 편집을, **Word ${word.version}**는 HWP·DOCX 변환, 한글 글꼴과 페이지 표시, 책갈피·그림·문서 내용 보존을 개선했습니다. 복잡한 문서는 변환·저장 후 원본과 비교해 확인하세요.
 
 ## 1. Windows 통합 다운로드
 
