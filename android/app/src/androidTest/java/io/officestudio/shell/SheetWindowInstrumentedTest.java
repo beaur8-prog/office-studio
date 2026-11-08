@@ -193,12 +193,16 @@ public class SheetWindowInstrumentedTest {
     }
 
     void mouse(ActivityScenario<MainActivity> scenario,int action,double x,double y,long downTime) {
-        float[] point=new float[2];
-        scenario.onActivity(a->{int[] origin=new int[2];a.web.getLocationOnScreen(origin);float scale=a.web.getWidth()/(float)1920;point[0]=origin[0]+(float)x*scale;point[1]=origin[1]+(float)y*scale;});
-        MotionEvent.PointerProperties property=new MotionEvent.PointerProperties();property.id=0;property.toolType=MotionEvent.TOOL_TYPE_MOUSE;
-        MotionEvent.PointerCoords coords=new MotionEvent.PointerCoords();coords.x=point[0];coords.y=point[1];coords.pressure=action==MotionEvent.ACTION_UP?0:1;coords.size=1;
-        MotionEvent event=MotionEvent.obtain(downTime,SystemClock.uptimeMillis(),action,1,new MotionEvent.PointerProperties[]{property},new MotionEvent.PointerCoords[]{coords},0,action==MotionEvent.ACTION_UP?0:MotionEvent.BUTTON_PRIMARY,1,1,0,0,InputDevice.SOURCE_MOUSE,0);
-        try{InstrumentationRegistry.getInstrumentation().sendPointerSync(event);}finally{event.recycle();}
+        // Dispatch a real mouse MotionEvent through the native WebView. Global
+        // injection is remapped by InputDispatcher after `wm size` + rotation;
+        // it was landing far outside the requested heading on this emulator.
+        scenario.onActivity(a->{
+            float scale=a.web.getWidth()/(float)1920;
+            MotionEvent.PointerProperties property=new MotionEvent.PointerProperties();property.id=0;property.toolType=MotionEvent.TOOL_TYPE_MOUSE;
+            MotionEvent.PointerCoords coords=new MotionEvent.PointerCoords();coords.x=(float)x*scale;coords.y=(float)y*scale;coords.pressure=action==MotionEvent.ACTION_UP?0:1;coords.size=1;
+            MotionEvent event=MotionEvent.obtain(downTime,SystemClock.uptimeMillis(),action,1,new MotionEvent.PointerProperties[]{property},new MotionEvent.PointerCoords[]{coords},0,action==MotionEvent.ACTION_UP?0:MotionEvent.BUTTON_PRIMARY,1,1,0,0,InputDevice.SOURCE_MOUSE,0);
+            try{a.web.dispatchTouchEvent(event);}finally{event.recycle();}
+        });
     }
     @Test public void tabletNumbersDoNotShowTailDigitsAndMouseResizeCommitsOnce() throws Exception {
         assertTrue(InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName().endsWith(".qa"));
@@ -217,8 +221,9 @@ public class SheetWindowInstrumentedTest {
             assertEquals("\"123456789\"",js(s,"document.querySelector('#formula').value"));
             screenshot("tablet-number-overflow");
             JSONObject p=new JSONObject(js(s,"(()=>{const r=document.querySelector('[data-resize-col=\"0\"]').getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2}})()"));
+            js(s,"window.__qaTouches=[];for(const type of ['pointerdown','pointermove','pointerup'])document.addEventListener(type,e=>__qaTouches.push({type,pointer:e.pointerType,x:e.clientX,y:e.clientY,target:e.target.outerHTML.slice(0,150)}),{capture:true})");
             long down=SystemClock.uptimeMillis();mouse(s,MotionEvent.ACTION_DOWN,p.getDouble("x"),p.getDouble("y"),down);
-            waitJS(s,"document.body.dataset.dimensionResize==='c'");settle(s);
+            waitJS(s,"__qaTouches.some(e=>e.type==='pointerdown' && e.pointer==='mouse') && document.body.dataset.dimensionResize==='c'");settle(s);
             js(s,"window.__widthRenders=0;window.__widthObserver=new MutationObserver(rs=>__widthRenders+=rs.length);__widthObserver.observe(document.querySelector('#cells'),{childList:true})");
             for(int n=1;n<=20;n++){mouse(s,MotionEvent.ACTION_MOVE,p.getDouble("x")+3*n,p.getDouble("y"),down);SystemClock.sleep(16);}
             waitJS(s,"document.querySelector('.dimension-guide-label').textContent==='열 너비: 124px'");
