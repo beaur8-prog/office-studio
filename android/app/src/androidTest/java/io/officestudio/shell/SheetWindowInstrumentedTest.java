@@ -201,7 +201,14 @@ public class SheetWindowInstrumentedTest {
             MotionEvent.PointerProperties property=new MotionEvent.PointerProperties();property.id=0;property.toolType=MotionEvent.TOOL_TYPE_MOUSE;
             MotionEvent.PointerCoords coords=new MotionEvent.PointerCoords();coords.x=(float)x*scale;coords.y=(float)y*scale;coords.pressure=action==MotionEvent.ACTION_UP?0:1;coords.size=1;
             MotionEvent event=MotionEvent.obtain(downTime,SystemClock.uptimeMillis(),action,1,new MotionEvent.PointerProperties[]{property},new MotionEvent.PointerCoords[]{coords},0,action==MotionEvent.ACTION_UP?0:MotionEvent.BUTTON_PRIMARY,1,1,0,0,InputDevice.SOURCE_MOUSE,0);
-            try{a.web.dispatchTouchEvent(event);}finally{event.recycle();}
+            try{
+                // Chromium consumes DOWN/UP to retain the stream, but generates
+                // mouse button DOM events from BUTTON_PRESS/BUTTON_RELEASE.
+                // https://chromium.googlesource.com/chromium/src/+/main/ui/android/java/src/org/chromium/ui/base/EventForwarder.java
+                if(action==MotionEvent.ACTION_UP){event.setAction(MotionEvent.ACTION_BUTTON_RELEASE);event.setActionButton(MotionEvent.BUTTON_PRIMARY);a.web.dispatchGenericMotionEvent(event);event.setAction(MotionEvent.ACTION_UP);}
+                a.web.dispatchTouchEvent(event);
+                if(action==MotionEvent.ACTION_DOWN){event.setAction(MotionEvent.ACTION_BUTTON_PRESS);event.setActionButton(MotionEvent.BUTTON_PRIMARY);a.web.dispatchGenericMotionEvent(event);}
+            }finally{event.recycle();}
         });
     }
     @Test public void tabletNumbersDoNotShowTailDigitsAndMouseResizeCommitsOnce() throws Exception {
