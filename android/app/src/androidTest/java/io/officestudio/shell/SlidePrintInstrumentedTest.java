@@ -65,16 +65,19 @@ public class SlidePrintInstrumentedTest {
         device.findObject(By.res("com.android.printspooler:id/print_button")).click();
         until(()->device.getCurrentPackageName()!=null&&device.getCurrentPackageName().contains("documentsui"),30000,"PDF save picker did not open");
         assertNotNull(device.wait(Until.findObject(By.clazz("android.widget.EditText")),10000));device.waitForIdle(2000);
-        UiObject roots=device.findObject(new UiSelector().description("Show roots"));if(roots.exists()){roots.click();UiObject downloads=device.findObject(new UiSelector().text("Downloads"));if(downloads.waitForExists(5000))downloads.click();}
+        if(device.hasObject(By.text("Save to"))||!device.hasObject(By.res("com.google.android.documentsui:id/breadcrumb_text").text("Downloads"))){
+            if(!device.hasObject(By.text("Save to")))device.findObject(new UiSelector().description("Show roots")).click();
+            // Match the drawer item, not the non-clickable toolbar title.
+            UiObject downloads=device.findObject(new UiSelector().resourceId("android:id/title").text("Downloads"));
+            assertTrue(downloads.waitForExists(5000));assertTrue(downloads.click());
+        }
+        until(()->!device.hasObject(By.text("Save to")),10000,"Save location drawer still open");
         UiObject2 name=device.wait(Until.findObject(By.clazz("android.widget.EditText")),10000);assertNotNull(name);name.setText(filename);
         device.waitForIdle(2000);
         until(()->{UiObject2 b=device.findObject(By.text(Pattern.compile("(?i)^save$")));return b!=null&&b.isEnabled();},10000,"System Save not enabled");
         shot("before-system-save");device.dumpWindowHierarchy(new File(folder,"before-system-save.xml"));
-        // DocumentsUI can re-position the bottom action while the filename IME
-        // changes. Activate the OS accessibility action, without cached bounds.
-        android.view.accessibility.AccessibilityNodeInfo root=inst.getUiAutomation().getRootInActiveWindow();
-        android.view.accessibility.AccessibilityNodeInfo save=root.findAccessibilityNodeInfosByViewId("android:id/button1").stream().filter(n->n.isEnabled()&&"SAVE".equalsIgnoreCase(String.valueOf(n.getText()))).findFirst().orElse(null);
-        assertNotNull("System Save action missing",save);assertTrue(save.performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_CLICK));
+        UiObject save=device.findObject(new UiSelector().resourceId("android:id/button1").textMatches("(?i)^save$"));
+        assertTrue(save.exists());assertTrue(save.click());
         returned();
         until(()->{try{return device.executeShellCommand("ls -l /sdcard/Download/"+filename).contains(filename);}catch(IOException e){return false;}},30000,"Saved PDF missing");
         File copy=new File(folder,filename);device.executeShellCommand("cp /sdcard/Download/"+filename+" "+copy.getAbsolutePath());assertTrue(copy.length()>100);return copy;
