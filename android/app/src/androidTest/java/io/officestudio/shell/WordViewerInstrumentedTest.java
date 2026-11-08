@@ -3,6 +3,7 @@ package io.officestudio.shell;
 import android.os.SystemClock;
 import android.view.InputDevice;
 import android.view.MotionEvent;
+import android.view.KeyEvent;
 import android.view.View;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -74,6 +75,16 @@ public class WordViewerInstrumentedTest {
             js(scenario,"(()=>{const e=document.querySelector('.tiptap');e.focus();document.execCommand('insertText',false,'ANDROID HORIZONTAL INPUT');})()");
             waitJS(scenario,"document.querySelector('.tiptap').textContent.includes('ANDROID HORIZONTAL INPUT')");
             assertEquals("true",js(scenario,"(()=>{const n=document.querySelector('.tiptap p').firstChild,a=document.createRange(),b=document.createRange();a.setStart(n,0);a.setEnd(n,1);b.setStart(n,1);b.setEnd(n,2);const x=a.getBoundingClientRect(),y=b.getBoundingClientRect();return Math.abs(x.y-y.y)<1&&y.x>x.x})()"));
+            assertEquals("true",js(scenario,"!!document.querySelector('.android-editor-ribbon [role=tab][aria-selected=true]')"));
+            js(scenario,"document.querySelector('.android-topbar [aria-label=\"전체 화면 뷰어\"]').click()");
+            waitJS(scenario,"!!document.querySelector('.android-presentation-page .print-page')&&!document.querySelector('.android-presentation-loading')");
+            waitJS(scenario,"document.querySelector('.android-presentation-page').textContent.includes('ANDROID HORIZONTAL INPUT')");
+            waitJS(scenario,"document.querySelector('.android-presentation-controls').hidden");
+            assertEquals("true",js(scenario,"document.querySelector('.android-presentation-modebar [aria-label=\"편집 모드\"]').getBoundingClientRect().height>=48"));
+            screenshot("docx-mode-switch");
+            assertTrue(UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressKeyCode(KeyEvent.KEYCODE_ESCAPE));
+            waitJS(scenario,"!document.querySelector('.android-presentation')&&!!document.querySelector('.tiptap[contenteditable=true]')");
+            assertEquals("true",js(scenario,"document.querySelector('.tiptap').textContent.includes('ANDROID HORIZONTAL INPUT')"));
             screenshot("new-page-horizontal-input");
         }
     }
