@@ -192,6 +192,12 @@ public class SheetWindowInstrumentedTest {
         }
     }
 
+    void mouseActionButton(MotionEvent event) {
+        // Framework setter is outside the public SDK. Instrumentation alone is
+        // started with --no-hidden-api-checks; the shipping app is unchanged.
+        try{MotionEvent.class.getMethod("setActionButton",int.class).invoke(event,MotionEvent.BUTTON_PRIMARY);}
+        catch(ReflectiveOperationException error){throw new AssertionError(error);}
+    }
     void mouse(ActivityScenario<MainActivity> scenario,int action,double x,double y,long downTime) {
         // Dispatch a real mouse MotionEvent through the native WebView. Global
         // injection is remapped by InputDispatcher after `wm size` + rotation;
@@ -205,9 +211,9 @@ public class SheetWindowInstrumentedTest {
                 // Chromium consumes DOWN/UP to retain the stream, but generates
                 // mouse button DOM events from BUTTON_PRESS/BUTTON_RELEASE.
                 // https://chromium.googlesource.com/chromium/src/+/main/ui/android/java/src/org/chromium/ui/base/EventForwarder.java
-                if(action==MotionEvent.ACTION_UP){event.setAction(MotionEvent.ACTION_BUTTON_RELEASE);event.setActionButton(MotionEvent.BUTTON_PRIMARY);a.web.dispatchGenericMotionEvent(event);event.setAction(MotionEvent.ACTION_UP);}
+                if(action==MotionEvent.ACTION_UP){event.setAction(MotionEvent.ACTION_BUTTON_RELEASE);mouseActionButton(event);a.web.dispatchGenericMotionEvent(event);event.setAction(MotionEvent.ACTION_UP);}
                 a.web.dispatchTouchEvent(event);
-                if(action==MotionEvent.ACTION_DOWN){event.setAction(MotionEvent.ACTION_BUTTON_PRESS);event.setActionButton(MotionEvent.BUTTON_PRIMARY);a.web.dispatchGenericMotionEvent(event);}
+                if(action==MotionEvent.ACTION_DOWN){event.setAction(MotionEvent.ACTION_BUTTON_PRESS);mouseActionButton(event);a.web.dispatchGenericMotionEvent(event);}
             }finally{event.recycle();}
         });
     }
