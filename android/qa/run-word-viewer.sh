@@ -13,6 +13,7 @@ for profile in phone tablet; do
   adb shell settings put global animator_duration_scale 0
   adb shell am instrument -w -r -e class io.officestudio.shell.WordViewerInstrumentedTest io.officestudio.word.test/androidx.test.runner.AndroidJUnitRunner > "$out/$profile.log" 2>&1
   cat "$out/$profile.log"
+  adb pull /sdcard/Android/data/io.officestudio.word/files/viewer-qa "$out/$profile-shots" || true
   adb logcat -d > "$out/$profile-logcat.txt"
   adb exec-out screencap -p > "$out/$profile.png"
   grep -q 'OK (2 tests)' "$out/$profile.log"

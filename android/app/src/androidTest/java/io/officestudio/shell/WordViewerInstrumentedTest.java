@@ -12,6 +12,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.UiDevice;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import java.io.File;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -33,6 +34,11 @@ public class WordViewerInstrumentedTest {
     void openFixture(ActivityScenario<MainActivity> scenario,String name) throws Exception {
         js(scenario,"fetch('/assets/qa/"+name+"').then(r=>r.blob()).then(b=>{const d=new DataTransfer();d.items.add(new File([b],'"+name+"'));const i=document.querySelector('input[type=file]');i.files=d.files;i.dispatchEvent(new Event('change',{bubbles:true}));})");
     }
+    void screenshot(String name){
+        File dir=new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null),"viewer-qa");
+        assertTrue(dir.isDirectory()||dir.mkdirs());
+        assertTrue(UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).takeScreenshot(new File(dir,name+".png")));
+    }
     @Test public void newPageUsesRealA4AndHorizontalTypingWithHiddenStatusBar() throws Exception {
         assertEquals("word",BuildConfig.STUDIO);
         try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(MainActivity.class)){
@@ -51,6 +57,7 @@ public class WordViewerInstrumentedTest {
             js(scenario,"(()=>{const e=document.querySelector('.tiptap');e.focus();document.execCommand('insertText',false,'ANDROID HORIZONTAL INPUT');})()");
             waitJS(scenario,"document.querySelector('.tiptap').textContent.includes('ANDROID HORIZONTAL INPUT')");
             assertEquals("true",js(scenario,"(()=>{const n=document.querySelector('.tiptap p').firstChild,a=document.createRange(),b=document.createRange();a.setStart(n,0);a.setEnd(n,1);b.setStart(n,1);b.setEnd(n,2);const x=a.getBoundingClientRect(),y=b.getBoundingClientRect();return Math.abs(x.y-y.y)<1&&y.x>x.x})()"));
+            screenshot("new-page-horizontal-input");
         }
     }
     @Test public void realWebViewSwipesPinchesAndHwpViewerKeepTheSelectedPage() throws Exception {
@@ -69,6 +76,7 @@ public class WordViewerInstrumentedTest {
             pinch(w,h);
             waitJS(scenario,"document.querySelector('.android-presentation-page').getBoundingClientRect().width>"+(before*1.5));
             assertEquals("true",js(scenario,"document.querySelector('.android-presentation').dataset.page==='2'"));
+            screenshot("docx-viewer-pinch");
             js(scenario,"document.querySelector('[aria-label=\"뷰어 닫기\"]').click()");
             waitJS(scenario,"!!document.querySelector('.android-paper-viewport')");
             openFixture(scenario,"landscape-pagination.hwp");waitJS(scenario,"!!document.querySelector('.hwp-reader [data-testid=hwp-page]')");
@@ -76,6 +84,8 @@ public class WordViewerInstrumentedTest {
             waitJS(scenario,"!!document.querySelector('.android-presentation-page svg')");
             assertTrue(device.swipe(w*4/5,h/2,w/5,h/2,10));waitJS(scenario,"document.querySelector('.android-presentation').dataset.page==='2'");
             scenario.onActivity(activity->{assertTrue(activity.immersive);assertEquals(View.VISIBLE,activity.web.getVisibility());});
+            waitJS(scenario,"!!document.querySelector('.android-presentation-page svg')");
+            screenshot("hwp-viewer");
         }
     }
     void pinch(int width,int height){
