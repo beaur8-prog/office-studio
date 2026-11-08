@@ -1,6 +1,12 @@
 # Office Studio · Android
 
-현재 배포: Sheet 1.0.3 · Slide 1.0.4 · Word 1.0.2. Android 통합 ZIP은 제공을 중단했으며 개별 APK만 게시합니다.
+현재 배포: Sheet 1.0.4 · Slide 1.0.5 · Word 1.0.2. Android 통합 ZIP은 제공을 중단했으며 개별 APK만 게시합니다.
+
+## Android 1.0.8 · Sheet·Slide 갱신
+
+Sheet main `a47a7cf`와 Slide main `c44122b`의 최신 제품 소스를 각각 Sheet 1.0.4/versionCode 5, Slide 1.0.5/versionCode 6으로 빌드했습니다. Sheet는 전체화면 셀 입력·수식 참조와 태블릿 편집, 입력기 전 Esc와 안전한 Back 처리의 호스트 `225cefb`를 포함합니다. Slide는 태블릿 편집과 발표 종료·Esc·Back 처리의 호스트 `44a8fc7` 및 기존 파일 입출력 어댑터를 포함합니다.
+
+Word 1.0.2는 이전 공개 APK URL과 체크섬을 그대로 유지합니다. 기존 앱 ID·서명·아이콘을 유지하며 설치·실행·기능·에뮬레이터 테스트와 ZIP 생성은 생략합니다. `:app:assembleSheetRelease :app:assembleSlideRelease`만 조립하고 `android/package-changed-apks.py`로 APK 두 개·BUILD·SHA256SUMS 네 파일을 준비합니다. `android-v1.0.8`을 `--latest=false`로 공개한 뒤 같은 Android 페이지를 갱신합니다. Windows latest·Mac 피드·다른 페이지·기존 방문 통계는 보존합니다.
 
 ## Android 1.0.7 · 변경 앱 배포
 
