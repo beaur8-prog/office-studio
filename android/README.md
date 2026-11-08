@@ -2,6 +2,14 @@
 
 현재 배포: Sheet 1.0.4 · Slide 1.0.5 · Word 1.0.3. Android 통합 ZIP은 제공을 중단했으며 개별 APK만 게시합니다.
 
+## APK 직접 다운로드
+
+기존 Android 공유 페이지의 APK 버튼은 리토스의 동일 출처 첨부 다운로드로 제공합니다. GitHub 정식 릴리스는 원본 보관소로 유지하며, 배포한 APK의 버전·바이트·서명은 바꾸지 않습니다. 공개 자산 API로 받은 파일의 크기·SHA-256을 BUILD 기록과 대조한 뒤 리토스 보관함의 앱별 버전 파일과 공유 서버 다운로드 스냅샷에 보관합니다. 서버는 `Content-Disposition: attachment`, 정확한 APK 파일명, Content-Length와 Range 이어받기를 제공합니다.
+
+`node android/publish-lithos.cjs --publish --update --skip-tests --direct-downloads`로 같은 공유 주소에 연결합니다. 한 번 전환한 페이지는 `PUBLISHED.json`과 `DOWNLOADS.json`의 모드를 보고 다음 배포에도 자동으로 직접 다운로드를 유지합니다. `ANDROID_DOWNLOAD_CACHE`는 임시 입력 캐시 위치이며, 현재 공유 서버의 다운로드 원본은 Lithos Vault의 `앱/attachments/office-studio-android/`와 shares/downloads에 영구 보관합니다. 앱 아이콘과 BUILD·SHA256SUMS도 같은 페이지에서 제공합니다.
+
+버전별 APK는 그대로 유지하고 공유 서버·터널·링크 복사 버튼·기존 방문 통계는 재시작하거나 초기화하지 않습니다. 전환 후 공개 공유 URL에서 실제 APK 전체를 내려받아 체크섬과 파일명, 첨부 다운로드 헤더, Range 응답을 확인합니다. 앱 실행·설치 테스트와 구분합니다.
+
 ## Android 1.0.9 · Word 갱신
 
 실제 Word 개발 작업본과 일치하는 원격 `codex/android-page-viewer`의 `f1d3c46`을 Word 1.0.3/versionCode 4로 빌드했습니다. 연속 페이지 확대 배율 유지와 태블릿에서 기존 데스크톱 편집 기능 재사용을 포함합니다. Word 호스트 `9bae920`의 실제 태블릿 구성 전달·변경 이벤트와 Esc down/up/repeat 소비를 병합했습니다. 기존 Sheet·Slide 네이티브 처리를 보존했습니다.

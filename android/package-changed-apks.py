@@ -135,13 +135,15 @@ body = body[:start] + f'''## 7. 이번 배포의 확인 범위
 assert body.split('# 오피스 스튜디오 Android')[0] == before['content'].split('# 오피스 스튜디오 Android')[0]
 assert '-APKs.zip' not in body
 for a in apps:
-    assert a['downloadURL'] in body
+    assert a['downloadURL'] in body or 'attachments/office-studio-android/' + a['filename'] in body
 pub = s / 'publication/android'
 (pub / 'downloads-ready.md').write_text(body)
+prior_publication = json.loads((pub / 'PUBLISHED.json').read_text()) if (pub / 'PUBLISHED.json').exists() else {}
 (pub / 'PUBLISHED.json').write_text(json.dumps({
     'version': prior['version'], 'title': before['title'], 'url': before['url'],
     'source': '앱/오피스 스튜디오 Android 다운로드.md',
     'contentSHA256': before['contentSHA256'], 'readOnly': True, 'expiresAt': None,
+    **({'downloadMode': 'lithos-attachments'} if prior_publication.get('downloadMode') == 'lithos-attachments' and prior_publication.get('url') == before['url'] else {}),
 }, ensure_ascii=False, indent=2) + '\n')
 commits = '\n'.join(f"- {a['name']} {a['version']}: 최신 소스 `{a['upstreamCommit']}`, 배포 소스 `{a['sourceCommit']}`"
                     for a in apps if a['rebuilt'])
