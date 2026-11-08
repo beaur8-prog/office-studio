@@ -1,9 +1,9 @@
 {
-  "version": "1.0.10",
+  "version": "1.0.11",
   "title": "오피스 스튜디오 Android",
   "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a",
   "source": "앱/오피스 스튜디오 Android 다운로드.md",
-  "contentSHA256": "7dde8f129c9fcedaf462ac0d38a772a824d7deed22d275edab8cf31397c6d684",
+  "contentSHA256": "72735f8048934fd87572df4722ff04266a1ed103f33f54db4f0fc2a40b0cdca1",
   "readOnly": true,
   "expiresAt": null,
   "downloadMode": "lithos-attachments",
