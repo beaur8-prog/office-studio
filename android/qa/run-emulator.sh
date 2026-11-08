@@ -11,9 +11,14 @@ adb shell settings put global animator_duration_scale 0
 if [ "$kind" = tablet ]; then adb shell wm size 1600x2560; adb shell wm density 240; fi
 adb shell svc wifi disable
 adb shell svc data disable
-adb shell mkdir -p /sdcard/Download/OfficeStudioQA
 printf 'PRESERVE EXTERNAL OFFICE DOCUMENT' > "$out/external-original.txt"
-adb shell "printf '%s' 'PRESERVE EXTERNAL OFFICE DOCUMENT' > /sdcard/Download/OfficeStudioQA/original.txt"
+# Android may report boot completed before emulated external storage is writable.
+for attempt in $(seq 1 60); do
+  if adb shell "mkdir -p /sdcard/Download/OfficeStudioQA && printf '%s' 'PRESERVE EXTERNAL OFFICE DOCUMENT' > /sdcard/Download/OfficeStudioQA/original.txt"; then break; fi
+  sleep 1
+done
+adb shell cat /sdcard/Download/OfficeStudioQA/original.txt > "$out/external-ready.txt"
+cmp "$out/external-original.txt" "$out/external-ready.txt"
 adb shell getprop > "$out/device-properties.txt"
 for id in sheet slide word; do
   apk="$inputs/$id.apk"
