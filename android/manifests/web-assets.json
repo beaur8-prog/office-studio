@@ -310,12 +310,12 @@
     "monochromeIcon": true
   },
   "word": {
-    "version": "1.0.3",
+    "version": "1.0.4",
     "assetFiles": [
       {
-        "path": "assets/AndroidApp-BfCXb4xW.js",
+        "path": "assets/AndroidApp-DAX7zML2.js",
         "bytes": 38455,
-        "sha256": "dd18016224a0643f740ea6cc8997ce267350faeefa6477fb10aef0f0ff9baf93"
+        "sha256": "758405f64b52ec9326c9d4f82714d16d098673dda46416868c23c6b803602f97"
       },
       {
         "path": "assets/AndroidApp-DISSET6a.css",
@@ -353,14 +353,14 @@
         "sha256": "7d5fb73b7ca67a6798101741f5d280a3d016a56a197afcd4199dbb57b4b82a21"
       },
       {
-        "path": "assets/index-BupRBH4j.js",
-        "bytes": 2003428,
-        "sha256": "c28f6ad07fa3f370cf7d4da11cdd08a388d96e4ec9bcd4c48d34ea2e716dc0f9"
-      },
-      {
         "path": "assets/index-DdiRe8Us.css",
         "bytes": 394499,
         "sha256": "336318b4482741aaac5a1abd845512e62848018e50cab63d7339fa896166fc04"
+      },
+      {
+        "path": "assets/index-SiQFuUS1.js",
+        "bytes": 2003394,
+        "sha256": "e3e867e69ecf8dcad84c953ea2da7f197d22e4c836a4a1ee1def5c53a7fa2af3"
       },
       {
         "path": "assets/noto-sans-kr-0-400-normal-Dk1zEwO4.woff",
@@ -5354,8 +5354,8 @@
       },
       {
         "path": "index.html",
-        "bytes": 477,
-        "sha256": "8ef52ed6e6342ac55ff1b43e2caa5c457b55fbd594fde08d6e2030f9162ddbd7"
+        "bytes": 473,
+        "sha256": "49ac96dbc8fb796d77113c3a1a812db2d9e9da1f4517b784bf9e6aabb84043c8"
       }
     ],
     "iconSourceSHA256": "45cd6cf1932e22c86ac0c975f73165ea164534cf2c9c57aa02b25897af63058f",

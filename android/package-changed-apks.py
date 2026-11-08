@@ -86,7 +86,7 @@ build = {
 changes = {
     'sheet': '전체화면 셀 입력·수식 참조, 태블릿 편집과 키보드·Esc·Back 처리 개선',
     'slide': '발표 화면을 원래 앱 창에서 유지, IME 숨김과 Android 16 Esc·Back 처리 개선',
-    'word': '연속 페이지 확대 배율 유지, 태블릿 편집과 안전한 네이티브 Esc 처리 개선',
+    'word': '느린 드래그 페이지 넘김과 태블릿 확대 배율 표시 개선',
 }
 day = datetime.datetime.now(ZoneInfo('Asia/Seoul')).strftime('%Y년 %m월 %d일')
 summary = ', '.join(a['name'] + ' **' + a['version'] + '**' for a in apps if a['rebuilt'])
@@ -126,8 +126,8 @@ if 'slide' in changed:
     body = body.replace('1.0.5에는 태블릿 편집 화면 개선과 발표 종료·Esc·Back 처리를 포함합니다.',
                         '1.0.6에는 원래 앱 창에서 발표 화면 유지와 키보드 숨김, Android 16 Esc·뒤로가기 처리 개선을 포함합니다.')
 if 'word' in changed:
-    body = body.replace('1.0.2에는 편집 리본과 읽기 화면에서 편집으로 돌아오는 Esc 처리를 포함합니다.',
-                        '1.0.3에는 연속 페이지 확대 배율 유지와 태블릿 편집, 안전한 Esc 처리를 포함합니다.')
+    body = body.replace('1.0.3에는 연속 페이지 확대 배율 유지와 태블릿 편집, 안전한 Esc 처리를 포함합니다.',
+                        '1.0.4에는 느린 드래그 페이지 넘김과 태블릿 확대 배율 표시 개선을 포함합니다.')
 start = body.index('## 7. 이번 배포의 확인 범위')
 end = body.index('이 문서는 리토스의 읽기 전용 공유 페이지입니다.', start)
 details = '\n'.join(f"- **{a['name']} {a['version']}**: {changes[a['id']]} · versionCode {a['versionCode']}"
