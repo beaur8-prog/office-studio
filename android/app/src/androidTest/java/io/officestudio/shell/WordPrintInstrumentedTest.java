@@ -30,10 +30,14 @@ public class WordPrintInstrumentedTest {
     void until(BooleanSupplier check,long timeout,String message)throws Exception {
         long end=SystemClock.uptimeMillis()+timeout;
         while(SystemClock.uptimeMillis()<end){if(check.getAsBoolean())return;SystemClock.sleep(150);}
-        shot("print-failed");device.dumpWindowHierarchy(new File(evidence(),"print-failed-ui.xml"));
+        String stage=message.toLowerCase().replaceAll("[^a-z0-9]+","-");
+        shot("print-failed-"+stage);device.dumpWindowHierarchy(new File(evidence(),"print-failed-"+stage+".xml"));
         fail(message+"; foreground="+device.getCurrentPackageName());
     }
-    void printWindow()throws Exception {
+    void printWindow(ActivityScenario<MainActivity> scenario)throws Exception {
+        SystemClock.sleep(1200);
+        System.out.println("PRINT-DIAGNOSTIC "+ui.js(scenario,"JSON.stringify({events:window.printKeyQA||[],body:document.body.innerText.slice(-1200),focus:document.activeElement?.outerHTML.slice(0,150)})"));
+        scenario.onActivity(activity->System.out.println("PRINT-NATIVE pending="+activity.pending+" printSession="+(activity.wordPrint!=null)+" webFocus="+activity.web.hasFocus()));
         until(()->"com.android.printspooler".equals(device.getCurrentPackageName()),90000,"System print window did not open");
         until(()->{UiObject2 button=device.findObject(By.res("com.android.printspooler:id/print_button"));return button!=null&&button.isEnabled();},90000,"Print preview did not become ready");
     }
@@ -75,14 +79,15 @@ public class WordPrintInstrumentedTest {
             ui.waitJS(scenario,"!!document.querySelector('.tiptap[contenteditable=true]')");
             ui.js(scenario,"(()=>{const e=document.querySelector('.tiptap'),p=e.querySelector('p'),r=document.createRange();e.focus();r.selectNodeContents(p);r.collapse(false);const s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('insertText',false,' PRINT EDIT')})()");
             ui.waitJS(scenario,"document.querySelector('.tiptap').textContent.includes('PRINT EDIT')");
-            assertTrue(device.pressKeyCode(KeyEvent.KEYCODE_P,KeyEvent.META_CTRL_ON));printWindow();shot("print-before-cancel");device.pressBack();returned();
+            ui.js(scenario,"window.printKeyQA=[];window.addEventListener('keydown',e=>window.printKeyQA.push({key:e.key,code:e.code,ctrl:e.ctrlKey,meta:e.metaKey}),true)");
+            assertTrue(device.pressKeyCode(KeyEvent.KEYCODE_P,KeyEvent.META_CTRL_ON));printWindow(scenario);shot("print-before-cancel");device.pressBack();returned();
             ui.waitJS(scenario,"!document.querySelector('.android-operation')&&!!document.querySelector('.tiptap[contenteditable=true]')");
             assertEquals("RESUMED",scenario.getState().name());
             assertEquals("true",ui.js(scenario,"!document.body.classList.contains('studio-printing')&&document.querySelector('.tiptap').textContent.includes('PRINT EDIT')"));
             ui.waitJS(scenario,"document.activeElement===document.querySelector('.tiptap')");
             assertTrue(device.pressKeyCode(KeyEvent.KEYCODE_Z,KeyEvent.META_CTRL_ON));ui.waitJS(scenario,"!document.querySelector('.tiptap').textContent.includes('PRINT EDIT')");
             assertTrue(device.pressKeyCode(KeyEvent.KEYCODE_Y,KeyEvent.META_CTRL_ON));ui.waitJS(scenario,"document.querySelector('.tiptap').textContent.includes('PRINT EDIT')");
-            assertTrue(device.pressKeyCode(KeyEvent.KEYCODE_P,KeyEvent.META_CTRL_ON));printWindow();File output=savePdf("WordStudio-Print-QA-docx.pdf");
+            assertTrue(device.pressKeyCode(KeyEvent.KEYCODE_P,KeyEvent.META_CTRL_ON));printWindow(scenario);File output=savePdf("WordStudio-Print-QA-docx.pdf");
             ui.waitJS(scenario,"!document.querySelector('.android-operation')&&!!document.querySelector('.tiptap[contenteditable=true]')");pdf(output,3);
             assertEquals("true",ui.js(scenario,"document.querySelector('.tiptap').textContent.includes('PRINT EDIT')&&!!document.querySelector('.tiptap table')&&!!document.querySelector('.tiptap img[src]')"));
             scenario.onActivity(activity->{assertNull(activity.pending);assertNull(activity.wordPrint);assertFalse(activity.isFinishing());});shot("print-docx-returned");
@@ -93,7 +98,7 @@ public class WordPrintInstrumentedTest {
             ui.waitJS(scenario,"!!document.querySelector('.android-start button')");ui.openFixture(scenario,"landscape-pagination.hwp");ui.waitJS(scenario,"!!document.querySelector('.hwp-reader [data-testid=hwp-page]')");ui.dismissImmersiveGuide();
             ui.js(scenario,"document.querySelector('[aria-label=\"한글 문서 메뉴\"]').click()");
             ui.js(scenario,"[...document.querySelectorAll('.android-sheet button')].find(b=>b.textContent==='인쇄·PDF 저장').click()");
-            printWindow();File output=savePdf("WordStudio-Print-QA-hwp.pdf");
+            printWindow(scenario);File output=savePdf("WordStudio-Print-QA-hwp.pdf");
             ui.waitJS(scenario,"!document.querySelector('.android-operation')&&!!document.querySelector('.hwp-reader [data-testid=hwp-page]')");pdf(output,4);
             assertEquals("true",ui.js(scenario,"!document.querySelector('.hwp-conversion-panel')&&!document.body.classList.contains('studio-printing')"));
             scenario.onActivity(activity->{assertNull(activity.pending);assertNull(activity.wordPrint);assertFalse(activity.isFinishing());});shot("print-hwp-returned");
