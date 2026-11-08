@@ -10,7 +10,8 @@ const modulePath='/Applications/Lithos.app/Contents/Resources/app.asar/electron/
 const hash=x=>crypto.createHash('sha256').update(x).digest('hex');
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 async function main(){
- const publish=process.argv.includes('--publish'),skipTests=process.argv.includes('--skip-tests');
+ const publish=process.argv.includes('--publish'),skipTests=process.argv.includes('--skip-tests'),basicChecks=process.argv.includes('--basic-checks');
+ if(skipTests&&basicChecks)throw Error('Choose basic verification or explicit test omission');
  const policy=JSON.parse(await fs.readFile(path.join(root,'android/distribution-policy.json'),'utf8'));
  if(policy.mode!=='lithos-local-attachments'||policy.publishGitHubRelease!==false||policy.uploadAPKsToGitHub!==false)throw Error('Android local-only distribution policy required');
  const version=JSON.parse(await fs.readFile(path.join(root,'android/source-lock.json'),'utf8')).version;
@@ -18,7 +19,11 @@ async function main(){
  if(publish){
   e.update=process.argv.includes('--update');if(e.update){const previous=JSON.parse(await fs.readFile(path.join(root,'publication/android/PUBLISHED.json'),'utf8'));e.directDownloads=e.directDownloads||previous.downloadMode==='lithos-attachments';if(!e.directDownloads){try{const saved=JSON.parse(await fs.readFile(path.join(root,'publication/android/DOWNLOADS.json'),'utf8'));e.directDownloads=saved.mode==='lithos-attachments'&&saved.page===previous.url;}catch(error){if(error.code!=='ENOENT')throw error;}}e.previousHash=previous.contentSHA256;e.previousURL=previous.url;e.previousToken=new URL(previous.url).pathname.split('/').at(-1);}
   const build=JSON.parse(await fs.readFile(path.join(root,'release/android',version,'BUILD-android.json'),'utf8'));
-  if(skipTests){if(build.tests?.status!=='skipped'||build.tests?.executed!==false||build.tests?.explicitlyAuthorized!==true)throw Error('Explicit no-test release record required');}
+  if(basicChecks){
+   const proof=JSON.parse(await fs.readFile(path.join(root,'release/android',version,'BASIC-VERIFICATION.json'),'utf8'));
+   if(build.tests?.status!=='basic'||build.tests?.executed!==true||!build.checks?.basicVerification||!proof.passed||proof.level!=='basic'||proof.apps.length!==build.changedApps.length)throw Error('Basic verification is incomplete');
+   for(const id of build.changedApps){const app=build.apps.find(a=>a.id===id),check=proof.apps.find(a=>a.id===id);if(!check||check.sha256!==app.sha256||check.version!==app.version||check.versionCode!==app.versionCode||!check.signature||!check.compiledManifest||!check.offlineAssets||!check.compiledLauncherIcons||!check.nativeBridge||!check.compiledPrintClass)throw Error('Basic APK verification mismatch: '+id);}
+  }else if(skipTests){if(build.tests?.status!=='skipped'||build.tests?.executed!==false||build.tests?.explicitlyAuthorized!==true)throw Error('Explicit no-test release record required');}
   else{const proof=JSON.parse(await fs.readFile(path.join(root,'release/android',version,'ANDROID-VERIFICATION.json'),'utf8'));if(!build.checks?.nativeDeviceTests||!proof.passed||proof.profiles.length!==2||proof.profiles.some(p=>!p.passed))throw Error('Android native verification is incomplete');}
   e.content=await fs.readFile(path.join(root,'publication/android/downloads-ready.md'),'utf8');e.contentHash=hash(e.content);
   if(!e.content.startsWith('> **Android 설치 안내')||!e.content.includes('# 오피스 스튜디오 Android'))throw Error('Android draft format changed');

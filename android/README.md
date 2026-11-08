@@ -1,8 +1,14 @@
 # Office Studio Android · 로컬 첨부 배포
 
-현재 앱: Sheet 1.0.5 · Slide 1.0.6 · Word 1.0.4. 기존 Android 공유 주소를 유지합니다.
+현재 앱: Sheet 1.0.6 · Slide 1.0.7 · Word 1.0.5. 기존 Android 공유 주소를 유지합니다.
 
 Android는 **로컬에서 빌드·서명 → 파일·버전·서명·체크섬 확인 → 리토스 첨부 게시**로 배포합니다. GitHub 릴리스 생성, APK 업로드, APK 재다운로드는 하지 않습니다. 소스의 Git pull·commit·push와 버전 태그 관리는 그대로 사용합니다. `distribution-policy.json`으로 이 방식을 고정합니다.
+
+## Android 1.0.13 · 세 앱 기본 검증 배포
+
+Sheet 1.0.6/code7, Slide 1.0.7/code8, Word 1.0.5/code6을 함께 빌드합니다. 세 앱의 문서 전용 인쇄 렌더러와 PDF 저장 연결, Slide 개체 메뉴·접이식 발표 도구, Word 포인터 중심 확대·축소·Ctrl+P·Esc 연결을 포함합니다. 최신 앱·호스트 커밋은 source-lock에 고정합니다.
+
+기본 검증은 Sheet 관련 단위45개, Word Node172개, Slide 브라우저5개, Word 브라우저6개와 Sheet 인쇄 시나리오를 포함합니다. APK마다 정식 서명·매니페스트·오프라인 자산 전체·컴파일된 아이콘·해당 인쇄 클래스를 확인하고 BASIC-VERIFICATION.json으로 보관합니다. 실제 Android 기기 설치·OS 인쇄는 수행하지 않았습니다. 통합 ZIP·GitHub APK 릴리스는 생성하지 않습니다.
 
 ## Sheet 1.0.5 · 로컬 첨부 갱신
 
@@ -25,7 +31,7 @@ Word만 versionName 1.0.4/versionCode 5로 조립·서명하고 로컬 첨부로
 1. 사용자 작업본을 보존하고 최신 개발 Git을 별도 복제본으로 가져옵니다. `source-lock.json`에 포함 커밋을 고정하고 변경 앱의 versionName/versionCode를 올립니다.
 2. 변경 앱의 프런트엔드를 빌드하고 APK 자산을 준비합니다. JDK 17·SDK 36·Build Tools 36.0.0과 기존 정식 서명 키를 사용해 해당 앱의 `:app:assemble<Id>Release`만 실행합니다. 앱 ID와 서명 키를 유지합니다.
 3. `python3 android/package-changed-apks.py`로 APK·BUILD·SHA256SUMS와 문서를 준비합니다. 인접 `records`의 이전 빌드·페이지·캐시 기록을 사용합니다. 공개 APK URL은 같은 리토스 페이지의 첨부 주소로 기록합니다.
-4. `npm run publish:android -- --skip-tests`로 기존 페이지에 바로 첨부합니다. 테스트를 생략하는 이번 사용자 방침은 BUILD의 명시적 기록으로 확인하며 앱 빌드·서명·해시 검사와 구분합니다.
+4. `npm run publish:android -- --basic-checks`로 기본 검증 기록을 확인한 뒤 기존 페이지에 첨부합니다. 기본 검증은 관련 단위·브라우저 검사, 빌드, 서명·앱 ID·버전, APK 웹 자산·아이콘·인쇄 클래스와 다운로드 무결성을 포함합니다. 실제 기기 설치·OS 인쇄 시험과 구분합니다. 명시적으로 검사를 생략하는 별도 요청에만 `--skip-tests`와 해당 BUILD 기록을 사용합니다.
 5. 실제 공개 다운로드의 파일명·전체 바이트·SHA-256을 확인하고, 영구 첨부와 필요한 기록을 남긴 뒤 임시 빌드·복제본을 정리합니다.
 
 ## 로컬 파일 선택과 보존

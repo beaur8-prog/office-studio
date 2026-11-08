@@ -1,31 +1,31 @@
 {
   "schema": 1,
-  "version": "1.0.12",
+  "version": "1.0.13",
   "versionCode": 2,
   "apps": {
     "sheet": {
       "repository": "beaur8-prog/sheet-studio",
-      "ref": "codex/android-1.0.5",
-      "sourceCommit": "09bcb3e7145c9de4ad3c8411481687a397ffef13",
-      "version": "1.0.5",
-      "versionCode": 6,
-      "upstreamCommit": "4c661c1047585672d8630c6e5509af4fa11cff57"
+      "ref": "codex/android-1.0.6",
+      "sourceCommit": "cfacc7fb3e0786f1d0a033f996476a6b0d2c1c82",
+      "version": "1.0.6",
+      "versionCode": 7,
+      "upstreamCommit": "febff8cd538c14b8e8f5d62ee6d5a7efd79b27a4"
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",
-      "ref": "codex/android-1.0.6",
-      "sourceCommit": "3702ff319c894b904198bda72877322a7a426524",
-      "version": "1.0.6",
-      "versionCode": 7,
-      "upstreamCommit": "e2644de1b2ba4a0d14349ff659feb211d9a9547a"
+      "ref": "codex/android-1.0.7",
+      "sourceCommit": "566e849fb3e8ba28f0e17819e85c596a9e18c3b2",
+      "version": "1.0.7",
+      "versionCode": 8,
+      "upstreamCommit": "bd5c5143fe9148cdac075f2ff23baf2a9b5e1f19"
     },
     "word": {
       "repository": "beaur8-prog/word-studio",
-      "ref": "codex/android-1.0.4",
-      "sourceCommit": "ecca9467697514a1f7b3e29a62e1da789b13df2f",
-      "version": "1.0.4",
-      "versionCode": 5,
-      "upstreamCommit": "95eb1aaaf41e45f5530eca2906ff0cefbd24b4d2"
+      "ref": "codex/android-1.0.5",
+      "sourceCommit": "4bac8ad20543a56a444d74bbb158c43b61bca482",
+      "version": "1.0.5",
+      "versionCode": 6,
+      "upstreamCommit": "5cb424690b89090183d326bfe3ec29b49b62382d"
     }
   },
   "minSdk": 29,
@@ -34,16 +34,19 @@
   "gradle": "8.13",
   "webkit": "1.14.0",
   "changedApps": [
-    "sheet"
+    "sheet",
+    "slide",
+    "word"
   ],
   "tests": {
-    "executed": false,
-    "status": "skipped",
-    "reason": "Fast Android publication without tests following the established user preference",
-    "explicitlyAuthorized": true
+    "status": "basic",
+    "executed": true,
+    "level": "basic",
+    "reason": "User requested basic source/browser/APK validation",
+    "nativeDeviceTests": false
   },
   "combinedZIP": false,
-  "nativeSlideHostUpstreamCommit": "e06f20cfb400386339f6077b977be7fde91bc309",
-  "nativeWordHostUpstreamCommit": "f06f81d6010250b9fccac79b65d5b8ec77584dcd",
-  "nativeSheetHostUpstreamCommit": "902b585bb8323d6a4d1f93382950b6307504a63f"
+  "nativeSlideHostUpstreamCommit": "612555c1aa480fe57a573039ae943ad92e085619",
+  "nativeWordHostUpstreamCommit": "434829094550a95c05b2bcea0af644699a6fc5a1",
+  "nativeSheetHostUpstreamCommit": "f04f9bdd6d506f17fc66e4c0ed89532ed3a016dd"
 }

@@ -8,7 +8,7 @@
 
 Android 설치 파일은 위 리토스 페이지의 **APK 바로 받기**에서 직접 내려받습니다. Android는 로컬에서 빌드한 APK를 바로 첨부하며 GitHub 릴리스 생성·APK 업로드·재다운로드를 배포 절차에 넣지 않습니다.
 
-Android판은 **Sheet Studio 1.0.5**, **Slide Studio 1.0.6**, **Word Studio 1.0.4**이며 Android 10 이상에서 개별 APK로 설치합니다. 현재 Android 변경 앱 갱신은 추가 설치·실행·기능 테스트를 생략했습니다. Android는 개별 APK만 제공하며 통합 ZIP은 제공을 중단했습니다. Android 업데이트는 새 APK를 기존 앱 위에 직접 설치하는 방식입니다. Android 릴리스는 Windows latest와 Mac 업데이트 피드에 영향을 주지 않습니다.
+Android판은 **Sheet Studio 1.0.6**, **Slide Studio 1.0.7**, **Word Studio 1.0.5**이며 Android 10 이상에서 개별 APK로 설치합니다. 현재 Android 배포는 단위·브라우저·빌드·APK 기본 검증을 수행했습니다. 실제 기기 설치·OS 인쇄 검사는 포함하지 않습니다. Android는 개별 APK만 제공하며 통합 ZIP은 제공을 중단했습니다. Android 업데이트는 새 APK를 기존 앱 위에 직접 설치하는 방식입니다. Android 릴리스는 Windows latest와 Mac 업데이트 피드에 영향을 주지 않습니다.
 
 Sheet Studio, Slide Studio, Word Studio를 묶어 설치하는 배포 프로젝트입니다. 기존 Windows x64 통합본과 별도 Mac Apple Silicon 통합본을 관리합니다. 아래 내용과 루트 잠금 파일은 Windows 배포용이며, Mac 배포 절차와 잠금 파일은 [mac/README.md](mac/README.md)에 있습니다.
 

@@ -8,6 +8,7 @@ import re
 import shutil
 import subprocess
 from zoneinfo import ZoneInfo
+from apk_basic_checks import verify_apk
 
 s = Path(__file__).resolve().parent.parent
 r = s.parent
@@ -19,8 +20,16 @@ before = json.loads((r / 'records/page-before.json').read_text())
 cache = json.loads((r / 'records/build-cache.json').read_text())
 changed = lock['changedApps']
 assert changed and len(changed) == len(set(changed))
-assert lock['tests']['executed'] is False and lock['tests']['explicitlyAuthorized'] is True
-assert lock['tests']['status'] == 'skipped' and lock['combinedZIP'] is False
+basic = lock['tests']['status'] == 'basic'
+assert lock['combinedZIP'] is False
+if basic:
+    frontend = json.loads((r / 'records/FRONTEND-BUILDS.json').read_text())
+    browsers = json.loads((r / 'records/BROWSER-CHECKS.json').read_text())
+    assert len(frontend) == 3 and all(result['passed'] for result in frontend)
+    assert len(browsers) == 3 and all(result['passed'] for result in browsers)
+else:
+    assert lock['tests']['executed'] is False and lock['tests']['explicitlyAuthorized'] is True
+    assert lock['tests']['status'] == 'skipped'
 version = lock['version']
 out = s / 'release/android' / version
 out.mkdir(parents=True, exist_ok=True)
@@ -35,6 +44,8 @@ def sha(file):
 
 
 apps = []
+basic_checks = []
+asset_manifests = json.loads((s / 'android/manifests/web-assets.json').read_text())
 for old in prior['apps']:
     id = old['id']
     app = {**old, 'rebuilt': id in changed}
@@ -50,13 +61,17 @@ for old in prior['apps']:
                       f"versionCode='{source['versionCode']}'", "minSdkVersion:'29'", "targetSdkVersion:'36'"]:
             assert field in manifest, field
         assert 'application-debuggable' not in manifest
+        if basic:
+            checks = verify_apk(apk, id, asset_manifests[id], s / 'android/app/src/main/assets/studio-host.js', sdk)
+            basic_checks.append({'id': id, 'version': source['version'], 'versionCode': source['versionCode'],
+                                 'sha256': sha(apk), 'signature': True, 'compiledManifest': True, **checks})
         filename = f"{id.title()}-Studio-{source['version']}-Android.apk"
         file = out / filename
         shutil.copy2(apk, file)
         app.update(version=source['version'], versionCode=source['versionCode'],
                    filename=filename, bytes=file.stat().st_size, sha256=sha(file),
                    sourceCommit=source['sourceCommit'], upstreamCommit=source['upstreamCommit'],
-                   offlineAssetsVerified=None)
+                   offlineAssetsVerified=True if basic else None)
         (r / 'records' / (id + '-signature.txt')).write_text(certificate)
         (r / 'records' / (id + '-manifest.txt')).write_text(manifest)
     href = 'attachments/office-studio-android/' + app['filename']
@@ -65,6 +80,11 @@ for old in prior['apps']:
     apps.append(app)
 
 source = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=s, text=True).strip()
+if basic:
+    proof = {'schema': 1, 'level': 'basic', 'passed': True, 'sourceCommit': source,
+             'apps': basic_checks, 'frontendChecks': frontend, 'browserChecks': browsers,
+             'nativeDeviceTests': False, 'installationTested': False, 'OSPrintingTested': False}
+    (out / 'BASIC-VERIFICATION.json').write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n')
 build = {
     'schema': 1, 'product': 'Office Studio', 'version': version, 'target': 'android',
     'releaseType': 'changed-apps', 'changedApps': changed, 'sourceCommit': source,
@@ -72,21 +92,22 @@ build = {
     'builtAt': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'apps': apps,
     'distribution': 'lithos-local-attachments', 'gitHubReleasePublished': False,
     'combinedZIP': False,
-    'tests': {'status': 'skipped', 'executed': False, 'explicitlyAuthorized': True,
-              'reason': 'Fast publication with tests omitted per established user instruction',
-              'installationTested': False, 'functionalTested': False},
-    'checks': {'signature': True, 'compiledManifest': True, 'nativeDeviceTests': False},
+    'tests': {'status': 'basic' if basic else 'skipped', 'executed': basic, 'explicitlyAuthorized': True,
+              'reason': 'Basic source/browser/APK verification requested' if basic else 'Fast publication with tests omitted per established user instruction',
+              'installationTested': False, 'functionalTested': basic, 'browserUITested': basic, 'nativeDeviceTested': False},
+    'checks': {'signature': True, 'compiledManifest': True, 'offlineAssets': basic, 'launcherIcons': basic, 'printBridgeClasses': basic, 'basicVerification': basic, 'nativeDeviceTests': False},
     'physicalDeviceTested': False,
 }
 (out / 'BUILD-android.json').write_text(json.dumps(build, ensure_ascii=False, indent=2) + '\n')
 (out / 'SHA256SUMS-android.txt').write_text(
     ''.join(a['sha256'] + '  ' + a['filename'] + '\n' for a in apps) +
-    sha(out / 'BUILD-android.json') + '  BUILD-android.json\n')
+    sha(out / 'BUILD-android.json') + '  BUILD-android.json\n' +
+    (sha(out / 'BASIC-VERIFICATION.json') + '  BASIC-VERIFICATION.json\n' if basic else ''))
 
 changes = {
-    'sheet': '숫자 표시·열 너비 조절·평균 수식 범위 선택과 Esc·Back 처리 개선',
-    'slide': '발표 화면을 원래 앱 창에서 유지, IME 숨김과 Android 16 Esc·Back 처리 개선',
-    'word': '느린 드래그 페이지 넘김과 태블릿 확대 배율 표시 개선',
+    'sheet': '현재 시트·선택 영역의 인쇄 및 PDF 저장 연결',
+    'slide': '개체 메뉴·접이식 발표 도구와 문서 전용 인쇄 및 PDF 저장 연결',
+    'word': '포인터 중심 확대·축소와 문서 전용 인쇄, Ctrl+P·Esc 입력 연결',
 }
 day = datetime.datetime.now(ZoneInfo('Asia/Seoul')).strftime('%Y년 %m월 %d일')
 summary = ', '.join(a['name'] + ' **' + a['version'] + '**' for a in apps if a['rebuilt'])
@@ -123,27 +144,26 @@ for a in apps:
         old = next(x for x in prior['apps'] if x['id'] == a['id'])
         body = body.replace(old['sha256'] + '  ' + old['filename'], a['sha256'] + '  ' + a['filename'])
 if 'sheet' in changed:
-    body = body.replace('1.0.4에는 전체화면 셀 입력·수식 참조와 태블릿 편집 개선을 포함합니다.',
-                        '1.0.5에는 숫자 표시·열 너비 조절·평균 수식 범위 선택과 Esc·뒤로가기 처리 개선을 포함합니다.')
+    body = body.replace('1.0.5에는 숫자 표시·열 너비 조절·평균 수식 범위 선택과 Esc·뒤로가기 처리 개선을 포함합니다.', '1.0.6에는 현재 시트·선택 영역 인쇄와 PDF 저장 연결을 포함합니다.')
 if 'slide' in changed:
-    body = body.replace('1.0.5에는 태블릿 편집 화면 개선과 발표 종료·Esc·Back 처리를 포함합니다.',
-                        '1.0.6에는 원래 앱 창에서 발표 화면 유지와 키보드 숨김, Android 16 Esc·뒤로가기 처리 개선을 포함합니다.')
+    body = body.replace('1.0.6에는 원래 앱 창에서 발표 화면 유지와 키보드 숨김, Android 16 Esc·뒤로가기 처리 개선을 포함합니다.', '1.0.7에는 개체 메뉴·접이식 발표 도구와 문서 인쇄·PDF 저장 연결을 포함합니다.')
 if 'word' in changed:
-    body = body.replace('1.0.3에는 연속 페이지 확대 배율 유지와 태블릿 편집, 안전한 Esc 처리를 포함합니다.',
-                        '1.0.4에는 느린 드래그 페이지 넘김과 태블릿 확대 배율 표시 개선을 포함합니다.')
+    body = body.replace('1.0.4에는 느린 드래그 페이지 넘김과 태블릿 확대 배율 표시 개선을 포함합니다.', '1.0.5에는 포인터 중심 확대·축소와 문서 인쇄·PDF 저장, Ctrl+P·Esc 입력 연결을 포함합니다.')
 start = body.index('## 7. 이번 배포의 확인 범위')
 end = body.index('이 문서는 리토스의 읽기 전용 공유 페이지입니다.', start)
 details = '\n'.join(f"- **{a['name']} {a['version']}**: {changes[a['id']]} · versionCode {a['versionCode']}"
                     for a in apps if a['rebuilt'])
-body = body[:start] + f'''## 7. 이번 배포의 확인 범위
+verification_text = ('관련 단위 검사와 Android 화면 브라우저 회귀, 빌드·서명·앱 ID·버전·오프라인 웹 자산·아이콘·인쇄 클래스 기본 검증을 통과했습니다. 실기기 설치·Android OS 인쇄 검사는 수행하지 않았습니다.' if basic else '추가 설치·실행·기능 테스트를 생략하고 빌드·서명·앱 ID·버전·SHA-256을 확인했습니다.')
+proof_link = '[이번 기본 검증 기록](attachments/office-studio-android/' + version + '/BASIC-VERIFICATION.json)\n\n' if basic else ''
+body = body[:start] + f"""## 7. 이번 배포의 확인 범위
 
-**이번 변경 앱 배포는 추가 설치·실행·기능 테스트를 생략했습니다.** 이전 배포 소스와 비교해 변경된 앱만 새로 빌드했습니다.
+**{verification_text}**
 
 {details}
 
-기존 앱 ID와 서명 키를 유지했습니다. 빌드 후 서명·앱 ID·버전·크기와 SHA-256을 기록했습니다. 통합 ZIP은 제공하지 않습니다. 위 1.0.0 검증 기록은 이전 배포 당시 결과입니다.
+{proof_link}기존 앱 ID·서명 키를 유지하고 versionCode를 올렸습니다. 통합 ZIP은 제공하지 않습니다. 위 1.0.0 검증 기록은 이전 배포 당시 결과입니다.
 
-''' + body[end:]
+""" + body[end:]
 assert body.split('# 오피스 스튜디오 Android')[0] == before['content'].split('# 오피스 스튜디오 Android')[0]
 assert '-APKs.zip' not in body
 for a in apps:
@@ -166,10 +186,10 @@ commits = '\n'.join(f"- {a['name']} {a['version']}: 최신 소스 `{a['upstreamC
 
 {commits}
 
-기존 앱 ID·정식 서명 키를 유지하고 versionCode를 올렸습니다. 설치·실행·기능 테스트와 통합 ZIP 생성은 생략했습니다. Windows latest·Mac 업데이트 피드와 배포 페이지는 유지합니다.
+기존 앱 ID·정식 서명 키를 유지하고 versionCode를 올렸습니다. {verification_text} 통합 ZIP은 생성하지 않습니다. Windows latest·Mac 업데이트 피드와 배포 페이지는 유지합니다.
 
 [Android 다운로드 페이지]({before['url']})
 ''')
 print(json.dumps({'version': version, 'sourceCommit': source,
                   'apps': [{k: a[k] for k in ('id', 'version', 'versionCode', 'bytes', 'sha256')} for a in apps],
-                  'testsExecuted': False, 'combinedZIP': False}, ensure_ascii=False, indent=2))
+                  'testsExecuted': basic, 'validation': 'basic' if basic else 'signature-only', 'combinedZIP': False}, ensure_ascii=False, indent=2))

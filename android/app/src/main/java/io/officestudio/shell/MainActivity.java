@@ -26,14 +26,18 @@ public class MainActivity extends Activity {
     static final int OPEN = 2101, SAVE = 2102, CHOOSE = 2103, SHARE = 2104;
     static final long LIMIT = 128L * 1024 * 1024;
     WebView web;
+    SheetPrintAdapter sheetPrintAdapter;
+    PrintJob sheetPrintJob;
     FrameLayout root;
     final ExecutorService io = Executors.newSingleThreadExecutor();
     final Map<String, ImportFile> imports = new ConcurrentHashMap<>();
     Transfer transfer;
     Pending pending;
+    SlidePrintSession slidePrint;
+    WordPrintSession wordPrint;
     ValueCallback<Uri[]> chooser;
     Uri incoming;
-    boolean ready, destroyed, immersive;
+    boolean ready, destroyed, immersive, wordPrintKeyDown;
     boolean slideBackKeyDown;
     boolean sheetViewer, sheetBackKeyDown;
     int slideNavigationGeneration;
@@ -72,10 +76,12 @@ public class MainActivity extends Activity {
         root=new FrameLayout(this);web=new WebView(this){
             @Override public boolean onKeyPreIme(int keyCode,KeyEvent event){
                 if(handleSlideNavigationKey(event))return true;
+                if(handleWordEscape(event))return true;
                 if(BuildConfig.STUDIO.equals("sheet")&&sheetKey(event,true))return true;
                 return super.onKeyPreIme(keyCode,event);
             }
         };root.addView(web,new FrameLayout.LayoutParams(-1,-1));setContentView(root);
+        if(BuildConfig.STUDIO.equals("word"))web.setOnGenericMotionListener((view,event)->relayWordWheel(event));
         ViewCompat.setOnApplyWindowInsetsListener(root,(v,insets)->{
             Insets keyboard = insets.getInsets(WindowInsetsCompat.Type.ime());
             if (BuildConfig.STUDIO.equals("slide")) {
@@ -191,9 +197,77 @@ public class MainActivity extends Activity {
             case "clipboard":android.content.ClipboardManager clipboard=(android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);clipboard.setPrimaryClip(a.optString("html").isEmpty()?ClipData.newPlainText("Studio",a.optString("text")):ClipData.newHtmlText("Studio",a.optString("text"),a.optString("html")));success(id,reply,true);break;
             case "readClipboard":android.content.ClipboardManager cm=(android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);ClipData clip=cm.getPrimaryClip();String text=clip!=null&&clip.getItemCount()>0?clip.getItemAt(0).coerceToText(this).toString():"";if(text.length()>1024*1024)throw new IOException("클립보드 내용이 너무 큽니다");success(id,reply,text);break;
             case "close":success(id,reply,true);if(BuildConfig.STUDIO.equals("sheet")){if(BuildConfig.DEBUG)android.util.Log.d("SheetInput","Ignored unconfirmed legacy close");}else if(BuildConfig.STUDIO.equals("slide"))requestSlideBack();else finish();break;
-            case "print":if(pending!=null)throw new IOException("다른 파일 작업이 진행 중입니다");pending=new Pending(id,"print",reply,null);PrintDocumentAdapter delegate=web.createPrintDocumentAdapter(getString(R.string.app_name));PrintDocumentAdapter adapter=new PrintDocumentAdapter(){@Override public void onStart(){delegate.onStart();}@Override public void onLayout(PrintAttributes old,PrintAttributes next,CancellationSignal signal,LayoutResultCallback cb,Bundle extras){delegate.onLayout(old,next,signal,cb,extras);}@Override public void onWrite(android.print.PageRange[] pages,ParcelFileDescriptor dest,CancellationSignal signal,WriteResultCallback cb){delegate.onWrite(pages,dest,signal,cb);}@Override public void onFinish(){delegate.onFinish();if(pending!=null&&pending.method.equals("print")){Pending x=pending;pending=null;success(x.id,x.reply,obj("completed",true));}}};((PrintManager)getSystemService(PRINT_SERVICE)).print(getString(R.string.app_name),adapter,new PrintAttributes.Builder().build());break;
+            case "sheetPrint":startSheetPrint(id,reply,a);break;
+            case "slidePrint":{
+                if(!BuildConfig.STUDIO.equals("slide"))throw new IOException("지원하지 않는 Android 요청입니다");
+                if(pending!=null||chooser!=null||slidePrint!=null)throw new IOException("다른 파일 작업이 진행 중입니다");
+                Transfer t=transfer;
+                if(t==null||!t.token.equals(a.getString("token"))||t.size!=t.written||t.size==0||!t.mime.equals("text/html"))throw new IOException("인쇄 데이터를 완성하지 못했습니다.");
+                int width=a.getInt("pageWidthMils"),height=a.getInt("pageHeightMils"),count=a.getInt("pages");
+                if(width<1000||height<1000||width>48000||height>48000||count<1||count>10000)throw new IOException("인쇄 용지 정보를 확인하지 못했습니다.");
+                t.out.close();transfer=null;
+                Pending request=new Pending(id,"slidePrint",reply,t.file);pending=request;
+                slidePrint=new SlidePrintSession(this,t.file,width,height,count,io,(status,error)->{
+                    if(pending==request)pending=null;slidePrint=null;
+                    if(error!=null)failure(id,reply,error);else success(id,reply,obj("status",status));
+                });
+                slidePrint.start();break;
+            }
+            case "wordPrint":{
+                if(!BuildConfig.STUDIO.equals("word"))throw new IOException("지원하지 않는 Android 요청입니다");
+                if(pending!=null||chooser!=null||wordPrint!=null)throw new IOException("다른 파일 작업이 진행 중입니다");
+                Transfer t=transfer;
+                if(t==null||!t.token.equals(a.getString("token"))||t.size!=t.written||t.size==0||!t.mime.equals("text/html"))throw new IOException("인쇄 데이터를 완성하지 못했습니다.");
+                int width=a.getInt("pageWidthMils"),height=a.getInt("pageHeightMils"),count=a.getInt("pages");
+                if(width<1000||height<1000||width>48000||height>48000||count<1||count>10000)throw new IOException("인쇄 용지 정보를 확인하지 못했습니다.");
+                t.out.close();transfer=null;
+                Pending request=new Pending(id,"wordPrint",reply,t.file);pending=request;
+                wordPrint=new WordPrintSession(this,t.file,width,height,count,io,(status,error)->{
+                    if(pending==request)pending=null;wordPrint=null;
+                    if(error!=null)failure(id,reply,error);else success(id,reply,obj("status",status));
+                });
+                wordPrint.start();break;
+            }
+            case "print":if(BuildConfig.STUDIO.equals("sheet"))throw new IOException("Sheet Studio의 인쇄 메뉴를 사용하세요");if(pending!=null)throw new IOException("다른 파일 작업이 진행 중입니다");pending=new Pending(id,"print",reply,null);PrintDocumentAdapter delegate=web.createPrintDocumentAdapter(getString(R.string.app_name));PrintDocumentAdapter adapter=new PrintDocumentAdapter(){@Override public void onStart(){delegate.onStart();}@Override public void onLayout(PrintAttributes old,PrintAttributes next,CancellationSignal signal,LayoutResultCallback cb,Bundle extras){delegate.onLayout(old,next,signal,cb,extras);}@Override public void onWrite(android.print.PageRange[] pages,ParcelFileDescriptor dest,CancellationSignal signal,WriteResultCallback cb){delegate.onWrite(pages,dest,signal,cb);}@Override public void onFinish(){delegate.onFinish();if(pending!=null&&pending.method.equals("print")){Pending x=pending;pending=null;success(x.id,x.reply,obj("completed",true));}}};((PrintManager)getSystemService(PRINT_SERVICE)).print(getString(R.string.app_name),adapter,new PrintAttributes.Builder().build());break;
             default:failure(id,reply,new IOException("지원하지 않는 Android 요청입니다"));
         }
+    }
+    void startSheetPrint(String id,JavaScriptReplyProxy reply,JSONObject params)throws Exception {
+        if(!BuildConfig.STUDIO.equals("sheet"))throw new IOException("Sheet Studio 인쇄 요청만 지원합니다");
+        if(pending!=null||chooser!=null||sheetPrintAdapter!=null)throw new IOException("다른 파일 작업이 진행 중입니다");
+        Pending operation=new Pending(id,"sheetPrint",reply,null);pending=operation;
+        io.execute(()->{
+            Transfer file=null;
+            try{
+                Transfer candidate=transfer;if(candidate==null||!candidate.token.equals(params.getString("token"))||candidate.size!=candidate.written)throw new IOException("인쇄 파일을 완성하지 못했습니다");
+                candidate.out.close();transfer=null;file=candidate;
+                if(file.size<1||file.size>32L*1024*1024)throw new IOException("인쇄 문서는 32 MiB 이하여야 합니다");
+                String html=new String(java.nio.file.Files.readAllBytes(file.file.toPath()),java.nio.charset.StandardCharsets.UTF_8);
+                JSONObject paper=params.getJSONObject("paper");double width=paper.getDouble("width"),height=paper.getDouble("height");int pages=params.getInt("pageCount");
+                String name=cleanName(params.optString("title","Sheet Studio"));if(name.length()>120)name=name.substring(0,120);final String title=name;
+                String paperName=paper.optString("name","A4");
+                runOnUiThread(()->{
+                    if(destroyed||pending!=operation)return;
+                    try{
+                        sheetPrintAdapter=new SheetPrintAdapter(this,root,title,html,width,height,pages,()->finishSheetPrint(operation,null));
+                        PrintAttributes attributes=SheetPrintAdapter.attributes(paperName,width,height);
+                        sheetPrintJob=((PrintManager)getSystemService(PRINT_SERVICE)).print(title,sheetPrintAdapter,attributes);
+                        if(sheetPrintJob==null)throw new IOException("Android 인쇄 서비스를 시작하지 못했습니다");
+                    }catch(Exception error){finishSheetPrint(operation,error);}
+                });
+            }catch(Exception error){runOnUiThread(()->finishSheetPrint(operation,error));}
+            finally{if(file!=null){file.file.delete();File folder=file.file.getParentFile();if(folder!=null)folder.delete();}}
+        });
+    }
+    void finishSheetPrint(Pending operation,Exception error){
+        if(pending!=operation)return;
+        SheetPrintAdapter adapter=sheetPrintAdapter;PrintJob job=sheetPrintJob;sheetPrintAdapter=null;sheetPrintJob=null;pending=null;
+        if(adapter!=null&&!adapter.finished)adapter.onFinish();
+        if(destroyed)return;
+        if(error==null&&adapter!=null&&adapter.error!=null)error=new IOException(adapter.error);
+        if(error!=null)failure(operation.id,operation.reply,error);
+        else {boolean cancelled=false;try{cancelled=job!=null&&job.isCancelled();}catch(Exception ignored){}success(operation.id,operation.reply,obj("dialogClosed",true,"cancelled",cancelled));}
+        deliverIncoming();
     }
     void startOutput(String id,JavaScriptReplyProxy reply,Transfer t,String method){
         if(pending!=null){t.file.delete();failure(id,reply,new IOException("다른 파일 작업이 진행 중입니다"));return;}pending=new Pending(id,method,reply,t.file);pending.transferToken=t.token;
@@ -276,6 +350,7 @@ public class MainActivity extends Activity {
     }
     @Override public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+        if(hasFocus&&BuildConfig.STUDIO.equals("word")&&web!=null&&!destroyed)web.requestFocus();
         if(hasFocus&&immersive&&BuildConfig.STUDIO.equals("word")&&root!=null){WindowInsetsControllerCompat bars=WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView());bars.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);bars.hide(WindowInsetsCompat.Type.systemBars());ViewCompat.requestApplyInsets(root);}
         if (hasFocus && root != null && web != null && BuildConfig.STUDIO.equals("slide")) setSlideImmersive(immersive);
         if(hasFocus&&BuildConfig.STUDIO.equals("sheet")&&root!=null&&web!=null)applySheetSystemBars();
@@ -339,18 +414,48 @@ public class MainActivity extends Activity {
         }
         return false;
     }
+    boolean relayWordWheel(MotionEvent event){
+        int meta=KeyEvent.normalizeMetaState(event.getMetaState());
+        if(event.getActionMasked()!=MotionEvent.ACTION_SCROLL||(meta&(KeyEvent.META_CTRL_ON|KeyEvent.META_META_ON))==0)return false;
+        float density=getResources().getDisplayMetrics().density;
+        ViewConfiguration config=ViewConfiguration.get(this);
+        float x=event.getX()/density,y=event.getY()/density;
+        float dx=-event.getAxisValue(MotionEvent.AXIS_HSCROLL)*config.getScaledHorizontalScrollFactor()/density;
+        float dy=-event.getAxisValue(MotionEvent.AXIS_VSCROLL)*config.getScaledVerticalScrollFactor()/density;
+        if(!destroyed&&Float.isFinite(x)&&Float.isFinite(y)&&Float.isFinite(dx)&&Float.isFinite(dy)){
+            // WebView can reserve modified mouse wheels for native page zoom.
+            // Consume once and route to the document viewport, leaving normal
+            // wheel scrolling and the other Studio apps on their usual path.
+            web.evaluateJavascript("(()=>{const x="+x+",y="+y+";document.elementFromPoint(x,y)?.dispatchEvent(new WheelEvent('wheel',{bubbles:true,cancelable:true,clientX:x,clientY:y,deltaX:"+dx+",deltaY:"+dy+",deltaMode:0,ctrlKey:"+((meta&KeyEvent.META_CTRL_ON)!=0)+",metaKey:"+((meta&KeyEvent.META_META_ON)!=0)+"}))})()",null);
+        }
+        return true;
+    }
+    boolean handleWordEscape(KeyEvent event){
+        if(!BuildConfig.STUDIO.equals("word")||event.getKeyCode()!=KeyEvent.KEYCODE_ESCAPE)return false;
+        if(event.getAction()==KeyEvent.ACTION_DOWN&&event.getRepeatCount()==0&&web!=null&&!destroyed){
+            web.evaluateJavascript("window.dispatchEvent(new Event('studio-native-escape',{cancelable:true}));",null);
+            web.requestFocus();
+        }
+        return true;
+    }
     @Override public boolean dispatchKeyEvent(KeyEvent event) {
         if(handleSlideNavigationKey(event))return true;
         if(BuildConfig.STUDIO.equals("sheet")&&sheetKey(event,false))return true;
-        // Own the whole Escape press, not only key-up. Passing either half to
-        // WebView/Android can turn the same press into a second back/close.
-        if(BuildConfig.STUDIO.equals("word")&&event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE){
-            if(event.getAction()==KeyEvent.ACTION_DOWN&&event.getRepeatCount()==0&&web!=null&&!destroyed){
-                web.evaluateJavascript("window.dispatchEvent(new Event('studio-native-escape',{cancelable:true}));",null);
-                web.requestFocus();
-            }
+        // WebView can consume Ctrl+P as a browser shortcut without delivering
+        // a DOM key event. Word owns this shortcut and opens its document print
+        // path once, including a hardware keyboard's held-key/release events.
+        if(BuildConfig.STUDIO.equals("word")&&event.getKeyCode()==KeyEvent.KEYCODE_P&&
+            (event.isCtrlPressed()||event.isMetaPressed()||wordPrintKeyDown)){
+            if(event.getAction()==KeyEvent.ACTION_DOWN){
+                if(event.getRepeatCount()==0&&web!=null&&!destroyed)
+                    web.evaluateJavascript("window.dispatchEvent(new Event('studio-native-print'));",null);
+                wordPrintKeyDown=true;
+            }else if(event.getAction()==KeyEvent.ACTION_UP)wordPrintKeyDown=false;
             return true;
         }
+        // Own the whole Escape press, not only key-up. Passing either half to
+        // WebView/Android can turn the same press into a second back/close.
+        if(handleWordEscape(event))return true;
         return super.dispatchKeyEvent(event);
     }
     void publishSheetInput() {
@@ -364,5 +469,5 @@ public class MainActivity extends Activity {
     }
     @Override public void onBackPressed(){if(BuildConfig.STUDIO.equals("slide")){requestSlideBack();return;}if(BuildConfig.STUDIO.equals("sheet")&&sheetViewer){sheetEscape(null,"system-back");return;}if(BuildConfig.STUDIO.equals("sheet")&&root!=null){WindowInsetsCompat insets=ViewCompat.getRootWindowInsets(root);if(insets!=null&&insets.isVisible(WindowInsetsCompat.Type.ime())){WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView()).hide(WindowInsetsCompat.Type.ime());return;}}if(fullscreen!=null){hideFullscreen();return;}if(web==null){finish();return;}if(BuildConfig.STUDIO.equals("sheet")){web.evaluateJavascript("window.dispatchEvent(new Event('sheet-studio-android-back',{cancelable:true}))",null);return;}web.evaluateJavascript("window.OfficeStudioHost?window.OfficeStudioHost.back():false",value->{if("false".equals(value)||"null".equals(value))finish();});}
     @Override protected void onPause(){if(web!=null)web.evaluateJavascript("document.dispatchEvent(new Event('visibilitychange'));window.dispatchEvent(new Event('pagehide'));",null);super.onPause();}
-    @Override protected void onDestroy(){destroyed=true;try{unregisterReceiver(shareReceiver);}catch(Exception ignored){}if(chooser!=null)chooser.onReceiveValue(null);io.execute(()->{if(transfer!=null)try{transfer.out.close();transfer.file.delete();}catch(Exception ignored){}for(ImportFile f:imports.values())f.file.delete();imports.clear();});io.shutdown();if(web!=null){root.removeView(web);web.destroy();}super.onDestroy();}
+    @Override protected void onDestroy(){destroyed=true;if(slidePrint!=null)slidePrint.close();if(wordPrint!=null)wordPrint.close();if(sheetPrintJob!=null)try{sheetPrintJob.cancel();}catch(Exception ignored){}if(sheetPrintAdapter!=null)sheetPrintAdapter.onFinish();try{unregisterReceiver(shareReceiver);}catch(Exception ignored){}if(chooser!=null)chooser.onReceiveValue(null);io.execute(()->{if(transfer!=null)try{transfer.out.close();transfer.file.delete();}catch(Exception ignored){}for(ImportFile f:imports.values())f.file.delete();imports.clear();});io.shutdown();if(web!=null){root.removeView(web);web.destroy();}super.onDestroy();}
 }

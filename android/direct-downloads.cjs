@@ -51,6 +51,8 @@ async function prepareDirectDownloads({root,build,content,baseURL,vaultRoot}){
   const href=add(entry,prefix+build.version+'/'+name);
   replaceLink(name==='BUILD-android.json'?'빌드 구성·포함 소스':'SHA-256 확인 파일',href);
  }
+ const basic=await localFile(path.join(root,'release/android',build.version,'BASIC-VERIFICATION.json'),'BASIC-VERIFICATION.json',null,'local-basic-verification');
+ if(basic){const href=add(basic,prefix+build.version+'/BASIC-VERIFICATION.json');replaceLink('이번 기본 검증 기록',href);}
  const oldProof=await localFile(path.join(root,'android/distribution-assets/ANDROID-VERIFICATION-1.0.0.json'),'ANDROID-VERIFICATION.json',null,'local-historical-proof');
  if(oldProof){const href=add(oldProof,prefix+'1.0.0/ANDROID-VERIFICATION.json');replaceLink('1.0.0 배포 당시 검증 기록',href);}
  content=content.replace(/\s*·\s*\[GitHub 릴리스\]\([^)]*\)/g,'');
