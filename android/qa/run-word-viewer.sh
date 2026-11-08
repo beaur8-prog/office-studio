@@ -23,6 +23,10 @@ adb shell settings put global animator_duration_scale 0
 adb shell am instrument -w -r -e studioQaProfile "$profile" -e class io.officestudio.shell.WordViewerInstrumentedTest,io.officestudio.shell.WordPrintInstrumentedTest io.officestudio.word.test/androidx.test.runner.AndroidJUnitRunner > "$out/$profile.log" 2>&1
 cat "$out/$profile.log"
 adb pull /sdcard/Android/data/io.officestudio.word/files/viewer-qa "$out/$profile-shots" || true
+# Preserve only these synthetic QA outputs even if an in-app assertion fails.
+mkdir -p "$out/$profile-pdfs"
+adb pull /sdcard/Download/WordStudio-Print-QA-docx.pdf "$out/$profile-pdfs/docx.pdf" || true
+adb pull /sdcard/Download/WordStudio-Print-QA-hwp.pdf "$out/$profile-pdfs/hwp.pdf" || true
 adb logcat -d > "$out/$profile-logcat.txt"
 adb exec-out screencap -p > "$out/$profile.png"
 grep -q 'OK (5 tests)' "$out/$profile.log"

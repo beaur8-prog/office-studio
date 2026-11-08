@@ -67,9 +67,13 @@ public class WordPrintInstrumentedTest {
         UiObject2 name=device.wait(Until.findObject(By.clazz("android.widget.EditText")),10000);assertNotNull(name);name.setText(filename);
         UiObject2 save=device.findObject(By.res("android:id/button1"));if(save==null)save=device.findObject(By.text(Pattern.compile("(?i)save")));assertNotNull("No system Save button",save);save.click();
         returned();
-        until(()->{try{return device.executeShellCommand("test -s /sdcard/Download/"+filename+" && echo ready").trim().equals("ready");}catch(IOException error){return false;}},30000,"Saved PDF missing from Downloads");
+        // UiAutomation executes commands directly, without a shell: operators
+        // and quote characters are not interpreted here.
+        System.out.println("PRINT-DOWNLOADS "+device.executeShellCommand("ls -l /sdcard/Download"));
+        until(()->{try{return Long.parseLong(device.executeShellCommand("stat -c %s /sdcard/Download/"+filename).trim())>100;}catch(Exception error){return false;}},30000,"Saved PDF missing from Downloads");
         File copy=new File(evidence(),filename);
-        String copied=device.executeShellCommand("cp /sdcard/Download/"+filename+" '"+copy.getAbsolutePath()+"'");
+        assertTrue(copy.getAbsolutePath().matches("[A-Za-z0-9_./-]+"));
+        String copied=device.executeShellCommand("cp /sdcard/Download/"+filename+" "+copy.getAbsolutePath());
         assertTrue("Cannot copy own QA PDF: "+copied,copy.isFile()&&copy.length()>100);return copy;
     }
     void pdf(File file,int expected)throws Exception {
