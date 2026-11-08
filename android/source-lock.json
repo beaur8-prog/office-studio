@@ -13,11 +13,11 @@
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",
-      "ref": "codex/android-1.0.6",
-      "sourceCommit": "3702ff319c894b904198bda72877322a7a426524",
+      "ref": "codex/android-object-menu-20261108",
+      "sourceCommit": "c6158657fd36932f1e8623f3008d848043a7ff82",
       "version": "1.0.6",
       "versionCode": 7,
-      "upstreamCommit": "e2644de1b2ba4a0d14349ff659feb211d9a9547a"
+      "upstreamCommit": "2db94ea2aadf426a7d221a5e80132215f9ac92d6"
     },
     "word": {
       "repository": "beaur8-prog/word-studio",
@@ -45,5 +45,35 @@
   "combinedZIP": false,
   "nativeSlideHostUpstreamCommit": "e06f20cfb400386339f6077b977be7fde91bc309",
   "nativeWordHostUpstreamCommit": "9bae920e13a49fff7ed7c3b6b54fdad5e7de678c",
-  "nativeSheetHostUpstreamCommit": "225cefbdc04a81bcc79639b2e106af05c39892b8"
+  "nativeSheetHostUpstreamCommit": "225cefbdc04a81bcc79639b2e106af05c39892b8",
+  "development": {
+    "status": "object-menu fix validated; not publicly released",
+    "baselineAppVersion": "1.0.6",
+    "baselineHostCommit": "0b0e61a641b669ddbe8115aad0291d45eddc1dcd",
+    "nativeVerificationCommit": "5b3dcb2de684492a46c445f0944f4f53ccf25024",
+    "requiresVersionBumpBeforeRelease": true,
+    "changes": [
+      "Context menu bounds respect visual viewport, resolved Android insets and editor footer",
+      "Scrollable menus retain reachable last action; dynamic insets update placement",
+      "Android context menu stays above transient notifications and owns pointer events"
+    ],
+    "verification": {
+      "browserPassed": 18,
+      "androidMenuCases": 8,
+      "desktopObjectCases": 5,
+      "partialTextSelectionCases": 5,
+      "webBuildsPassed": [
+        "main",
+        "Android 1.0.6 source branch"
+      ],
+      "nativeMenuPassed": 1,
+      "nativeSdk": 36,
+      "nativeWebView": "133.0.6943.137",
+      "nativeResolution": "1280x800",
+      "nativeDensityDpi": 160,
+      "nativeCrashBufferEmpty": true,
+      "oneUIHardwareTested": false
+    },
+    "note": "Root version/tests describe the published baseline. Debug QA APK only; APK/links/documents unchanged. Preserve local attachment distribution policy and existing signatures on a later authorized release."
+  }
 }
