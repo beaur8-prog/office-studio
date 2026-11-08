@@ -68,8 +68,21 @@ public class SheetWindowInstrumentedTest {
         assertTrue("Native viewer acknowledgement",ready[0]);
     }
     void waitIme(ActivityScenario<MainActivity> s) throws Exception {
-        long end=SystemClock.uptimeMillis()+15000;boolean[] showing={false};
-        do{s.onActivity(a->{WindowInsetsCompat insets=ViewCompat.getRootWindowInsets(a.root);showing[0]=insets!=null&&insets.isVisible(WindowInsetsCompat.Type.ime());});if(!showing[0])SystemClock.sleep(100);}while(!showing[0]&&SystemClock.uptimeMillis()<end);
+        long end=SystemClock.uptimeMillis()+15000;boolean[] showing={false};boolean handledGuide=false;
+        UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        do{
+            // The first fullscreen confirmation may arrive AFTER readiness and
+            // steal the IME show request (ImeTracker: CLIENT_FOCUSED / ABORT).
+            // Re-enter only after this identified OS guide; a missing keyboard
+            // without the guide remains a failure of the original assertion.
+            androidx.test.uiautomator.UiObject2 guide=device.findObject(androidx.test.uiautomator.By.text("Got it"));
+            if(guide!=null&&!handledGuide){
+                handledGuide=true;screenshot("late-fullscreen-system-guide");
+                try{guide.click();}catch(androidx.test.uiautomator.StaleObjectException closedGuide){}
+                ready(s);tap(s,"#formula");end=SystemClock.uptimeMillis()+15000;
+            }
+            s.onActivity(a->{WindowInsetsCompat insets=ViewCompat.getRootWindowInsets(a.root);showing[0]=insets!=null&&insets.isVisible(WindowInsetsCompat.Type.ime());});if(!showing[0])SystemClock.sleep(100);
+        }while(!showing[0]&&SystemClock.uptimeMillis()<end);
         assertTrue("Real IME visible",showing[0]);
     }
     void settle(ActivityScenario<MainActivity> s) throws Exception {
