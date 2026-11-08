@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
     WebChromeClient.CustomViewCallback fullscreenCallback;
     String shareAction;
     BroadcastReceiver shareReceiver;
-    static class Pending { String id, method; JavaScriptReplyProxy reply; File file; Pending(String i, String m, JavaScriptReplyProxy r, File f) { id=i;method=m;reply=r;file=f; } }
+    static class Pending { String id, method, transferToken; JavaScriptReplyProxy reply; File file; Pending(String i, String m, JavaScriptReplyProxy r, File f) { id=i;method=m;reply=r;file=f; } }
     static class Transfer { String token; File file; OutputStream out; long size, written; String mime; }
     static class ImportFile { File file; String name,mime; long size; }
     interface Job { void run() throws Exception; }
@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
         ViewCompat.setOnApplyWindowInsetsListener(root,(v,insets)->{Insets b=insets.getInsets(WindowInsetsCompat.Type.systemBars()|WindowInsetsCompat.Type.displayCutout());Insets k=insets.getInsets(WindowInsetsCompat.Type.ime());v.setPadding(b.left,b.top,b.right,Math.max(b.bottom,k.bottom));return insets;});
         if(Build.VERSION.SDK_INT>=33)getOnBackInvokedDispatcher().registerOnBackInvokedCallback(android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT,this::onBackPressed);
         shareAction=getPackageName()+".SHARE_TARGET."+UUID.randomUUID();
-        shareReceiver=new BroadcastReceiver(){@Override public void onReceive(Context c,Intent i){if(shareAction.equals(i.getAction())&&pending!=null&&pending.method.equals("share")){Pending p=pending;pending=null;success(p.id,p.reply,obj("completed",true));}}};
+        shareReceiver=new BroadcastReceiver(){@Override public void onReceive(Context c,Intent i){if(shareAction.equals(i.getAction())&&pending!=null&&pending.method.equals("share")&&Objects.equals(pending.transferToken,i.getStringExtra("transferToken"))){Pending p=pending;pending=null;success(p.id,p.reply,obj("completed",true));}}};
         if(Build.VERSION.SDK_INT>=33)registerReceiver(shareReceiver,new IntentFilter(shareAction),Context.RECEIVER_NOT_EXPORTED);else registerReceiver(shareReceiver,new IntentFilter(shareAction));
         WebView.setWebContentsDebuggingEnabled(false);
         WebSettings settings=web.getSettings();settings.setJavaScriptEnabled(true);settings.setDomStorageEnabled(true);settings.setAllowFileAccess(false);settings.setAllowContentAccess(true);settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);settings.setMediaPlaybackRequiresUserGesture(true);settings.setSupportMultipleWindows(false);settings.setTextZoom(100);
@@ -117,9 +117,9 @@ public class MainActivity extends Activity {
         }
     }
     void startOutput(String id,JavaScriptReplyProxy reply,Transfer t,String method){
-        if(pending!=null){t.file.delete();failure(id,reply,new IOException("다른 파일 작업이 진행 중입니다"));return;}pending=new Pending(id,method,reply,t.file);
+        if(pending!=null){t.file.delete();failure(id,reply,new IOException("다른 파일 작업이 진행 중입니다"));return;}pending=new Pending(id,method,reply,t.file);pending.transferToken=t.token;
         try{if(method.equals("save"))startActivityForResult(new Intent(Intent.ACTION_CREATE_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType(t.mime).putExtra(Intent.EXTRA_TITLE,t.file.getName()),SAVE);
-        else{Uri uri=FileProvider.getUriForFile(this,getPackageName()+".files",t.file);Intent send=new Intent(Intent.ACTION_SEND).setType(t.mime).putExtra(Intent.EXTRA_STREAM,uri).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);send.setClipData(ClipData.newUri(getContentResolver(),t.file.getName(),uri));Intent chosen=new Intent(shareAction).setPackage(getPackageName());int flags=PendingIntent.FLAG_UPDATE_CURRENT|(Build.VERSION.SDK_INT>=31?PendingIntent.FLAG_MUTABLE:0);PendingIntent receiver=PendingIntent.getBroadcast(this,0,chosen,flags);startActivityForResult(Intent.createChooser(send,"파일 공유",receiver.getIntentSender()),SHARE);}}
+        else{Uri uri=FileProvider.getUriForFile(this,getPackageName()+".files",t.file);Intent send=new Intent(Intent.ACTION_SEND).setType(t.mime).putExtra(Intent.EXTRA_STREAM,uri).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);send.setClipData(ClipData.newUri(getContentResolver(),t.file.getName(),uri));Intent chosen=new Intent(shareAction).setPackage(getPackageName()).putExtra("transferToken",t.token);int flags=PendingIntent.FLAG_UPDATE_CURRENT|(Build.VERSION.SDK_INT>=31?PendingIntent.FLAG_MUTABLE:0);PendingIntent receiver=PendingIntent.getBroadcast(this,t.token.hashCode(),chosen,flags);startActivityForResult(Intent.createChooser(send,"파일 공유",receiver.getIntentSender()),SHARE);}}
         catch(Exception e){pending=null;t.file.delete();failure(id,reply,e);}
     }
     @Override protected void onActivityResult(int request,int result,Intent data){super.onActivityResult(request,result,data);
@@ -127,7 +127,12 @@ public class MainActivity extends Activity {
         Pending p=pending;if(p==null)return;
         if(request==OPEN&&p.method.equals("open")){pending=null;if(result!=RESULT_OK||data==null||data.getData()==null){success(p.id,p.reply,obj("cancelled",true));return;}work(p.id,p.reply,()->success(p.id,p.reply,importUri(data.getData())));}
         else if(request==SAVE&&p.method.equals("save")){pending=null;if(result!=RESULT_OK||data==null||data.getData()==null){p.file.delete();success(p.id,p.reply,obj("cancelled",true));return;}Uri uri=data.getData();work(p.id,p.reply,()->{try(InputStream input=new FileInputStream(p.file);OutputStream output=getContentResolver().openOutputStream(uri,"w")){if(output==null)throw new IOException("저장 위치를 열지 못했습니다");byte[] bytes=new byte[65536];int n;while((n=input.read(bytes))!=-1)output.write(bytes,0,n);output.flush();}finally{p.file.delete();}success(p.id,p.reply,obj("completed",true));});}
-        else if(request==SHARE&&p.method.equals("share")){pending=null;success(p.id,p.reply,obj("cancelled",true));}
+        else if(request==SHARE&&p.method.equals("share")){
+            // Chooser completion and its selected-target broadcast are separate
+            // asynchronous deliveries. Let the positive selection arrive before
+            // treating an unselected chooser dismissal as cancellation.
+            new Handler(Looper.getMainLooper()).postDelayed(()->{if(!destroyed&&pending==p){pending=null;success(p.id,p.reply,obj("cancelled",true));}},2000);
+        }
     }
     JSONObject importUri(Uri uri)throws Exception {
         if(!"content".equals(uri.getScheme()))throw new IOException("Android 파일 선택기에서 파일을 선택해 주세요");if(imports.size()>3)throw new IOException("읽기 대기 파일이 너무 많습니다");String name="문서",type=mime(getContentResolver().getType(uri));
