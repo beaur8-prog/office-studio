@@ -1,5 +1,7 @@
 # Office Studio · Android
 
+현재 배포: Sheet 1.0.1 · Slide 1.0.1 · Word 1.0.0. Android 통합 ZIP은 제공을 중단했으며 개별 APK만 게시합니다.
+
 세 Android 전용 앱을 각각 서명한 범용 APK로 빌드합니다. Android 10(API 29) 이상과 Android System WebView 120 이상이 필요합니다. 오프라인 프런트엔드, 시스템 파일 선택기, 사본 저장·공유, 원형·적응형·단색 아이콘을 포함합니다.
 
 원본은 `source-lock.json`의 각 앱 커밋으로 고정합니다. 인접한 `<id>-studio` 체크아웃에서 `npm ci --ignore-scripts && npm run build`를 실행한 뒤 `node android/prepare-web.cjs`로 APK assets와 아이콘을 준비합니다. `manifests/web-assets.json`에서 포함 파일의 SHA-256을 확인합니다.
@@ -23,3 +25,9 @@ Android 릴리스는 `android-v<version>` 태그와 `--latest=false`로 게시�
 이번 요청은 추가 테스트 없이 배포하도록 명시되어 설치·실행·기능·에뮬레이터·브라우저 테스트를 수행하지 않았습니다. APK 조립과 서명·매니페스트·자산 포함·체크섬 기록만 수행하며 `BUILD-android.json`의 테스트 상태는 `skipped`입니다. 이전 1.0.0 검사 결과와 별도로 기록합니다.
 
 앱 소스를 잠금 커밋에 맞춘 뒤 `npm run build`, `node android/prepare-web.cjs slide`, `cd android && ./gradlew :app:assembleSlideRelease`로 Slide만 빌드합니다. `package-slide-update.py`는 인접 `baseline/`에 내려받은 기존 Sheet·Word APK, `BUILD-android-1.0.0.json` 및 운영 기록을 사용해 새 APK·ZIP·체크섬을 만듭니다. `build-slide-update-page.py`로 기존 페이지 갱신안을 만들고 공개 배포 후 `node android/publish-lithos.cjs --publish --update --skip-tests`로 같은 공유 주소를 갱신합니다. `--skip-tests`는 명시적으로 승인된 테스트 생략 기록이 있을 때만 허용합니다.
+
+## Sheet Studio 1.0.1 단독 갱신 · ZIP 제공 중단
+
+최신 Sheet main `89053c6`의 컴팩트 화면·연속 셀 입력을 포함하며 Android 네이티브 `setFullscreen` 상태바 제어를 연결했습니다. Sheet만 versionName 1.0.1/versionCode 2로 조립·서명합니다. 설치·실행·기능 테스트는 명시적인 요청에 따라 모두 생략합니다. 빌드는 `:app:assembleSheetRelease`만 사용합니다.
+
+Office Android 릴리스 `android-v1.0.2`는 Sheet APK, 빌드 기록, 체크섬 세 파일만 제공합니다. 기존 Android 1.0.0·1.0.1 릴리스의 통합 APK ZIP도 삭제했습니다. Slide·Word APK, Windows·Mac 페이지와 업데이트 피드는 유지합니다. 이전 ZIP 생성 스크립트는 과거 배포 기록이며 현재 배포에서는 실행하지 않습니다.
