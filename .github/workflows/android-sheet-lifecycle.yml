@@ -6,6 +6,7 @@ on:
       - .github/workflows/android-sheet-lifecycle.yml
       - android/app/**
       - android/source-lock.json
+      - android/gradle/wrapper/gradle-wrapper.properties
       - android/qa/prepare-sheet-assets.cjs
       - android/qa/run-sheet-lifecycle.sh
 concurrency:
