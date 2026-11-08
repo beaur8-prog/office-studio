@@ -8,6 +8,9 @@ import android.graphics.drawable.*;
 import android.net.Uri;
 import android.os.*;
 import androidx.core.content.FileProvider;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.*;
@@ -60,7 +63,7 @@ public class ReleaseInstrumentedTest {
     void status(JSONObject record){Bundle bundle=new Bundle();bundle.putString("stream","OFFICE_RESULT "+record+"\n");inst.sendStatus(2,bundle);}
     @Test public void packagedIdentityIconsAndOfflineAssets()throws Exception{
         PackageInfo info=target.getPackageManager().getPackageInfo(target.getPackageName(),PackageManager.GET_SIGNING_CERTIFICATES);
-        assertEquals("1.0.0",info.versionName);assertEquals(0,info.applicationInfo.flags&ApplicationInfo.FLAG_DEBUGGABLE);
+        assertEquals(BuildConfig.VERSION_NAME,info.versionName);assertEquals(0,info.applicationInfo.flags&ApplicationInfo.FLAG_DEBUGGABLE);
         String cert=hex(MessageDigest.getInstance("SHA-256").digest(info.signingInfo.getApkContentsSigners()[0].toByteArray()));String expected=InstrumentationRegistry.getArguments().getString("certificate");if(expected!=null)assertEquals(expected.toLowerCase(Locale.ROOT),cert);
         Drawable icon=target.getPackageManager().getApplicationIcon(target.getPackageName());assertTrue(icon instanceof AdaptiveIconDrawable);Bitmap bitmap=Bitmap.createBitmap(192,192,Bitmap.Config.ARGB_8888);icon.setBounds(0,0,192,192);icon.draw(new Canvas(bitmap));assertNotEquals(0,bitmap.getPixel(96,96));ByteArrayOutputStream png=new ByteArrayOutputStream();bitmap.compress(Bitmap.CompressFormat.PNG,100,png);
         Bundle bundle=new Bundle();bundle.putString("stream","OFFICE_ICON "+BuildConfig.STUDIO+" "+android.util.Base64.encodeToString(png.toByteArray(),android.util.Base64.NO_WRAP)+"\n");inst.sendStatus(2,bundle);
@@ -72,6 +75,40 @@ public class ReleaseInstrumentedTest {
         exec("window.__qaResult=null;"+host()+".openFile().then(f=>window.__qaResult=f?{name:f.name,bytes:f.data.length,first:f.data[0],last:f.data[f.data.length-1]}:'cancelled').catch(e=>window.__qaResult={error:e.message})");until(()->pending("open"),15000,"system open picker not launched");picker();device.pressBack();until(()->!"null".equals(js("window.__qaResult")),15000,"picker cancellation not acknowledged");assertEquals("\"cancelled\"",js("window.__qaResult"));
         Uri file=fixture("chunked-open.bin",PAYLOAD);Uri uri=grant(file,Intent.FLAG_GRANT_READ_URI_PERMISSION);
         exec("window.__qaResult=null;"+host()+".openFile().then(f=>window.__qaResult=f?{name:f.name,bytes:f.data.length,first:f.data[0],last:f.data[f.data.length-1]}:'cancelled').catch(e=>window.__qaResult={error:e.message})");until(()->pending("open"),15000,"second open picker not launched");result(MainActivity.OPEN,uri);until(()->!"null".equals(js("window.__qaResult")),30000,"native file stream not returned");JSONObject result=new JSONObject(js("window.__qaResult"));assertEquals(PAYLOAD.length,result.getInt("bytes"));assertEquals(PAYLOAD[PAYLOAD.length-1]&255,result.getInt("last"));assertArrayEquals(PAYLOAD,read(file));status(MainActivity.obj("app",BuildConfig.STUDIO,"scenario","saf-open-cancel-and-chunked-read","passed",true,"bytes",PAYLOAD.length));
+    }
+    @Test public void slideWindowFillsCameraAreaAndRestoresAfterPresentation() throws Exception {
+        Assume.assumeTrue(BuildConfig.STUDIO.equals("slide"));
+        WindowInsetsCompat cutout = new WindowInsetsCompat.Builder()
+            .setInsets(WindowInsetsCompat.Type.systemBars(), Insets.of(0, 28, 0, 24))
+            .setInsets(WindowInsetsCompat.Type.displayCutout(), Insets.of(40, 0, 0, 0)).build();
+        inst.runOnMainSync(() -> {
+            ViewCompat.dispatchApplyWindowInsets(activity.root, cutout);
+            assertEquals(0, activity.root.getPaddingLeft());
+            assertEquals(0, activity.root.getPaddingTop());
+            assertEquals(0, activity.root.getPaddingBottom());
+            activity.setSlideImmersive(true);
+            ViewCompat.dispatchApplyWindowInsets(activity.root, cutout);
+            assertEquals(0, activity.root.getPaddingLeft());
+            assertEquals(0, activity.root.getPaddingTop());
+            assertEquals(Color.BLACK, ((ColorDrawable)activity.root.getBackground()).getColor());
+            int expected = Build.VERSION.SDK_INT >= 30
+                ? android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+                : android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            assertEquals(expected, activity.getWindow().getAttributes().layoutInDisplayCutoutMode);
+        });
+        until(() -> "true".equals(js("getComputedStyle(document.documentElement).getPropertyValue('--studio-safe-area-inset-left').trim().endsWith('px')")), 10000, "native safe inset CSS missing");
+        inst.runOnMainSync(() -> {
+            activity.setSlideImmersive(false);
+            WindowInsetsCompat keyboard = new WindowInsetsCompat.Builder(cutout)
+                .setInsets(WindowInsetsCompat.Type.ime(), Insets.of(0, 0, 0, 300)).build();
+            ViewCompat.dispatchApplyWindowInsets(activity.root, keyboard);
+            assertFalse(activity.immersive);
+            assertEquals(0, activity.root.getPaddingLeft());
+            assertEquals(0, activity.root.getPaddingTop());
+            assertEquals(300, activity.root.getPaddingBottom());
+            ViewCompat.requestApplyInsets(activity.root);
+        });
+        status(MainActivity.obj("app", "slide", "scenario", "edge-to-edge-cutout-and-keyboard-insets", "passed", true));
     }
     @Test public void nativeSaveCancellationCompletionAndFailure()throws Exception{
         callSave();until(()->pending("save"),20000,"save picker not launched");assertEquals("null",js("window.__qaResult"));picker();device.pressBack();until(()->!"null".equals(js("window.__qaResult")),15000,"save cancel not acknowledged");assertEquals("true",js("window.__qaResult==='cancelled'||window.__qaResult===false||window.__qaResult?.cancelled===true"));

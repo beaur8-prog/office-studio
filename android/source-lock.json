@@ -11,11 +11,11 @@
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",
-      "ref": "codex/android-1.0.1",
-      "sourceCommit": "440b6191e9379aa35de98f8fb5e4884e57be25a6",
+      "ref": "codex/android-screen-ui-20261108",
+      "sourceCommit": "7c0f96b5f9802f01cfaa2c9181ffcffeb6008863",
       "version": "1.0.1",
       "versionCode": 2,
-      "upstreamCommit": "0dd3e1a4841c8ab3ec87b5391d5b2f40ad9134eb"
+      "upstreamCommit": "1ee351b"
     },
     "word": {
       "repository": "beaur8-prog/word-studio",
@@ -36,5 +36,23 @@
     "executed": false,
     "status": "skipped",
     "reason": "Explicit user request to release without tests"
+  },
+  "development": {
+    "status": "source-only; not packaged or published",
+    "changes": [
+      "pinch zoom and pan",
+      "labeled fit controls",
+      "Slide-only edge-to-edge and cutout safe insets"
+    ],
+    "baselineVersion": "1.0.1",
+    "requiresVersionBumpBeforeRelease": true,
+    "verification": {
+      "browserAndroidTests": 31,
+      "browserFailures": 0,
+      "mainActivityAndInstrumentationCompile": "passed: JDK 17, Android SDK 36",
+      "nativeRuntime": "not run",
+      "apkPackaging": "not run"
+    },
+    "note": "Top-level tests record belongs to baseline 1.0.1 release; current checks are recorded here."
   }
 }

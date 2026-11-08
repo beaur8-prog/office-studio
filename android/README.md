@@ -23,3 +23,9 @@ Android 릴리스는 `android-v<version>` 태그와 `--latest=false`로 게시�
 이번 요청은 추가 테스트 없이 배포하도록 명시되어 설치·실행·기능·에뮬레이터·브라우저 테스트를 수행하지 않았습니다. APK 조립과 서명·매니페스트·자산 포함·체크섬 기록만 수행하며 `BUILD-android.json`의 테스트 상태는 `skipped`입니다. 이전 1.0.0 검사 결과와 별도로 기록합니다.
 
 앱 소스를 잠금 커밋에 맞춘 뒤 `npm run build`, `node android/prepare-web.cjs slide`, `cd android && ./gradlew :app:assembleSlideRelease`로 Slide만 빌드합니다. `package-slide-update.py`는 인접 `baseline/`에 내려받은 기존 Sheet·Word APK, `BUILD-android-1.0.0.json` 및 운영 기록을 사용해 새 APK·ZIP·체크섬을 만듭니다. `build-slide-update-page.py`로 기존 페이지 갱신안을 만들고 공개 배포 후 `node android/publish-lithos.cjs --publish --update --skip-tests`로 같은 공유 주소를 갱신합니다. `--skip-tests`는 명시적으로 승인된 테스트 생략 기록이 있을 때만 허용합니다.
+
+## 발표 화면 개선 개발 브랜치 (2026-11-08)
+
+`codex/android-screen-ui-20261108`은 Slide 전용 창이 상태바·카메라 영역까지 그리도록 수정하고, 일반 화면·발표 도구에 사용할 안전 여백을 CSS로 전달합니다. 웹 앱의 핀치 확대·이동·화면 맞춤 이름 개선도 같은 이름의 Slide 브랜치에 병합했습니다. Sheet/Word의 창 여백 정책은 유지합니다.
+
+현재 `source-lock.json`의 `development`에 이 변경의 부분 검증 결과를 기록했습니다. 기존 버전/테스트 기록과 `manifests/web-assets.json`은 기준 배포본에 해당하며 새 APK를 의미하지 않습니다. APK 자산 재생성·조립·서명·실기기 설치는 아직 수행하지 않았습니다. 다음 배포 시 버전과 versionCode를 올리고 앱 자산과 네이티브 호스트를 함께 빌드해야 합니다. 상세 내용은 [검증 기록](qa/SLIDE-SCREEN-UI-2026-11-08.md)을 참고합니다.

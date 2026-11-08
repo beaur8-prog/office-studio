@@ -34,6 +34,8 @@ public class MainActivity extends Activity {
     ValueCallback<Uri[]> chooser;
     Uri incoming;
     boolean ready, destroyed, immersive;
+    Insets slideSafeInsets = Insets.NONE;
+    String insetStyle;
     Integer orientationBefore;
     View fullscreen;
     WebChromeClient.CustomViewCallback fullscreenCallback;
@@ -46,9 +48,35 @@ public class MainActivity extends Activity {
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        if (BuildConfig.STUDIO.equals("slide")) {
+            Window window = getWindow();
+            WindowManager.LayoutParams attributes = window.getAttributes();
+            attributes.layoutInDisplayCutoutMode = Build.VERSION.SDK_INT >= 30
+                ? WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+                : WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            window.setAttributes(attributes);
+            window.setStatusBarColor(android.graphics.Color.TRANSPARENT);
+            window.setNavigationBarColor(android.graphics.Color.TRANSPARENT);
+            window.setStatusBarContrastEnforced(false);
+            window.setNavigationBarContrastEnforced(false);
+        }
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         root=new FrameLayout(this);web=new WebView(this);root.addView(web,new FrameLayout.LayoutParams(-1,-1));setContentView(root);
-        ViewCompat.setOnApplyWindowInsetsListener(root,(v,insets)->{Insets b=insets.getInsets((immersive?0:WindowInsetsCompat.Type.systemBars())|WindowInsetsCompat.Type.displayCutout());Insets k=insets.getInsets(WindowInsetsCompat.Type.ime());v.setPadding(b.left,b.top,b.right,Math.max(b.bottom,k.bottom));return insets;});
+        ViewCompat.setOnApplyWindowInsetsListener(root,(v,insets)->{
+            Insets keyboard = insets.getInsets(WindowInsetsCompat.Type.ime());
+            if (BuildConfig.STUDIO.equals("slide")) {
+                // The WebView fills the window, including the camera cutout.
+                // Only controls receive safe insets through CSS. Padding the
+                // native parent would leave a light strip beside a landscape show.
+                slideSafeInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+                v.setPadding(0, 0, 0, keyboard.bottom);
+                publishSlideInsets(false);
+                return WindowInsetsCompat.CONSUMED;
+            }
+            Insets b=insets.getInsets((immersive?0:WindowInsetsCompat.Type.systemBars())|WindowInsetsCompat.Type.displayCutout());
+            v.setPadding(b.left,b.top,b.right,Math.max(b.bottom,keyboard.bottom));
+            return insets;
+        });
         if(Build.VERSION.SDK_INT>=33)getOnBackInvokedDispatcher().registerOnBackInvokedCallback(android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT,this::onBackPressed);
         shareAction=getPackageName()+".SHARE_TARGET."+UUID.randomUUID();
         shareReceiver=new BroadcastReceiver(){@Override public void onReceive(Context c,Intent i){if(shareAction.equals(i.getAction())&&pending!=null&&pending.method.equals("share")&&Objects.equals(pending.transferToken,i.getStringExtra("transferToken"))){Pending p=pending;pending=null;success(p.id,p.reply,obj("completed",true));}}};
@@ -75,7 +103,7 @@ public class MainActivity extends Activity {
                 if(req.isForMainFrame()&&req.hasGesture()&&(u.getScheme().equals("https")||u.getScheme().equals("mailto")))try{startActivity(new Intent(Intent.ACTION_VIEW,u));}catch(Exception ignored){}
                 return true;
             }
-            @Override public void onPageFinished(WebView view,String url){web.evaluateJavascript("window.__studioHostConfig="+obj("studio",BuildConfig.STUDIO,"version",BuildConfig.VERSION_NAME)+";",null);}
+            @Override public void onPageFinished(WebView view,String url){web.evaluateJavascript("window.__studioHostConfig="+obj("studio",BuildConfig.STUDIO,"version",BuildConfig.VERSION_NAME)+";",null);publishSlideInsets(true);ViewCompat.requestApplyInsets(root);}
         });
         web.setWebChromeClient(new WebChromeClient(){
             @Override public boolean onShowFileChooser(WebView v,ValueCallback<Uri[]> callback,FileChooserParams params){
@@ -110,7 +138,7 @@ public class MainActivity extends Activity {
             case "append":work(id,reply,()->{Transfer t=transfer;if(t==null||!t.token.equals(a.getString("token")))throw new IOException("저장 요청이 만료되었습니다");String encoded=a.getString("chunk");if(encoded.length()>50000||a.getLong("offset")!=t.written)throw new IOException("저장 데이터 순서가 올바르지 않습니다");byte[] bytes=android.util.Base64.decode(encoded,android.util.Base64.DEFAULT);if(t.written+bytes.length>t.size)throw new IOException("저장 파일 크기가 일치하지 않습니다");t.out.write(bytes);t.written+=bytes.length;success(id,reply,t.written);});break;
             case "save":case "share":work(id,reply,()->{Transfer t=transfer;if(t==null||!t.token.equals(a.getString("token"))||t.size!=t.written)throw new IOException("저장 파일을 완성하지 못했습니다");t.out.close();transfer=null;runOnUiThread(()->startOutput(id,reply,t,method));});break;
             case "abort":work(id,reply,()->{Transfer t=transfer;if(t!=null&&t.token.equals(a.optString("token"))){t.out.close();t.file.delete();transfer=null;}success(id,reply,true);});break;
-            case "systemBars":if(!BuildConfig.STUDIO.equals("slide"))throw new IOException("지원하지 않는 Android 요청입니다");immersive=a.optBoolean("hidden");WindowInsetsControllerCompat bars=WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView());bars.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);if(immersive)bars.hide(WindowInsetsCompat.Type.systemBars());else bars.show(WindowInsetsCompat.Type.systemBars());ViewCompat.requestApplyInsets(root);success(id,reply,true);break;
+            case "systemBars":if(!BuildConfig.STUDIO.equals("slide"))throw new IOException("지원하지 않는 Android 요청입니다");setSlideImmersive(a.optBoolean("hidden"));success(id,reply,true);break;
             case "orientation":if(!BuildConfig.STUDIO.equals("slide"))throw new IOException("지원하지 않는 Android 요청입니다");String direction=a.getString("orientation");if(direction.equals("unlock")){if(orientationBefore!=null){setRequestedOrientation(orientationBefore);orientationBefore=null;}}else{if(!direction.equals("landscape")&&!direction.equals("portrait"))throw new IOException("잘못된 화면 방향입니다");if(orientationBefore==null)orientationBefore=getRequestedOrientation();setRequestedOrientation(direction.equals("landscape")?android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE:android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);}success(id,reply,true);break;
             case "clipboard":android.content.ClipboardManager clipboard=(android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);clipboard.setPrimaryClip(a.optString("html").isEmpty()?ClipData.newPlainText("Studio",a.optString("text")):ClipData.newHtmlText("Studio",a.optString("text"),a.optString("html")));success(id,reply,true);break;
             case "readClipboard":android.content.ClipboardManager cm=(android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);ClipData clip=cm.getPrimaryClip();String text=clip!=null&&clip.getItemCount()>0?clip.getItemAt(0).coerceToText(this).toString():"";if(text.length()>1024*1024)throw new IOException("클립보드 내용이 너무 큽니다");success(id,reply,text);break;
@@ -150,6 +178,36 @@ public class MainActivity extends Activity {
     static Uri intentUri(Intent i){if(i==null)return null;if(Intent.ACTION_SEND.equals(i.getAction()))return i.getParcelableExtra(Intent.EXTRA_STREAM);if(Intent.ACTION_VIEW.equals(i.getAction()))return i.getData();return null;}
     @Override protected void onNewIntent(Intent i){super.onNewIntent(i);setIntent(i);Uri u=intentUri(i);if(u!=null){if(incoming!=null){Toast.makeText(this,"다른 파일을 읽고 있습니다. 잠시 뒤 다시 열어 주세요",Toast.LENGTH_LONG).show();return;}incoming=u;deliverIncoming();}}
     void deliverIncoming(){if(!ready||incoming==null)return;Uri uri=incoming;incoming=null;io.execute(()->{try{JSONObject f=importUri(uri);runOnUiThread(()->{if(!destroyed)web.evaluateJavascript("window.OfficeStudioHost&&window.OfficeStudioHost.receive("+f+")",null);});}catch(Exception e){runOnUiThread(()->Toast.makeText(this,"파일을 열지 못했습니다. 앱의 열기에서 다시 선택해 주세요",Toast.LENGTH_LONG).show());}});}
+    void publishSlideInsets(boolean force) {
+        if (!BuildConfig.STUDIO.equals("slide") || web == null || destroyed) return;
+        float density = getResources().getDisplayMetrics().density;
+        String[] edges = {"top", "right", "bottom", "left"};
+        int[] pixels = {slideSafeInsets.top, slideSafeInsets.right, slideSafeInsets.bottom, slideSafeInsets.left};
+        StringBuilder script = new StringBuilder("(()=>{const s=document.documentElement.style;");
+        for (int i=0;i<edges.length;i++) script.append("s.setProperty('--studio-safe-area-inset-").append(edges[i]).append("','").append(pixels[i]/density).append("px');");
+        script.append("})()");
+        String next = script.toString();
+        if (force || !next.equals(insetStyle)) { insetStyle = next; web.evaluateJavascript(next, null); }
+    }
+    void setSlideImmersive(boolean hidden) {
+        if (!BuildConfig.STUDIO.equals("slide")) return;
+        immersive = hidden;
+        // Fill both the WebView and its parent so transitions/rotation cannot
+        // expose the light editor window background around a presentation.
+        int background = hidden ? android.graphics.Color.BLACK : 0xfff5f7fb;
+        root.setBackgroundColor(background);
+        web.setBackgroundColor(background);
+        getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(background));
+        WindowInsetsControllerCompat bars = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        bars.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        if (hidden) bars.hide(WindowInsetsCompat.Type.systemBars());
+        else bars.show(WindowInsetsCompat.Type.systemBars());
+        ViewCompat.requestApplyInsets(root);
+    }
+    @Override public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus && immersive && root != null && web != null) setSlideImmersive(true);
+    }
     void hideFullscreen(){if(fullscreen==null)return;root.removeView(fullscreen);fullscreen=null;web.setVisibility(View.VISIBLE);if(fullscreenCallback!=null)fullscreenCallback.onCustomViewHidden();fullscreenCallback=null;}
     @Override public void onBackPressed(){if(fullscreen!=null){hideFullscreen();return;}if(web==null){finish();return;}web.evaluateJavascript("window.OfficeStudioHost?window.OfficeStudioHost.back():false",value->{if("false".equals(value)||"null".equals(value))finish();});}
     @Override protected void onPause(){if(web!=null)web.evaluateJavascript("document.dispatchEvent(new Event('visibilitychange'));window.dispatchEvent(new Event('pagehide'));",null);super.onPause();}
