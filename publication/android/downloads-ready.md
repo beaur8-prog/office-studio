@@ -10,9 +10,9 @@
 
 # 오피스 스튜디오 Android
 
-**Office Studio Android 1.0.12 · 2026년 11월 08일 · 변경 앱 업데이트**
+**Office Studio Android 1.0.13 · 2026년 11월 08일 · 변경 앱 업데이트**
 
-Sheet Studio **1.0.5**로 갱신했습니다. Slide Studio **1.0.6**, Word Studio **1.0.4**은 기존 파일을 그대로 제공합니다.
+Sheet Studio **1.0.6**, Slide Studio **1.0.7**, Word Studio **1.0.5**로 갱신했습니다.
 
 표·발표 자료·문서를 보고 기본 터치 편집을 할 수 있는 **Sheet Studio·Slide Studio·Word Studio**를 제공합니다. 세 앱은 각각 설치하며 앱 목록에 고유한 아이콘으로 표시됩니다.
 
@@ -24,11 +24,11 @@ Sheet Studio **1.0.5**로 갱신했습니다. Slide Studio **1.0.6**, Word Studi
 
 | 아이콘 | 앱 | 설치 파일 | 크기 |
 | --- | --- | --- | --- |
-| ![Sheet Studio 아이콘](attachments/office-studio-android/Sheet-Studio-Android-icon.png) | **Sheet Studio 1.0.5** | [APK 바로 받기](attachments/office-studio-android/Sheet-Studio-1.0.5-Android.apk) | 5.9 MiB |
-| ![Slide Studio 아이콘](attachments/office-studio-android/Slide-Studio-Android-icon.png) | **Slide Studio 1.0.6** | [APK 바로 받기](attachments/office-studio-android/Slide-Studio-1.0.6-Android.apk) | 12.9 MiB |
-| ![Word Studio 아이콘](attachments/office-studio-android/Word-Studio-Android-icon.png) | **Word Studio 1.0.4** | [APK 바로 받기](attachments/office-studio-android/Word-Studio-1.0.4-Android.apk) | 36.4 MiB |
+| ![Sheet Studio 아이콘](attachments/office-studio-android/Sheet-Studio-Android-icon.png) | **Sheet Studio 1.0.6** | [APK 바로 받기](attachments/office-studio-android/Sheet-Studio-1.0.6-Android.apk) | 5.9 MiB |
+| ![Slide Studio 아이콘](attachments/office-studio-android/Slide-Studio-Android-icon.png) | **Slide Studio 1.0.7** | [APK 바로 받기](attachments/office-studio-android/Slide-Studio-1.0.7-Android.apk) | 12.9 MiB |
+| ![Word Studio 아이콘](attachments/office-studio-android/Word-Studio-Android-icon.png) | **Word Studio 1.0.5** | [APK 바로 받기](attachments/office-studio-android/Word-Studio-1.0.5-Android.apk) | 36.4 MiB |
 
-[SHA-256 확인 파일](attachments/office-studio-android/1.0.12/SHA256SUMS-android.txt) · [빌드 구성·포함 소스](attachments/office-studio-android/1.0.12/BUILD-android.json) · [1.0.0 배포 당시 검증 기록](attachments/office-studio-android/1.0.0/ANDROID-VERIFICATION.json)
+[SHA-256 확인 파일](attachments/office-studio-android/1.0.13/SHA256SUMS-android.txt) · [빌드 구성·포함 소스](attachments/office-studio-android/1.0.13/BUILD-android.json) · [1.0.0 배포 당시 검증 기록](attachments/office-studio-android/1.0.0/ANDROID-VERIFICATION.json)
 
 ## 2. 설치와 실행
 
@@ -41,9 +41,9 @@ Sheet Studio **1.0.5**로 갱신했습니다. Slide Studio **1.0.6**, Word Studi
 
 ## 3. 기본 사용
 
-- **Sheet Studio:** XLSX·CSV 등의 표 보기, 시트 이동·검색·계산값·차트 확인과 기본 셀 편집. 편집하려면 편집 모드로 전환하고, 사본 저장에서 XLSX 등 필요한 형식을 선택합니다. 1.0.5에는 숫자 표시·열 너비 조절·평균 수식 범위 선택과 Esc·뒤로가기 처리 개선을 포함합니다. XLSM은 원본 보기·공유 중심으로 사용하며 매크로 작업은 PC에서 진행합니다.
-- **Slide Studio:** PPTX 보기·슬라이드 이동·검색·발표와 기본 터치 편집. 뷰어 상단의 **편집** 버튼으로 바로 편집 모드로 전환합니다. 1.0.6에는 원래 앱 창에서 발표 화면 유지와 키보드 숨김, Android 16 Esc·뒤로가기 처리 개선을 포함합니다. PPTX 저장은 Android 파일 선택기에서 사본 위치를 정하고 완료합니다. 지원하지 않는 원본 요소가 있으면 저장 안내를 확인하고 중요한 파일은 원본과 비교하세요.
-- **Word Studio:** DOCX·텍스트와 HWP/HWPX 보기, 문서 검색·쪽 이동·기본 편집. 1.0.4에는 느린 드래그 페이지 넘김과 태블릿 확대 배율 표시 개선을 포함합니다. 편집한 문서는 DOCX 사본으로 저장할 수 있습니다. HWP/HWPX 원본 파일에 직접 덮어쓰는 방식은 아닙니다.
+- **Sheet Studio:** XLSX·CSV 등의 표 보기, 시트 이동·검색·계산값·차트 확인과 기본 셀 편집. 편집하려면 편집 모드로 전환하고, 사본 저장에서 XLSX 등 필요한 형식을 선택합니다. 1.0.6에는 현재 시트·선택 영역 인쇄와 PDF 저장 연결을 포함합니다. XLSM은 원본 보기·공유 중심으로 사용하며 매크로 작업은 PC에서 진행합니다.
+- **Slide Studio:** PPTX 보기·슬라이드 이동·검색·발표와 기본 터치 편집. 뷰어 상단의 **편집** 버튼으로 바로 편집 모드로 전환합니다. 1.0.7에는 개체 메뉴·접이식 발표 도구와 문서 인쇄·PDF 저장 연결을 포함합니다. PPTX 저장은 Android 파일 선택기에서 사본 위치를 정하고 완료합니다. 지원하지 않는 원본 요소가 있으면 저장 안내를 확인하고 중요한 파일은 원본과 비교하세요.
+- **Word Studio:** DOCX·텍스트와 HWP/HWPX 보기, 문서 검색·쪽 이동·기본 편집. 1.0.5에는 포인터 중심 확대·축소와 문서 인쇄·PDF 저장, Ctrl+P·Esc 입력 연결을 포함합니다. 편집한 문서는 DOCX 사본으로 저장할 수 있습니다. HWP/HWPX 원본 파일에 직접 덮어쓰는 방식은 아닙니다.
 
 읽기 화면과 편집 화면을 구분하며, 중요한 원본은 보관하고 사본으로 작업하세요. Android판은 모바일 보기·기본 편집 중심이며 PC판의 고급 메뉴·출력 기능과 차이가 있습니다.
 
@@ -67,9 +67,9 @@ Sheet Studio **1.0.5**로 갱신했습니다. Slide Studio **1.0.6**, Word Studi
 각 APK의 SHA-256입니다.
 
 ```text
-e5e84b4dec91f829cde97b9533954cda1bdb540e7b7bf37e1a43fdd87ce3eca5  Sheet-Studio-1.0.5-Android.apk
-39e1b3c868faeacdd4a45c98c4239461ea3547f640bb4b2134fd27451465d8a4  Slide-Studio-1.0.6-Android.apk
-e2c8f1041d1d7ae4adc097fa3932c9c3a516e8c64ede25402baa36b27248ecca  Word-Studio-1.0.4-Android.apk
+e7816cdb915088a6eb94d3cbd7bb4f4e7d8653931a705ef183e83a3db10a8713  Sheet-Studio-1.0.6-Android.apk
+5f89eb99c28731d854f5e91321449bf4da5176f2109c46a8298efef7477ed618  Slide-Studio-1.0.7-Android.apk
+dac3657676f733a00862a856b6a856c42991d4619010f424886925cb0c8b0132  Word-Studio-1.0.5-Android.apk
 ```
 
 세 앱은 같은 정식 배포 서명으로 확인했습니다. 서명 인증서 SHA-256:
@@ -80,10 +80,14 @@ c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b
 
 ## 7. 이번 배포의 확인 범위
 
-**이번 변경 앱 배포는 추가 설치·실행·기능 테스트를 생략했습니다.** 이전 배포 소스와 비교해 변경된 앱만 새로 빌드했습니다.
+**관련 단위 검사와 Android 화면 브라우저 회귀, 빌드·서명·앱 ID·버전·오프라인 웹 자산·아이콘·인쇄 클래스 기본 검증을 통과했습니다. 실기기 설치·Android OS 인쇄 검사는 수행하지 않았습니다.**
 
-- **Sheet Studio 1.0.5**: 숫자 표시·열 너비 조절·평균 수식 범위 선택과 Esc·Back 처리 개선 · versionCode 6
+- **Sheet Studio 1.0.6**: 현재 시트·선택 영역의 인쇄 및 PDF 저장 연결 · versionCode 7
+- **Slide Studio 1.0.7**: 개체 메뉴·접이식 발표 도구와 문서 전용 인쇄 및 PDF 저장 연결 · versionCode 8
+- **Word Studio 1.0.5**: 포인터 중심 확대·축소와 문서 전용 인쇄, Ctrl+P·Esc 입력 연결 · versionCode 6
 
-기존 앱 ID와 서명 키를 유지했습니다. 빌드 후 서명·앱 ID·버전·크기와 SHA-256을 기록했습니다. 통합 ZIP은 제공하지 않습니다. 위 1.0.0 검증 기록은 이전 배포 당시 결과입니다.
+[이번 기본 검증 기록](attachments/office-studio-android/1.0.13/BASIC-VERIFICATION.json)
+
+기존 앱 ID·서명 키를 유지하고 versionCode를 올렸습니다. 통합 ZIP은 제공하지 않습니다. 위 1.0.0 검증 기록은 이전 배포 당시 결과입니다.
 
 이 문서는 리토스의 읽기 전용 공유 페이지입니다. APK는 이 페이지의 로컬 첨부 파일로 제공합니다.
