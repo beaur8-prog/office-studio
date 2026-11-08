@@ -32,6 +32,7 @@ public class WordViewerInstrumentedTest {
     void waitJS(ActivityScenario<MainActivity> scenario,String expression) throws Exception {
         long end=SystemClock.uptimeMillis()+90000;
         while(SystemClock.uptimeMillis()<end){if("true".equals(js(scenario,expression)))return;SystemClock.sleep(250);}
+        screenshot("failed-wait");
         fail("Timed out: "+expression+"; body="+js(scenario,"document.body.innerText.slice(-1500)"));
     }
     void openFixture(ActivityScenario<MainActivity> scenario,String name) throws Exception {
@@ -39,6 +40,13 @@ public class WordViewerInstrumentedTest {
     }
     void dismissImmersiveGuide(){
         UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        // A fresh CI emulator can show a launcher ANR while our Activity is
+        // already running. Close only that unrelated process's OS dialog;
+        // never dismiss a Word ANR or change product behavior to hide one.
+        if(device.hasObject(By.text("Pixel Launcher isn't responding"))){
+            UiObject2 close=device.findObject(By.text("Close app"));
+            assertNotNull("Launcher ANR has no close action",close);close.click();device.waitForIdle();
+        }
         UiObject2 gotIt=device.wait(Until.findObject(By.text("Got it")),1200);
         if(gotIt!=null){gotIt.click();device.waitForIdle();}
     }
@@ -73,8 +81,11 @@ public class WordViewerInstrumentedTest {
         try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(MainActivity.class)){
             waitJS(scenario,"!!document.querySelector('.android-start button')");openFixture(scenario,"viewer.docx");
             waitJS(scenario,"!!document.querySelector('.android-paper-viewport')");
+            dismissImmersiveGuide();
             js(scenario,"document.querySelector('[aria-label=\"전체 화면 뷰어\"]').click()");
-            waitJS(scenario,"!!document.querySelector('.android-presentation-page .print-page')");
+            waitJS(scenario,"!!document.querySelector('.android-presentation-page .print-page')&&!document.querySelector('.android-presentation-loading')");
+            dismissImmersiveGuide();
+            scenario.onActivity(activity->assertTrue("Word must own input focus before real gestures",activity.hasWindowFocus()));
             UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
             int w=device.getDisplayWidth(),h=device.getDisplayHeight();
             assertTrue(device.swipe(w*4/5,h/2,w/5,h/2,10));waitJS(scenario,"document.querySelector('.android-presentation').dataset.page==='2'");

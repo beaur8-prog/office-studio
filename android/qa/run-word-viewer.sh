@@ -2,6 +2,9 @@
 set -euo pipefail
 out="$PWD/test-results/android-word-viewer"
 mkdir -p "$out"
+adb wait-for-device
+# Let a new emulator finish its launcher/setup animation before launching tests.
+sleep 5
 adb install -r android/app/build/outputs/apk/word/debug/app-word-debug.apk
 adb install -r android/app/build/outputs/apk/androidTest/word/debug/app-word-debug-androidTest.apk
 for profile in phone tablet; do
