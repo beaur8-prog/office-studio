@@ -67,3 +67,11 @@ Sheet만 versionName 1.0.2/versionCode 3으로 빌드합니다. 기존 키와 �
 실제 개발 원본과 원격 Android 브랜치의 일치 커밋 `ccba472`를 확인했습니다. 문서·편집 페이지 맞춤과 전체화면 스와이프 뷰어 개선을 포함하며 호스트 `8e56284`의 Word 전체화면·카메라 여백·포커스 복귀를 연결했습니다. 기존 Sheet·Slide 호스트 정책과 APK는 유지합니다.
 
 Word만 versionName 1.0.1/versionCode 2로 빌드하고 기존 앱 ID·서명 키를 사용합니다. 빌드 캐시를 재사용하며 설치·실행·기능 테스트와 통합 ZIP 생성은 생략합니다. `android-v1.0.6`에는 Word APK·빌드 기록·체크섬 세 파일을 게시하고 기존 Android 공유 주소를 갱신합니다.
+
+## Slide 태블릿 데스크톱 UI·네이티브 쇼 종료 개발 (2026-11-08)
+
+앱·호스트의 `codex/android-tablet-native-20261108`은 Slide1.0.4를 기준으로 태블릿에 공용 데스크톱 편집 UI와22개 도형 갤러리를 적용하고, Android Esc/Back을 전용 쇼 종료 이벤트로 전달합니다. 일반 Back의 웹 응답 false/null을 앱 종료로 해석하지 않으며 홈의 명시적 close만 허용합니다. Sheet/Word 변경은 보존합니다.
+
+공개1.0.4의 DEX/웹 자산을 유지한 격리 재현본에서 false 응답에 따른 실제 Activity 종료를 재현했고 수정 APK에서 통과했습니다. Android15 ARM64/WebView124의 휴대폰·태블릿 에뮬레이터에서 실제 키 입력과 도형 갤러리를 검증했습니다. [검증 기록](qa/SLIDE-TABLET-DESKTOP-AND-NAVIGATION-2026-11-08.md)을 참고하세요.
+
+로컬 검증 APK는 `-PstudioTestBuildType=debug :app:assembleSlideDebug :app:assembleSlideDebugAndroidTest`로 만들며, 기본 testBuildType은 기존 release를 유지합니다. 검증용 디버그 APK/재현본은 공개 배포하지 않습니다. 별도 배포 때 Android 버전/versionCode를 올리고 새 앱 자산·이 호스트를 기존 정식 서명 키로 함께 빌드해야 합니다. 현재 공개 APK·공유 문서는 갱신하지 않았습니다.

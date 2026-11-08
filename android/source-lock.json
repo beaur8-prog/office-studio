@@ -13,11 +13,11 @@
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",
-      "ref": "codex/android-1.0.4",
-      "sourceCommit": "72989db80acb5d208b7da0ad11bc09a3e7b30e65",
+      "ref": "codex/android-tablet-native-20261108",
+      "sourceCommit": "610d6d8cfce8ad0eda16fcaf0f5fba8bd984babb",
       "version": "1.0.4",
       "versionCode": 5,
-      "upstreamCommit": "4d4013de4ff20ad919316f967db1b028fecfa9ab"
+      "upstreamCommit": "c44122ba25b58fdb9ea3aae9d5c8502ce6c6cd19"
     },
     "word": {
       "repository": "beaur8-prog/word-studio",
@@ -47,5 +47,45 @@
   "combinedZIP": false,
   "nativeSlideHostUpstreamCommit": "0c4c536778fd602650a2e999e7337ce4738f1030",
   "nativeWordHostUpstreamCommit": "d0e5ca10fed93f9d6307640390265d56cd2ad29f",
-  "nativeSheetHostUpstreamCommit": "04fc43a285c29669fcdcbdef3069cac71092f46b"
+  "nativeSheetHostUpstreamCommit": "04fc43a285c29669fcdcbdef3069cac71092f46b",
+  "development": {
+    "status": "validated locally; no public release or user device replacement",
+    "baselineAppVersion": "1.0.4",
+    "baselineHostCommit": "7c3f7f87e1c914671e46d7f846805dcede8d677d",
+    "nativeImplementationCommit": "e21efbb05aa1a07eb8d87204753c184f394f2f4e",
+    "requiresVersionBumpBeforeRelease": true,
+    "changes": [
+      "reuse full desktop editor on Android tablets including all22 shape presets",
+      "dedicated native show-end event",
+      "consume Esc and presentation Back key edges",
+      "close Activity only on affirmative home close, never false/null callbacks",
+      "preserve phone and Sheet/Word behavior"
+    ],
+    "verification": {
+      "browserPassed": 70,
+      "browserSkipped": 1,
+      "browserFailures": 0,
+      "nativeContractPassed": 9,
+      "nativeAndroid": {
+        "sdk": 35,
+        "abi": "arm64-v8a",
+        "webView": "124.0.6367.219",
+        "phone": {
+          "passed": 6,
+          "tabletOnlySkipped": 1
+        },
+        "tablet": {
+          "passed": 7
+        },
+        "finalHomeAndGallery": {
+          "passed": 2
+        },
+        "note": "profile repeats are overlapping scenarios;8 unique native scenarios tested"
+      },
+      "baselineControlledReplay": "unchanged DEX/assets with debug signature;false callback reproduced Activity finish",
+      "webBuild": "passed: main and Android source branch",
+      "debugApkBuildInstallRun": "passed"
+    },
+    "note": "Root version/tests reflect the published baseline; next APK must include new app assets AND this host and keep the official signing key."
+  }
 }
