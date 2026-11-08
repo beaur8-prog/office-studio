@@ -175,6 +175,7 @@ public class WordViewerInstrumentedTest {
             JSONArray point=new JSONArray(js(scenario,"(()=>{const v=document.querySelector('.android-tablet-editor[data-active=true] .document-workspace')||document.querySelector('.android-editor-scroll');const r=v.getBoundingClientRect(),d=devicePixelRatio;return [(r.x+r.width/2)*d,(r.y+r.height/2)*d,Math.min(r.width*.12,r.height*.2)*d]})()"));
             pinchAt((float)point.getDouble(0),(float)point.getDouble(1),(float)point.getDouble(2));
             waitJS(scenario,scaleExpression+">"+(editorScale*1.5));
+            assertEquals("true",js(scenario,"(()=>{const label=document.querySelector('.android-tablet-editor[data-active=true] .zoom-value');return !label||/^\\d+%$/.test(label.textContent.trim())})()"));
             screenshot("editor-pinch");
         }
     }
