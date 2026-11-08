@@ -11,7 +11,8 @@
     "package:win": "node scripts/build.cjs win-x64",
     "fetch:mac": "node mac/fetch.cjs",
     "package:mac": "node mac/build.cjs",
-    "test:mac": "node mac/test-native.cjs"
+    "test:mac": "node mac/test-native.cjs",
+    "publish:android": "node android/publish-lithos.cjs --publish --update"
   },
   "engines": {
     "node": ">=22.12.0"

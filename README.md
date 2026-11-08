@@ -4,9 +4,9 @@
 
 [Mac 리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/7ef9c9402c857485a69bb9e8e0c441f57e1025bc8dd9d002) · [Mac Apple Silicon 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.6/Office-Studio-1.0.6-mac-arm64-Setup.pkg) · [Mac 배포 안내](publication/mac/downloads-ready.md)
 
-[Android 리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a) · [Android APK 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/android-v1.0.9) · [Android 빌드·배포 안내](android/README.md)
+[Android 리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a) · [Android APK 다운로드 안내](publication/android/downloads-ready.md) · [Android 빌드·배포 안내](android/README.md)
 
-Android 설치 파일은 위 리토스 페이지의 **APK 바로 받기**에서 직접 내려받습니다.
+Android 설치 파일은 위 리토스 페이지의 **APK 바로 받기**에서 직접 내려받습니다. Android는 로컬에서 빌드한 APK를 바로 첨부하며 GitHub 릴리스 생성·APK 업로드·재다운로드를 배포 절차에 넣지 않습니다.
 
 Android판은 **Sheet Studio 1.0.4**, **Slide Studio 1.0.5**, **Word Studio 1.0.3**이며 Android 10 이상에서 개별 APK로 설치합니다. 현재 Android 변경 앱 갱신은 추가 설치·실행·기능 테스트를 생략했습니다. Android는 개별 APK만 제공하며 통합 ZIP은 제공을 중단했습니다. Android 업데이트는 새 APK를 기존 앱 위에 직접 설치하는 방식입니다. Android 릴리스는 Windows latest와 Mac 업데이트 피드에 영향을 주지 않습니다.
 

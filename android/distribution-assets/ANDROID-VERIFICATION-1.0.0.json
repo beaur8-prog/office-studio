@@ -1,0 +1,403 @@
+{
+  "schema": 1,
+  "product": "Office Studio",
+  "version": "1.0.0",
+  "platform": "android",
+  "verifiedAt": "2026-11-08T02:31:25.053591+00:00",
+  "passed": true,
+  "buildSourceCommit": "98ff9df0a578cfd8a3c3bc8a47021240ccb19233",
+  "verificationSourceCommit": "6a82f877c275f07883b6fd5aba166df874c58861",
+  "workflowURL": "https://github.com/beaur8-prog/office-studio/actions/runs/42438370004",
+  "validationInputsSHA256": "9168626caaddfaea8b2a2a1a8ee8f8482161ce40f2ff8801633007f89259aa3a",
+  "apps": [
+    {
+      "id": "sheet",
+      "applicationId": "io.officestudio.sheet",
+      "version": "1.0.0",
+      "versionCode": 1,
+      "sourceCommit": "9e7c433a41e326f6c4de2fac3473d389a0383c46",
+      "sha256": "a6749eae8f313df81fec42b22ee41c37c3e3a3a35f8420e17beb0670e76e954d",
+      "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b"
+    },
+    {
+      "id": "slide",
+      "applicationId": "io.officestudio.slide",
+      "version": "1.0.0",
+      "versionCode": 1,
+      "sourceCommit": "ebf6010b0231b492eb45c35cbc75cb5bd22dc1eb",
+      "sha256": "1601ed4743eab9d2619376fbfa35fc57ba2ec47c1617026b6f2087a7265a7562",
+      "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b"
+    },
+    {
+      "id": "word",
+      "applicationId": "io.officestudio.word",
+      "version": "1.0.0",
+      "versionCode": 1,
+      "sourceCommit": "493c0492dc0fce75f3dab411317acbdfc1ae98ca",
+      "sha256": "cd4cb5cafcdfbf5f1bb18df971cb82b8ccd33e689bf386754e849f2d301d3664",
+      "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b"
+    }
+  ],
+  "profiles": [
+    {
+      "verifiedAt": "2026-11-08T02:29:03.773649+00:00",
+      "deviceProfile": "android-native-phone",
+      "passed": true,
+      "nativeScenarios": 18,
+      "results": [
+        {
+          "app": "sheet",
+          "scenario": "saf-open-cancel-and-chunked-read",
+          "passed": true,
+          "bytes": 80003
+        },
+        {
+          "app": "sheet",
+          "scenario": "identity-icons-offline",
+          "passed": true,
+          "version": "1.0.0",
+          "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b",
+          "webView": "124.0.6367.219",
+          "sdk": 35,
+          "debuggable": false,
+          "adaptiveIcon": true
+        },
+        {
+          "app": "sheet",
+          "scenario": "real-chooser-fileprovider-share",
+          "passed": true,
+          "bytes": 80003
+        },
+        {
+          "app": "sheet",
+          "scenario": "saf-save-cancel-confirmed-write-and-provider-failure",
+          "passed": true,
+          "bytes": 80003,
+          "originalPreserved": true
+        },
+        {
+          "app": "sheet",
+          "scenario": "real-document-intent-and-recovery-storage",
+          "passed": true,
+          "originalPreserved": true,
+          "hwp": false
+        },
+        {
+          "app": "sheet",
+          "scenario": "same-package-signed-reinstall-preserves-storage",
+          "passed": true
+        },
+        {
+          "app": "slide",
+          "scenario": "saf-open-cancel-and-chunked-read",
+          "passed": true,
+          "bytes": 80003
+        },
+        {
+          "app": "slide",
+          "scenario": "identity-icons-offline",
+          "passed": true,
+          "version": "1.0.0",
+          "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b",
+          "webView": "124.0.6367.219",
+          "sdk": 35,
+          "debuggable": false,
+          "adaptiveIcon": true
+        },
+        {
+          "app": "slide",
+          "scenario": "real-chooser-fileprovider-share",
+          "passed": true,
+          "bytes": 80003
+        },
+        {
+          "app": "slide",
+          "scenario": "saf-save-cancel-confirmed-write-and-provider-failure",
+          "passed": true,
+          "bytes": 80003,
+          "originalPreserved": true
+        },
+        {
+          "app": "slide",
+          "scenario": "real-document-intent-and-recovery-storage",
+          "passed": true,
+          "originalPreserved": true,
+          "hwp": false
+        },
+        {
+          "app": "slide",
+          "scenario": "same-package-signed-reinstall-preserves-storage",
+          "passed": true
+        },
+        {
+          "app": "word",
+          "scenario": "saf-open-cancel-and-chunked-read",
+          "passed": true,
+          "bytes": 80003
+        },
+        {
+          "app": "word",
+          "scenario": "identity-icons-offline",
+          "passed": true,
+          "version": "1.0.0",
+          "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b",
+          "webView": "124.0.6367.219",
+          "sdk": 35,
+          "debuggable": false,
+          "adaptiveIcon": true
+        },
+        {
+          "app": "word",
+          "scenario": "real-chooser-fileprovider-share",
+          "passed": true,
+          "bytes": 80003
+        },
+        {
+          "app": "word",
+          "scenario": "saf-save-cancel-confirmed-write-and-provider-failure",
+          "passed": true,
+          "bytes": 80003,
+          "originalPreserved": true
+        },
+        {
+          "app": "word",
+          "scenario": "real-document-intent-and-recovery-storage",
+          "passed": true,
+          "originalPreserved": true,
+          "hwp": true
+        },
+        {
+          "app": "word",
+          "scenario": "same-package-signed-reinstall-preserves-storage",
+          "passed": true
+        }
+      ],
+      "physicalDeviceTested": false,
+      "uninstallVerified": true,
+      "externalDocumentPreservedAfterUninstall": true
+    },
+    {
+      "verifiedAt": "2026-11-08T02:30:05.500126+00:00",
+      "deviceProfile": "android-native-tablet",
+      "passed": true,
+      "nativeScenarios": 18,
+      "results": [
+        {
+          "app": "sheet",
+          "scenario": "saf-open-cancel-and-chunked-read",
+          "passed": true,
+          "bytes": 80003
+        },
+        {
+          "app": "sheet",
+          "scenario": "identity-icons-offline",
+          "passed": true,
+          "version": "1.0.0",
+          "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b",
+          "webView": "124.0.6367.219",
+          "sdk": 35,
+          "debuggable": false,
+          "adaptiveIcon": true
+        },
+        {
+          "app": "sheet",
+          "scenario": "real-chooser-fileprovider-share",
+          "passed": true,
+          "bytes": 80003
+        },
+        {
+          "app": "sheet",
+          "scenario": "saf-save-cancel-confirmed-write-and-provider-failure",
+          "passed": true,
+          "bytes": 80003,
+          "originalPreserved": true
+        },
+        {
+          "app": "sheet",
+          "scenario": "real-document-intent-and-recovery-storage",
+          "passed": true,
+          "originalPreserved": true,
+          "hwp": false
+        },
+        {
+          "app": "sheet",
+          "scenario": "same-package-signed-reinstall-preserves-storage",
+          "passed": true
+        },
+        {
+          "app": "slide",
+          "scenario": "saf-open-cancel-and-chunked-read",
+          "passed": true,
+          "bytes": 80003
+        },
+        {
+          "app": "slide",
+          "scenario": "identity-icons-offline",
+          "passed": true,
+          "version": "1.0.0",
+          "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b",
+          "webView": "124.0.6367.219",
+          "sdk": 35,
+          "debuggable": false,
+          "adaptiveIcon": true
+        },
+        {
+          "app": "slide",
+          "scenario": "real-chooser-fileprovider-share",
+          "passed": true,
+          "bytes": 80003
+        },
+        {
+          "app": "slide",
+          "scenario": "saf-save-cancel-confirmed-write-and-provider-failure",
+          "passed": true,
+          "bytes": 80003,
+          "originalPreserved": true
+        },
+        {
+          "app": "slide",
+          "scenario": "real-document-intent-and-recovery-storage",
+          "passed": true,
+          "originalPreserved": true,
+          "hwp": false
+        },
+        {
+          "app": "slide",
+          "scenario": "same-package-signed-reinstall-preserves-storage",
+          "passed": true
+        },
+        {
+          "app": "word",
+          "scenario": "saf-open-cancel-and-chunked-read",
+          "passed": true,
+          "bytes": 80003
+        },
+        {
+          "app": "word",
+          "scenario": "identity-icons-offline",
+          "passed": true,
+          "version": "1.0.0",
+          "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b",
+          "webView": "124.0.6367.219",
+          "sdk": 35,
+          "debuggable": false,
+          "adaptiveIcon": true
+        },
+        {
+          "app": "word",
+          "scenario": "real-chooser-fileprovider-share",
+          "passed": true,
+          "bytes": 80003
+        },
+        {
+          "app": "word",
+          "scenario": "saf-save-cancel-confirmed-write-and-provider-failure",
+          "passed": true,
+          "bytes": 80003,
+          "originalPreserved": true
+        },
+        {
+          "app": "word",
+          "scenario": "real-document-intent-and-recovery-storage",
+          "passed": true,
+          "originalPreserved": true,
+          "hwp": true
+        },
+        {
+          "app": "word",
+          "scenario": "same-package-signed-reinstall-preserves-storage",
+          "passed": true
+        }
+      ],
+      "physicalDeviceTested": false,
+      "uninstallVerified": true,
+      "externalDocumentPreservedAfterUninstall": true
+    }
+  ],
+  "browserChecks": {
+    "sheet": {
+      "script": "tests/android-ui.mjs",
+      "passed": true,
+      "log": "sheet-android-browser.log"
+    },
+    "slide": {
+      "initialHarnessAttempt": {
+        "reason": "Hard-coded test page URL did not use the isolated server port",
+        "passed": 0,
+        "failedSetup": 19
+      },
+      "final": {
+        "startTime": "2026-11-08T01:46:29.039Z",
+        "duration": 24363.413,
+        "expected": 19,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    "word": {
+      "startTime": "2026-11-08T01:38:02.113Z",
+      "duration": 15989.226,
+      "expected": 13,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  },
+  "priorAttempts": [
+    {
+      "runId": 42436379698,
+      "conclusion": "failure",
+      "reason": "adb sync could not create the external test sentinel on Android 15 scoped storage before APK installation. Changed only the CI fixture creation to the device shell; APKs and native tests unchanged.",
+      "beforeAppInstallation": true,
+      "url": "https://github.com/beaur8-prog/office-studio/actions/runs/42436379698"
+    },
+    {
+      "runId": 42436628763,
+      "conclusion": "failure",
+      "reason": "Native identity and offline launch passed; test fixture creation and result reading attempted to access the instrumentation APK private directory while executing under the target UID. Replaced direct private-directory access with a test-only document provider in its own process. Production APKs unchanged.",
+      "beforeAppInstallation": false,
+      "url": "https://github.com/beaur8-prog/office-studio/actions/runs/42436628763"
+    },
+    {
+      "runId": 42437205514,
+      "conclusion": "failure",
+      "reason": "Emulator external storage remained unavailable immediately after boot; added bounded readiness polling before APK installation.",
+      "beforeAppInstallation": true,
+      "url": "https://github.com/beaur8-prog/office-studio/actions/runs/42437205514"
+    },
+    {
+      "runId": 42437210827,
+      "conclusion": "failure",
+      "reason": "Sheet completed all native scenarios; Slide completed file open/save/share and icon checks, then failed reinstall storage comparison. The localStorage test fixture was created only 600 ms before activity teardown; wait 6500 ms for the WebView storage commit before reinstall and repeat the same assertion.",
+      "url": "https://github.com/beaur8-prog/office-studio/actions/runs/42437210827"
+    },
+    {
+      "runId": 42437497369,
+      "conclusion": "success",
+      "reason": "Both profiles passed all native scenarios on the preceding private APK candidate. A subsequent repeat exposed a chooser callback ordering problem, so this candidate was superseded before any APK was published.",
+      "url": "https://github.com/beaur8-prog/office-studio/actions/runs/42437497369"
+    },
+    {
+      "runId": 42437711000,
+      "conclusion": "failure",
+      "reason": "Tablet passed all scenarios. Phone recipient read exact shared bytes, but app reported cancelled because chooser activity result arrived before its asynchronous selected-target broadcast. Fixed production share completion ordering and added per-transfer correlation plus explicit cancel/race coverage.",
+      "productFixRequired": true,
+      "url": "https://github.com/beaur8-prog/office-studio/actions/runs/42437711000"
+    }
+  ],
+  "bundle": {
+    "filename": "Office-Studio-1.0.0-Android-APKs.zip",
+    "bytes": 57720669,
+    "sha256": "82dd1ea6f03d084b7ba953674a2abea2b03dea62ba96a791ce70604b248670e3"
+  },
+  "physicalDeviceTested": false,
+  "scopeNotes": [
+    "Android 15 API 35 x86_64 Google APIs emulators: phone and tablet layouts.",
+    "System document picker cancellation is exercised through its actual UI. Success and read-only failures use content URI results from a separate test-only document provider.",
+    "Android chooser hands exact bytes to a separate recipient process using production FileProvider URI grants.",
+    "Sharing cancellation and an early chooser RESULT_CANCELED callback are tested before successful target selection.",
+    "Reinstall uses adb install -r of the same signed APK; this is the first Android release.",
+    "Manufacturer file providers, physical Korean keyboards, S Pen, DeX, external displays and large-document performance have not been verified on physical devices."
+  ]
+}

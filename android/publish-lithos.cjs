@@ -10,9 +10,11 @@ const modulePath='/Applications/Lithos.app/Contents/Resources/app.asar/electron/
 const hash=x=>crypto.createHash('sha256').update(x).digest('hex');
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 async function main(){
- const publish=process.argv.includes('--publish'),skipTests=process.argv.includes('--skip-tests'),metadataFallback=process.argv.includes('--github-metadata-fallback');
+ const publish=process.argv.includes('--publish'),skipTests=process.argv.includes('--skip-tests');
+ const policy=JSON.parse(await fs.readFile(path.join(root,'android/distribution-policy.json'),'utf8'));
+ if(policy.mode!=='lithos-local-attachments'||policy.publishGitHubRelease!==false||policy.uploadAPKsToGitHub!==false)throw Error('Android local-only distribution policy required');
  const version=JSON.parse(await fs.readFile(path.join(root,'android/source-lock.json'),'utf8')).version;
- const e={pid,directory,vaultRoot,publish,directDownloads:process.argv.includes('--direct-downloads'),source:'앱/오피스 스튜디오 Android 다운로드.md',title:'오피스 스튜디오 Android'};
+ const e={pid,directory,vaultRoot,publish,directDownloads:true,source:'앱/오피스 스튜디오 Android 다운로드.md',title:'오피스 스튜디오 Android'};
  if(publish){
   e.update=process.argv.includes('--update');if(e.update){const previous=JSON.parse(await fs.readFile(path.join(root,'publication/android/PUBLISHED.json'),'utf8'));e.directDownloads=e.directDownloads||previous.downloadMode==='lithos-attachments';if(!e.directDownloads){try{const saved=JSON.parse(await fs.readFile(path.join(root,'publication/android/DOWNLOADS.json'),'utf8'));e.directDownloads=saved.mode==='lithos-attachments'&&saved.page===previous.url;}catch(error){if(error.code!=='ENOENT')throw error;}}e.previousHash=previous.contentSHA256;e.previousURL=previous.url;e.previousToken=new URL(previous.url).pathname.split('/').at(-1);}
   const build=JSON.parse(await fs.readFile(path.join(root,'release/android',version,'BUILD-android.json'),'utf8'));
@@ -20,32 +22,10 @@ async function main(){
   else{const proof=JSON.parse(await fs.readFile(path.join(root,'release/android',version,'ANDROID-VERIFICATION.json'),'utf8'));if(!build.checks?.nativeDeviceTests||!proof.passed||proof.profiles.length!==2||proof.profiles.some(p=>!p.passed))throw Error('Android native verification is incomplete');}
   e.content=await fs.readFile(path.join(root,'publication/android/downloads-ready.md'),'utf8');e.contentHash=hash(e.content);
   if(!e.content.startsWith('> **Android 설치 안내')||!e.content.includes('# 오피스 스튜디오 Android'))throw Error('Android draft format changed');
-  if(e.directDownloads){
-   if(!e.update)throw Error('Direct downloads require the existing Android share');
-   const prepared=await require('./direct-downloads.cjs').prepareDirectDownloads({root,build,content:e.content,baseURL:e.previousURL,vaultRoot});
-   e.content=prepared.content;e.contentHash=hash(e.content);e.directFiles=prepared.files;
-   await fs.writeFile(path.join(root,'publication/android/downloads-ready.md'),e.content);
-  }else{
-  // During a GitHub download gateway outage, explicit operator fallback still
-  // requires a public release asset with the exact URL, byte size and SHA-256.
-  // A missing/private/deleted asset or wrong checksum never qualifies.
-  const releaseMetadata=new Map();
-  e.downloadReadiness=await Promise.all(build.apps.map(async app=>{
-   const url=app.downloadURL||('https://github.com/beaur8-prog/office-studio/releases/download/android-v'+version+'/'+app.filename);
-   let status,transportError;
-   try{const response=await fetch(url,{method:'HEAD',signal:AbortSignal.timeout(10000)});status=response.status;if(response.ok&&Number(response.headers.get('content-length'))===app.bytes)return {app:app.id,method:'public-head',bytes:app.bytes,status};await response.body?.cancel();if(response.status<500)throw Error('Public APK download unavailable: '+app.id+' HTTP '+response.status);}
-   catch(error){if(error.name!=='TimeoutError'&&error.name!=='AbortError')throw error;transportError=error.name;}
-   if(!metadataFallback)throw Error('Public APK download unavailable: '+app.id+' HTTP '+status);
-   const match=url.match(/^https:\/\/github\.com\/beaur8-prog\/office-studio\/releases\/download\/(android-v[0-9.]+)\/([^/?#]+)$/);
-   if(!match)throw Error('Unsupported public APK URL: '+app.id);
-   if(!releaseMetadata.has(match[1]))releaseMetadata.set(match[1],JSON.parse(execFileSync('gh',['api','repos/beaur8-prog/office-studio/releases/tags/'+encodeURIComponent(match[1])],{encoding:'utf8'})));
-   const release=releaseMetadata.get(match[1]),asset=release.assets?.find(a=>a.name===match[2]);
-   if(release.draft||release.prerelease||!asset||asset.state!=='uploaded'||asset.browser_download_url!==url||asset.size!==app.bytes||asset.digest!=='sha256:'+app.sha256)throw Error('Public GitHub asset metadata mismatch: '+app.id);
-   return {app:app.id,method:'public-github-asset-metadata',gatewayStatus:status??null,transportError:transportError??null,bytes:asset.size,sha256:app.sha256,public:true,directDownloadVerified:false};
-  }));
-  await fs.mkdir(path.join(root,'test-results/android-lithos'),{recursive:true});
-  await fs.writeFile(path.join(root,'test-results/android-lithos/download-readiness.json'),JSON.stringify({checkedAt:new Date().toISOString(),metadataFallback,apps:e.downloadReadiness},null,2)+'\n');
-  }
+  if(!e.update)throw Error('Local attachments require the existing Android share');
+  const prepared=await require('./direct-downloads.cjs').prepareDirectDownloads({root,build,content:e.content,baseURL:e.previousURL,vaultRoot});
+  e.content=prepared.content;e.contentHash=hash(e.content);e.directFiles=prepared.files;
+  await fs.writeFile(path.join(root,'publication/android/downloads-ready.md'),e.content);
  }
  if(execFileSync('ps',['-p',String(pid),'-o','command='],{encoding:'utf8'}).trim()!=='/Applications/Lithos.app/Contents/MacOS/Lithos')throw Error('Lithos process identity changed');
  if(await fetch('http://127.0.0.1:9229/json/list').then(()=>true,()=>false))throw Error('Existing inspector left untouched');
@@ -143,7 +123,7 @@ async function main(){
   }`})).value;
   await fs.mkdir(path.join(root,'test-results/android-lithos'),{recursive:true});
   await fs.writeFile(path.join(root,'test-results/android-lithos',publish?'maintenance-receipt.json':'ready.json'),JSON.stringify(result,null,2)+'\n');
-  if(publish){await fs.mkdir(path.join(root,'publication/android'),{recursive:true});const publicRecord={version,title:result.title,url:result.url,source:result.source,contentSHA256:result.contentSHA256,readOnly:true,expiresAt:result.expiresAt,...(e.directFiles?{downloadMode:'lithos-attachments'}:{})};await fs.writeFile(path.join(root,'publication/android/PUBLISHED.json'),JSON.stringify(publicRecord,null,2)+'\n');}
+  if(publish){await fs.mkdir(path.join(root,'publication/android'),{recursive:true});const publicRecord={version,title:result.title,url:result.url,source:result.source,contentSHA256:result.contentSHA256,readOnly:true,expiresAt:result.expiresAt,...(e.directFiles?{downloadMode:'lithos-attachments',distribution:'local-only'}:{})};await fs.writeFile(path.join(root,'publication/android/PUBLISHED.json'),JSON.stringify(publicRecord,null,2)+'\n');}
   console.log(JSON.stringify(result,null,2));
  }finally{
   if(owns){try{await call('Runtime.releaseObjectGroup',{objectGroup:'android-publication'});await call('Runtime.evaluate',{expression:"setTimeout(()=>process.getBuiltinModule('inspector').close(),200);'closing'",returnByValue:true});}finally{ws.close();}

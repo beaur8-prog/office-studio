@@ -28,7 +28,7 @@ Word Studio **1.0.3**로 갱신했습니다. Sheet Studio **1.0.4**, Slide Studi
 | ![Slide Studio 아이콘](attachments/office-studio-android/Slide-Studio-Android-icon.png) | **Slide Studio 1.0.5** | [APK 바로 받기](attachments/office-studio-android/Slide-Studio-1.0.5-Android.apk) | 12.9 MiB |
 | ![Word Studio 아이콘](attachments/office-studio-android/Word-Studio-Android-icon.png) | **Word Studio 1.0.3** | [APK 바로 받기](attachments/office-studio-android/Word-Studio-1.0.3-Android.apk) | 36.4 MiB |
 
-[SHA-256 확인 파일](attachments/office-studio-android/1.0.9/SHA256SUMS-android.txt) · [빌드 구성·포함 소스](attachments/office-studio-android/1.0.9/BUILD-android.json) · [1.0.0 배포 당시 검증 기록](https://github.com/beaur8-prog/office-studio/releases/download/android-v1.0.0/ANDROID-VERIFICATION.json) · [GitHub 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/android-v1.0.9)
+[SHA-256 확인 파일](attachments/office-studio-android/1.0.9/SHA256SUMS-android.txt) · [빌드 구성·포함 소스](attachments/office-studio-android/1.0.9/BUILD-android.json) · [1.0.0 배포 당시 검증 기록](attachments/office-studio-android/1.0.0/ANDROID-VERIFICATION.json)
 
 ## 2. 설치와 실행
 
@@ -86,4 +86,4 @@ c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b
 
 기존 앱 ID와 서명 키를 유지했습니다. 빌드 후 서명·앱 ID·버전·크기와 SHA-256을 기록했습니다. 통합 ZIP은 제공하지 않습니다. 위 1.0.0 검증 기록은 이전 배포 당시 결과입니다.
 
-이 문서는 리토스의 읽기 전용 공유 페이지입니다. 설치 파일은 GitHub에서도 받을 수 있습니다.
+이 문서는 리토스의 읽기 전용 공유 페이지입니다. APK는 이 페이지의 로컬 첨부 파일로 제공합니다.

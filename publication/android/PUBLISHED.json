@@ -3,8 +3,9 @@
   "title": "오피스 스튜디오 Android",
   "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a",
   "source": "앱/오피스 스튜디오 Android 다운로드.md",
-  "contentSHA256": "1fabee41c48d629072184cf4d5b07b938e27a28ef6bb53c9a526d3e151bcc91f",
+  "contentSHA256": "765f4279d2c544845047d69bbdfa34d3e81b6710b9d9bcdfc0f211c01d6ae27f",
   "readOnly": true,
   "expiresAt": null,
-  "downloadMode": "lithos-attachments"
+  "downloadMode": "lithos-attachments",
+  "distribution": "local-only"
 }

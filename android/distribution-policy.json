@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "target": "android",
+  "mode": "lithos-local-attachments",
+  "publishGitHubRelease": false,
+  "uploadAPKsToGitHub": false,
+  "automaticUpdates": false,
+  "combinedZIP": false,
+  "sourceControl": "git"
+}

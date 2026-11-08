@@ -12,6 +12,8 @@ from zoneinfo import ZoneInfo
 s = Path(__file__).resolve().parent.parent
 r = s.parent
 lock = json.loads((s / 'android/source-lock.json').read_text())
+policy = json.loads((s / 'android/distribution-policy.json').read_text())
+assert policy['mode'] == 'lithos-local-attachments' and policy['publishGitHubRelease'] is False and policy['uploadAPKsToGitHub'] is False
 prior = json.loads((r / 'records/previous-build.json').read_text())
 before = json.loads((r / 'records/page-before.json').read_text())
 cache = json.loads((r / 'records/build-cache.json').read_text())
@@ -54,10 +56,12 @@ for old in prior['apps']:
         app.update(version=source['version'], versionCode=source['versionCode'],
                    filename=filename, bytes=file.stat().st_size, sha256=sha(file),
                    sourceCommit=source['sourceCommit'], upstreamCommit=source['upstreamCommit'],
-                   downloadURL=f'https://github.com/beaur8-prog/office-studio/releases/download/android-v{version}/{filename}',
                    offlineAssetsVerified=None)
         (r / 'records' / (id + '-signature.txt')).write_text(certificate)
         (r / 'records' / (id + '-manifest.txt')).write_text(manifest)
+    href = 'attachments/office-studio-android/' + app['filename']
+    identifier = hashlib.sha256(('앱/' + href).encode()).hexdigest()[:32]
+    app['downloadURL'] = before['url'] + '/download/' + identifier
     apps.append(app)
 
 source = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=s, text=True).strip()
@@ -66,6 +70,7 @@ build = {
     'releaseType': 'changed-apps', 'changedApps': changed, 'sourceCommit': source,
     **{key: value for key, value in lock.items() if key.startswith('native') and key.endswith('UpstreamCommit')},
     'builtAt': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'apps': apps,
+    'distribution': 'lithos-local-attachments', 'gitHubReleasePublished': False,
     'combinedZIP': False,
     'tests': {'status': 'skipped', 'executed': False, 'explicitlyAuthorized': True,
               'reason': 'Fast publication with tests omitted per established user instruction',
@@ -103,7 +108,7 @@ for a in apps:
         if line.startswith('| ![' + a['name'] + ' 아이콘]'):
             parts = line.split('|')
             parts[2] = f" **{a['name']} {a['version']}** "
-            parts[3] = f" [APK 받기]({a['downloadURL']}) "
+            parts[3] = f" [APK 바로 받기]({a['downloadURL']}) "
             parts[4] = f" {a['bytes'] / 1024 / 1024:.1f} MiB "
             lines[i] = '|'.join(parts)
             matches += 1
@@ -111,7 +116,8 @@ for a in apps:
 body = '\n'.join(lines) + '\n'
 for file in ('BUILD-android.json', 'SHA256SUMS-android.txt'):
     body = body.replace('android-v' + prior['version'] + '/' + file, 'android-v' + version + '/' + file)
-body = body.replace('releases/tag/android-v' + prior['version'], 'releases/tag/android-v' + version)
+body = re.sub(r'\s*·\s*\[GitHub 릴리스\]\([^)]*\)', '', body)
+body = body.replace('설치 파일은 GitHub에서도 받을 수 있습니다.', 'APK는 이 페이지의 로컬 첨부 파일로 제공합니다.')
 for a in apps:
     if a['rebuilt']:
         old = next(x for x in prior['apps'] if x['id'] == a['id'])
@@ -142,6 +148,7 @@ prior_publication = json.loads((pub / 'PUBLISHED.json').read_text()) if (pub / '
 (pub / 'PUBLISHED.json').write_text(json.dumps({
     'version': prior['version'], 'title': before['title'], 'url': before['url'],
     'source': '앱/오피스 스튜디오 Android 다운로드.md',
+    'downloadMode': 'lithos-attachments', 'distribution': 'local-only',
     'contentSHA256': before['contentSHA256'], 'readOnly': True, 'expiresAt': None,
     **({'downloadMode': 'lithos-attachments'} if prior_publication.get('downloadMode') == 'lithos-attachments' and prior_publication.get('url') == before['url'] else {}),
 }, ensure_ascii=False, indent=2) + '\n')
