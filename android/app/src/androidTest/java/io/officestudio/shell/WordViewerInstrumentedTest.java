@@ -45,6 +45,9 @@ public class WordViewerInstrumentedTest {
         boolean tablet="tablet".equals(InstrumentationRegistry.getArguments().getString("studioQaProfile","phone"));
         assertEquals("Native hardware form factor must match the QA profile",String.valueOf(tablet),js(scenario,"window.__studioHostConfig.tablet"));
     }
+    void traceViewer(ActivityScenario<MainActivity> scenario) throws Exception {
+        js(scenario,"(()=>{const v=document.querySelector('.android-presentation-viewport');window.viewerGestureQA={width:innerWidth,height:innerHeight,ratio:devicePixelRatio,viewport:[v.clientWidth,v.clientHeight,v.scrollWidth,v.scrollHeight],rect:v.getBoundingClientRect().toJSON(),events:[]};for(const type of ['pointerdown','pointermove','pointerup','pointercancel'])v.addEventListener(type,e=>{if(type==='pointerdown'&&e.isPrimary)window.viewerGestureQA.events=[];if(window.viewerGestureQA.events.length<30)window.viewerGestureQA.events.push([type,e.pointerType,e.clientX,e.clientY,v.scrollTop,performance.now(),e.timeStamp,Number(v.closest('.android-presentation').dataset.scale)])},true)})()");
+    }
     void dismissImmersiveGuide(){
         UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         // A fresh CI emulator can show a launcher ANR while our Activity is
@@ -120,6 +123,7 @@ public class WordViewerInstrumentedTest {
             // zoomed sheets intentionally pan inside the current page.
             js(scenario,"document.querySelector('.android-presentation-options > button').click()");
             waitJS(scenario,"document.querySelector('.android-presentation-page').getBoundingClientRect().height<=innerHeight+2");
+            traceViewer(scenario);
             UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
             int w=device.getDisplayWidth(),h=device.getDisplayHeight();
             assertTrue(device.swipe(w*4/5,h/2,w/5,h/2,10));waitJS(scenario,"document.querySelector('.android-presentation').dataset.page==='2'");
@@ -148,7 +152,7 @@ public class WordViewerInstrumentedTest {
             waitJS(scenario,"!!document.querySelector('.android-presentation-page svg')");
             dismissImmersiveGuide();
             scenario.onActivity(activity->assertTrue("HWP viewer must own input focus",activity.hasWindowFocus()));
-            js(scenario,"(()=>{const v=document.querySelector('.android-presentation-viewport');window.viewerGestureQA={width:innerWidth,height:innerHeight,ratio:devicePixelRatio,rect:v.getBoundingClientRect().toJSON(),target:document.elementFromPoint(innerWidth*.8,innerHeight*.5)?.outerHTML.slice(0,180),events:[]};for(const type of ['pointerdown','pointermove','pointerup','pointercancel'])v.addEventListener(type,e=>{if(window.viewerGestureQA.events.length<30)window.viewerGestureQA.events.push([type,e.pointerType,e.clientX,e.clientY,v.scrollTop])},true)})()");
+            traceViewer(scenario);
             screenshot("hwp-before-swipe");
             assertTrue(device.swipe(w*4/5,h/2,w/5,h/2,10));waitJS(scenario,"document.querySelector('.android-presentation').dataset.page==='2'");
             scenario.onActivity(activity->{assertTrue(activity.immersive);assertEquals(View.VISIBLE,activity.web.getVisibility());});
