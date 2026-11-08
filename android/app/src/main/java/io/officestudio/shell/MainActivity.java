@@ -49,7 +49,13 @@ public class MainActivity extends Activity {
         super.onCreate(state);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        root=new FrameLayout(this);web=new WebView(this);root.addView(web,new FrameLayout.LayoutParams(-1,-1));setContentView(root);
+        root=new FrameLayout(this);web=new WebView(this){
+            @Override public boolean onKeyPreIme(int code,KeyEvent event){
+                if(handleWordEscape(event))return true;
+                return super.onKeyPreIme(code,event);
+            }
+        };root.addView(web,new FrameLayout.LayoutParams(-1,-1));setContentView(root);
+        if(BuildConfig.STUDIO.equals("word"))web.setOnGenericMotionListener((view,event)->relayWordWheel(event));
         ViewCompat.setOnApplyWindowInsetsListener(root,(v,insets)->{
             Insets b=insets.getInsets((immersive?0:WindowInsetsCompat.Type.systemBars())|WindowInsetsCompat.Type.displayCutout());
             Insets k=insets.getInsets(WindowInsetsCompat.Type.ime());
@@ -191,6 +197,30 @@ public class MainActivity extends Activity {
         if(!css.equals(lastCutoutCss)){lastCutoutCss=css;web.evaluateJavascript(css,null);}
     }
     void hideFullscreen(){if(fullscreen==null)return;root.removeView(fullscreen);fullscreen=null;web.setVisibility(View.VISIBLE);if(fullscreenCallback!=null)fullscreenCallback.onCustomViewHidden();fullscreenCallback=null;}
+    boolean relayWordWheel(MotionEvent event){
+        int meta=KeyEvent.normalizeMetaState(event.getMetaState());
+        if(event.getActionMasked()!=MotionEvent.ACTION_SCROLL||(meta&(KeyEvent.META_CTRL_ON|KeyEvent.META_META_ON))==0)return false;
+        float density=getResources().getDisplayMetrics().density;
+        ViewConfiguration config=ViewConfiguration.get(this);
+        float x=event.getX()/density,y=event.getY()/density;
+        float dx=-event.getAxisValue(MotionEvent.AXIS_HSCROLL)*config.getScaledHorizontalScrollFactor()/density;
+        float dy=-event.getAxisValue(MotionEvent.AXIS_VSCROLL)*config.getScaledVerticalScrollFactor()/density;
+        if(!destroyed&&Float.isFinite(x)&&Float.isFinite(y)&&Float.isFinite(dx)&&Float.isFinite(dy)){
+            // WebView can reserve modified mouse wheels for native page zoom.
+            // Consume once and route to the document viewport, leaving normal
+            // wheel scrolling and the other Studio apps on their usual path.
+            web.evaluateJavascript("(()=>{const x="+x+",y="+y+";document.elementFromPoint(x,y)?.dispatchEvent(new WheelEvent('wheel',{bubbles:true,cancelable:true,clientX:x,clientY:y,deltaX:"+dx+",deltaY:"+dy+",deltaMode:0,ctrlKey:"+((meta&KeyEvent.META_CTRL_ON)!=0)+",metaKey:"+((meta&KeyEvent.META_META_ON)!=0)+"}))})()",null);
+        }
+        return true;
+    }
+    boolean handleWordEscape(KeyEvent event){
+        if(!BuildConfig.STUDIO.equals("word")||event.getKeyCode()!=KeyEvent.KEYCODE_ESCAPE)return false;
+        if(event.getAction()==KeyEvent.ACTION_DOWN&&event.getRepeatCount()==0&&web!=null&&!destroyed){
+            web.evaluateJavascript("window.dispatchEvent(new Event('studio-native-escape',{cancelable:true}));",null);
+            web.requestFocus();
+        }
+        return true;
+    }
     @Override public boolean dispatchKeyEvent(KeyEvent event){
         // WebView can consume Ctrl+P as a browser shortcut without delivering
         // a DOM key event. Word owns this shortcut and opens its document print
@@ -206,13 +236,7 @@ public class MainActivity extends Activity {
         }
         // Own the whole Escape press, not only key-up. Passing either half to
         // WebView/Android can turn the same press into a second back/close.
-        if(BuildConfig.STUDIO.equals("word")&&event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE){
-            if(event.getAction()==KeyEvent.ACTION_DOWN&&event.getRepeatCount()==0&&web!=null&&!destroyed){
-                web.evaluateJavascript("window.dispatchEvent(new Event('studio-native-escape',{cancelable:true}));",null);
-                web.requestFocus();
-            }
-            return true;
-        }
+        if(handleWordEscape(event))return true;
         return super.dispatchKeyEvent(event);
     }
     @Override public void onBackPressed(){if(fullscreen!=null){hideFullscreen();return;}if(web==null){finish();return;}web.evaluateJavascript("window.OfficeStudioHost?window.OfficeStudioHost.back():false",value->{if("false".equals(value)||"null".equals(value))finish();});}

@@ -38,7 +38,7 @@ public class WordViewerInstrumentedTest {
         long end=SystemClock.uptimeMillis()+90000;
         while(SystemClock.uptimeMillis()<end){if("true".equals(js(scenario,expression)))return;SystemClock.sleep(250);}
         screenshot("failed-wait");
-        fail("Timed out: "+expression+"; gestures="+js(scenario,"JSON.stringify(window.viewerGestureQA||null)")+"; body="+js(scenario,"document.body.innerText.slice(-500)"));
+        fail("Timed out: "+expression+"; gestures="+js(scenario,"JSON.stringify(window.viewerGestureQA||null)")+"; nativeEscape="+js(scenario,"window.hardwareEscapeCount||0")+"; wheel="+js(scenario,"JSON.stringify(window.wheelQA||[])")+"; body="+js(scenario,"document.body.innerText.slice(-500)"));
     }
     void openFixture(ActivityScenario<MainActivity> scenario,String name) throws Exception {
         js(scenario,"fetch('/assets/qa/"+name+"').then(r=>r.blob()).then(b=>{const d=new DataTransfer();d.items.add(new File([b],'"+name+"'));const i=document.querySelector('input[type=file]');i.files=d.files;i.dispatchEvent(new Event('change',{bubbles:true}));})");
@@ -281,9 +281,13 @@ public class WordViewerInstrumentedTest {
         String scale="(()=>{const v=document.querySelector("+query+");return v?.dataset.scale?Number(v.dataset.scale):v?.querySelector('.scaled-document')?new DOMMatrix(getComputedStyle(v.querySelector('.scaled-document')).transform).a:0})()";
         JSONObject point=new JSONObject(js(scenario,"(()=>{const r=document.querySelector("+query+").getBoundingClientRect();return {x:(r.left+r.width/2)*devicePixelRatio,y:(r.top+r.height/2)*devicePixelRatio}})()"));
         double before=Double.parseDouble(js(scenario,scale));assertTrue("Initial display scale missing for "+selector,before>0);
+        js(scenario,"window.wheelQA=[];window.addEventListener('wheel',e=>window.wheelQA.push({ctrl:e.ctrlKey,dy:e.deltaY,x:e.clientX,y:e.clientY,target:e.target.tagName}),{capture:true,once:true})");
         MotionEvent.PointerProperties prop=new MotionEvent.PointerProperties();prop.id=0;prop.toolType=MotionEvent.TOOL_TYPE_MOUSE;
         MotionEvent.PointerCoords pos=new MotionEvent.PointerCoords();pos.x=(float)point.getDouble("x");pos.y=(float)point.getDouble("y");pos.setAxisValue(MotionEvent.AXIS_VSCROLL,1);
-        long now=SystemClock.uptimeMillis();MotionEvent event=MotionEvent.obtain(now,now,MotionEvent.ACTION_SCROLL,1,new MotionEvent.PointerProperties[]{prop},new MotionEvent.PointerCoords[]{pos},KeyEvent.META_CTRL_ON,0,1,1,-1,0,InputDevice.SOURCE_MOUSE,0);
+        long now=SystemClock.uptimeMillis();
+        MotionEvent hover=MotionEvent.obtain(now,now,MotionEvent.ACTION_HOVER_MOVE,1,new MotionEvent.PointerProperties[]{prop},new MotionEvent.PointerCoords[]{pos},0,0,1,1,-1,0,InputDevice.SOURCE_MOUSE,0);
+        assertTrue(InstrumentationRegistry.getInstrumentation().getUiAutomation().injectInputEvent(hover,true));hover.recycle();
+        MotionEvent event=MotionEvent.obtain(now,SystemClock.uptimeMillis(),MotionEvent.ACTION_SCROLL,1,new MotionEvent.PointerProperties[]{prop},new MotionEvent.PointerCoords[]{pos},KeyEvent.META_CTRL_ON,0,1,1,-1,0,InputDevice.SOURCE_MOUSE,0);
         assertTrue(InstrumentationRegistry.getInstrumentation().getUiAutomation().injectInputEvent(event,true));event.recycle();
         waitJS(scenario,scale+">"+(before*1.05));
         assertEquals("Native page zoom must stay off","1",js(scenario,"window.visualViewport.scale"));
