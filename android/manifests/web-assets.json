@@ -1,21 +1,36 @@
 {
   "sheet": {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "assetFiles": [
+      {
+        "path": "THIRD-PARTY-NOTICES.txt",
+        "bytes": 3500,
+        "sha256": "89f48af3064611735f2cc4894bdb94a466c2ef451b5595d44028c989cf90cbac"
+      },
+      {
+        "path": "android-icon.svg",
+        "bytes": 326,
+        "sha256": "0eaaf864f101caf5975db0b197abe8267d9d889e4c75a227f42a2e47a0603f8f"
+      },
+      {
+        "path": "android.webmanifest",
+        "bytes": 319,
+        "sha256": "aed33e6cc75c831bd52667b76a654478dc8853a1a2e4fe5df8a7a8d510115997"
+      },
       {
         "path": "app-version.json",
         "bytes": 20,
-        "sha256": "705f5e244229493ee06e69f5af0b066b5d0aa1eb92548a8d1d98bd81953371ea"
+        "sha256": "6a33e5f4b8fe43d76bfa8ad1c14fbbae5a9abad68194dc331b17c8b0d1415185"
       },
       {
-        "path": "assets/index-Bp2Iit1a.js",
-        "bytes": 1006615,
-        "sha256": "101036ea9f8800cfa98d3b0ed15620d4a813297a854e7259da1a0a636a851c7b"
+        "path": "assets/index-9GD8aNcM.js",
+        "bytes": 1017031,
+        "sha256": "9baf86d739d6431e789644982d1159b2aec6f8f876d3e4f9e1a524550c4c07d8"
       },
       {
-        "path": "assets/index-eYs7Zs1y.css",
-        "bytes": 51715,
-        "sha256": "96242c567abe7eac2a3636e10adcb34ebd95af1e188b762387063dfd62d8d0b7"
+        "path": "assets/index-BNATsQxm.css",
+        "bytes": 53915,
+        "sha256": "698ae0199e357288ba28e20a2156fd935e814e99a26e878bf81510a94e439e50"
       },
       {
         "path": "assets/spreadsheet-BTv7Xkas.js",
@@ -28,19 +43,14 @@
         "sha256": "b0148384fbee630b679928d0a9ef71f1d9a179fe8c1a6d18d422bb4e6c1bdf61"
       },
       {
-        "path": "assets/workbook-worker-SxGHq1nx.js",
-        "bytes": 1734596,
-        "sha256": "1ec715d52aa44bf33b464d9bba8a35db1c333ee34cf0726024f95410995b2e09"
+        "path": "assets/workbook-worker-ZSSNjkDw.js",
+        "bytes": 1735272,
+        "sha256": "1f02c5c9538b7f8c8fe6e0509209e3daf2d6ea03805f5bd55e5e472166b918d8"
       },
       {
         "path": "index.html",
         "bytes": 784,
-        "sha256": "d0739f66256781a700e57363196bbc368c324e50cf5117984b5c22fd0840a4d2"
-      },
-      {
-        "path": "THIRD-PARTY-NOTICES.txt",
-        "bytes": 3500,
-        "sha256": "89f48af3064611735f2cc4894bdb94a466c2ef451b5595d44028c989cf90cbac"
+        "sha256": "172c5109c55bd72d7c655e9952b59dad9cfb29f3144d5d31b55a18cc47838fc0"
       }
     ],
     "iconSourceSHA256": "180827929304256408d440428f7f736266be150b939270ea08efe92f332c864f",
