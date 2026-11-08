@@ -26,6 +26,8 @@ public class MainActivity extends Activity {
     static final int OPEN = 2101, SAVE = 2102, CHOOSE = 2103, SHARE = 2104;
     static final long LIMIT = 128L * 1024 * 1024;
     WebView web;
+    SheetPrintAdapter sheetPrintAdapter;
+    PrintJob sheetPrintJob;
     FrameLayout root;
     final ExecutorService io = Executors.newSingleThreadExecutor();
     final Map<String, ImportFile> imports = new ConcurrentHashMap<>();
@@ -190,9 +192,47 @@ public class MainActivity extends Activity {
             case "clipboard":android.content.ClipboardManager clipboard=(android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);clipboard.setPrimaryClip(a.optString("html").isEmpty()?ClipData.newPlainText("Studio",a.optString("text")):ClipData.newHtmlText("Studio",a.optString("text"),a.optString("html")));success(id,reply,true);break;
             case "readClipboard":android.content.ClipboardManager cm=(android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);ClipData clip=cm.getPrimaryClip();String text=clip!=null&&clip.getItemCount()>0?clip.getItemAt(0).coerceToText(this).toString():"";if(text.length()>1024*1024)throw new IOException("클립보드 내용이 너무 큽니다");success(id,reply,text);break;
             case "close":success(id,reply,true);if(BuildConfig.STUDIO.equals("sheet")){if(BuildConfig.DEBUG)android.util.Log.d("SheetInput","Ignored unconfirmed legacy close");}else if(BuildConfig.STUDIO.equals("slide"))requestSlideBack();else finish();break;
-            case "print":if(pending!=null)throw new IOException("다른 파일 작업이 진행 중입니다");pending=new Pending(id,"print",reply,null);PrintDocumentAdapter delegate=web.createPrintDocumentAdapter(getString(R.string.app_name));PrintDocumentAdapter adapter=new PrintDocumentAdapter(){@Override public void onStart(){delegate.onStart();}@Override public void onLayout(PrintAttributes old,PrintAttributes next,CancellationSignal signal,LayoutResultCallback cb,Bundle extras){delegate.onLayout(old,next,signal,cb,extras);}@Override public void onWrite(android.print.PageRange[] pages,ParcelFileDescriptor dest,CancellationSignal signal,WriteResultCallback cb){delegate.onWrite(pages,dest,signal,cb);}@Override public void onFinish(){delegate.onFinish();if(pending!=null&&pending.method.equals("print")){Pending x=pending;pending=null;success(x.id,x.reply,obj("completed",true));}}};((PrintManager)getSystemService(PRINT_SERVICE)).print(getString(R.string.app_name),adapter,new PrintAttributes.Builder().build());break;
+            case "sheetPrint":startSheetPrint(id,reply,a);break;
+            case "print":if(BuildConfig.STUDIO.equals("sheet"))throw new IOException("Sheet Studio의 인쇄 메뉴를 사용하세요");if(pending!=null)throw new IOException("다른 파일 작업이 진행 중입니다");pending=new Pending(id,"print",reply,null);PrintDocumentAdapter delegate=web.createPrintDocumentAdapter(getString(R.string.app_name));PrintDocumentAdapter adapter=new PrintDocumentAdapter(){@Override public void onStart(){delegate.onStart();}@Override public void onLayout(PrintAttributes old,PrintAttributes next,CancellationSignal signal,LayoutResultCallback cb,Bundle extras){delegate.onLayout(old,next,signal,cb,extras);}@Override public void onWrite(android.print.PageRange[] pages,ParcelFileDescriptor dest,CancellationSignal signal,WriteResultCallback cb){delegate.onWrite(pages,dest,signal,cb);}@Override public void onFinish(){delegate.onFinish();if(pending!=null&&pending.method.equals("print")){Pending x=pending;pending=null;success(x.id,x.reply,obj("completed",true));}}};((PrintManager)getSystemService(PRINT_SERVICE)).print(getString(R.string.app_name),adapter,new PrintAttributes.Builder().build());break;
             default:failure(id,reply,new IOException("지원하지 않는 Android 요청입니다"));
         }
+    }
+    void startSheetPrint(String id,JavaScriptReplyProxy reply,JSONObject params)throws Exception {
+        if(!BuildConfig.STUDIO.equals("sheet"))throw new IOException("Sheet Studio 인쇄 요청만 지원합니다");
+        if(pending!=null||chooser!=null||sheetPrintAdapter!=null)throw new IOException("다른 파일 작업이 진행 중입니다");
+        Pending operation=new Pending(id,"sheetPrint",reply,null);pending=operation;
+        io.execute(()->{
+            Transfer file=null;
+            try{
+                Transfer candidate=transfer;if(candidate==null||!candidate.token.equals(params.getString("token"))||candidate.size!=candidate.written)throw new IOException("인쇄 파일을 완성하지 못했습니다");
+                candidate.out.close();transfer=null;file=candidate;
+                if(file.size<1||file.size>32L*1024*1024)throw new IOException("인쇄 문서는 32 MiB 이하여야 합니다");
+                String html=new String(java.nio.file.Files.readAllBytes(file.file.toPath()),java.nio.charset.StandardCharsets.UTF_8);
+                JSONObject paper=params.getJSONObject("paper");double width=paper.getDouble("width"),height=paper.getDouble("height");int pages=params.getInt("pageCount");
+                String name=cleanName(params.optString("title","Sheet Studio"));if(name.length()>120)name=name.substring(0,120);final String title=name;
+                String paperName=paper.optString("name","A4");
+                runOnUiThread(()->{
+                    if(destroyed||pending!=operation)return;
+                    try{
+                        sheetPrintAdapter=new SheetPrintAdapter(this,root,title,html,width,height,pages,()->finishSheetPrint(operation,null));
+                        PrintAttributes attributes=SheetPrintAdapter.attributes(paperName,width,height);
+                        sheetPrintJob=((PrintManager)getSystemService(PRINT_SERVICE)).print(title,sheetPrintAdapter,attributes);
+                        if(sheetPrintJob==null)throw new IOException("Android 인쇄 서비스를 시작하지 못했습니다");
+                    }catch(Exception error){finishSheetPrint(operation,error);}
+                });
+            }catch(Exception error){runOnUiThread(()->finishSheetPrint(operation,error));}
+            finally{if(file!=null){file.file.delete();File folder=file.file.getParentFile();if(folder!=null)folder.delete();}}
+        });
+    }
+    void finishSheetPrint(Pending operation,Exception error){
+        if(pending!=operation)return;
+        SheetPrintAdapter adapter=sheetPrintAdapter;PrintJob job=sheetPrintJob;sheetPrintAdapter=null;sheetPrintJob=null;pending=null;
+        if(adapter!=null&&!adapter.finished)adapter.onFinish();
+        if(destroyed)return;
+        if(error==null&&adapter!=null&&adapter.error!=null)error=new IOException(adapter.error);
+        if(error!=null)failure(operation.id,operation.reply,error);
+        else {boolean cancelled=false;try{cancelled=job!=null&&job.isCancelled();}catch(Exception ignored){}success(operation.id,operation.reply,obj("dialogClosed",true,"cancelled",cancelled));}
+        deliverIncoming();
     }
     void startOutput(String id,JavaScriptReplyProxy reply,Transfer t,String method){
         if(pending!=null){t.file.delete();failure(id,reply,new IOException("다른 파일 작업이 진행 중입니다"));return;}pending=new Pending(id,method,reply,t.file);pending.transferToken=t.token;
@@ -360,5 +400,5 @@ public class MainActivity extends Activity {
     }
     @Override public void onBackPressed(){if(BuildConfig.STUDIO.equals("slide")){requestSlideBack();return;}if(BuildConfig.STUDIO.equals("sheet")&&sheetViewer){sheetEscape(null,"system-back");return;}if(BuildConfig.STUDIO.equals("sheet")&&root!=null){WindowInsetsCompat insets=ViewCompat.getRootWindowInsets(root);if(insets!=null&&insets.isVisible(WindowInsetsCompat.Type.ime())){WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView()).hide(WindowInsetsCompat.Type.ime());return;}}if(fullscreen!=null){hideFullscreen();return;}if(web==null){finish();return;}if(BuildConfig.STUDIO.equals("sheet")){web.evaluateJavascript("window.dispatchEvent(new Event('sheet-studio-android-back',{cancelable:true}))",null);return;}web.evaluateJavascript("window.OfficeStudioHost?window.OfficeStudioHost.back():false",value->{if("false".equals(value)||"null".equals(value))finish();});}
     @Override protected void onPause(){if(web!=null)web.evaluateJavascript("document.dispatchEvent(new Event('visibilitychange'));window.dispatchEvent(new Event('pagehide'));",null);super.onPause();}
-    @Override protected void onDestroy(){destroyed=true;try{unregisterReceiver(shareReceiver);}catch(Exception ignored){}if(chooser!=null)chooser.onReceiveValue(null);io.execute(()->{if(transfer!=null)try{transfer.out.close();transfer.file.delete();}catch(Exception ignored){}for(ImportFile f:imports.values())f.file.delete();imports.clear();});io.shutdown();if(web!=null){root.removeView(web);web.destroy();}super.onDestroy();}
+    @Override protected void onDestroy(){destroyed=true;if(sheetPrintJob!=null)try{sheetPrintJob.cancel();}catch(Exception ignored){}if(sheetPrintAdapter!=null)sheetPrintAdapter.onFinish();try{unregisterReceiver(shareReceiver);}catch(Exception ignored){}if(chooser!=null)chooser.onReceiveValue(null);io.execute(()->{if(transfer!=null)try{transfer.out.close();transfer.file.delete();}catch(Exception ignored){}for(ImportFile f:imports.values())f.file.delete();imports.clear();});io.shutdown();if(web!=null){root.removeView(web);web.destroy();}super.onDestroy();}
 }

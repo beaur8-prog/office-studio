@@ -267,4 +267,68 @@ public class SheetWindowInstrumentedTest {
         }finally{device.executeShellCommand("wm size reset");device.executeShellCommand("wm density reset");}
     }
 
+    androidx.test.uiautomator.UiObject2 printObject(androidx.test.uiautomator.BySelector selector,String name) throws Exception {
+        UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        androidx.test.uiautomator.UiObject2 object=device.wait(androidx.test.uiautomator.Until.findObject(selector),30000);
+        if(object==null){screenshot("print-"+name);File file=new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null),"sheet-qa/print-window.xml");device.dumpWindowHierarchy(file);fail("Missing print control: "+name);}
+        return object;
+    }
+    void openNativePrint(ActivityScenario<MainActivity> s,String scope,String orientation) throws Exception {
+        js(s,"document.querySelector('.android-header [data-mobile=more]').click()");
+        waitJS(s,"!!document.querySelector('[data-mobile=print]')");js(s,"document.querySelector('[data-mobile=print]').click()");
+        waitJS(s,"!!document.querySelector('#print-scope')");
+        js(s,"(()=>{const q=document.querySelector('#print-scope');q.value="+JSONObject.quote(scope)+";q.dispatchEvent(new Event('change'));document.querySelector('#print-orientation').value="+JSONObject.quote(orientation)+";document.querySelector('#print-object-layout').value='pages';if("+JSONObject.quote(scope)+"==='selection'){document.querySelector('#print-charts').checked=false;document.querySelector('#print-images').checked=false;}document.querySelector('[role=dialog][aria-label=인쇄] .primary').click();})()");
+        printObject(androidx.test.uiautomator.By.res("com.android.printspooler","print_button"),"preview");
+    }
+    void saveNativePdf(ActivityScenario<MainActivity> s,String name,boolean letter,boolean landscape,int pages) throws Exception {
+        UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        androidx.test.uiautomator.UiObject2 destination=printObject(androidx.test.uiautomator.By.res("com.android.printspooler","destination_spinner"),"destination");
+        if(!device.hasObject(androidx.test.uiautomator.By.text("Save as PDF"))){destination.click();printObject(androidx.test.uiautomator.By.text("Save as PDF"),"pdf-destination").click();}
+        if(letter){
+            if(!device.hasObject(androidx.test.uiautomator.By.res("com.android.printspooler","paper_size_spinner")))printObject(androidx.test.uiautomator.By.res("com.android.printspooler","expand_collapse_handle"),"options").click();
+            printObject(androidx.test.uiautomator.By.res("com.android.printspooler","paper_size_spinner"),"paper").click();printObject(androidx.test.uiautomator.By.text("Letter"),"letter").click();
+        }
+        long end=SystemClock.uptimeMillis()+45000;androidx.test.uiautomator.UiObject2 button=null;
+        do{button=device.findObject(androidx.test.uiautomator.By.res("com.android.printspooler","print_button"));if(button!=null&&button.isEnabled())break;SystemClock.sleep(200);}while(SystemClock.uptimeMillis()<end);
+        screenshot("print-preview-"+name);assertNotNull(button);assertTrue("PDF preview must finish",button.isEnabled());button.click();
+        end=SystemClock.uptimeMillis()+20000;while(!device.getCurrentPackageName().contains("documentsui")&&SystemClock.uptimeMillis()<end)SystemClock.sleep(150);
+        assertTrue("PDF uses the system save picker",device.getCurrentPackageName().contains("documentsui"));
+        printObject(androidx.test.uiautomator.By.clazz("android.widget.EditText"),"filename").setText("sheet-studio-"+name+".pdf");
+        printObject(androidx.test.uiautomator.By.text(java.util.regex.Pattern.compile("(?i)save")),"save").click();
+        waitJS(s,"!document.querySelector('.sheet-print-frame')");settle(s);
+        File folder=new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null),"sheet-qa");assertTrue(folder.isDirectory()||folder.mkdirs());File target=new File(folder,name+".pdf");
+        String result=device.executeShellCommand("cp /sdcard/Download/sheet-studio-"+name+".pdf "+target.getAbsolutePath());assertTrue(result,target.isFile());
+        try(android.os.ParcelFileDescriptor descriptor=android.os.ParcelFileDescriptor.open(target,android.os.ParcelFileDescriptor.MODE_READ_ONLY);android.graphics.pdf.PdfRenderer pdf=new android.graphics.pdf.PdfRenderer(descriptor)){
+            assertEquals("PDF page count",pages,pdf.getPageCount());
+            for(int n=0;n<pdf.getPageCount();n++)try(android.graphics.pdf.PdfRenderer.Page page=pdf.openPage(n)){
+                assertEquals("Paper direction",landscape,page.getWidth()>page.getHeight());
+                if(letter){assertEquals(792,page.getWidth(),2);assertEquals(612,page.getHeight(),2);}
+                android.graphics.Bitmap bitmap=android.graphics.Bitmap.createBitmap(1000,Math.round(1000f*page.getHeight()/page.getWidth()),android.graphics.Bitmap.Config.ARGB_8888);bitmap.eraseColor(android.graphics.Color.WHITE);page.render(bitmap,null,null,android.graphics.pdf.PdfRenderer.Page.RENDER_MODE_FOR_PRINT);
+                int ink=0;for(int y=0;y<bitmap.getHeight();y+=2)for(int x=0;x<bitmap.getWidth();x+=2)if((bitmap.getPixel(x,y)&0xffffff)<0xe0e0e0)ink++;
+                assertTrue("No blank PDF page "+n,ink>50);
+                try(java.io.FileOutputStream output=new java.io.FileOutputStream(new File(folder,name+"-"+(n+1)+".png"))){bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,output);}bitmap.recycle();
+            }
+        }
+        s.onActivity(a->{assertNull("Print operation releases file lock",a.pending);assertNull(a.sheetPrintAdapter);assertEquals("Private print views released",1,a.root.getChildCount());});
+    }
+    @Test public void sheetSystemPrintingSavesOnlyWorksheetPagesAndCanCancelRetry() throws Exception {
+        try(ActivityScenario<MainActivity> s=ActivityScenario.launch(MainActivity.class)){
+            ready(s);
+            String encoded;try(java.io.InputStream input=InstrumentationRegistry.getInstrumentation().getContext().getAssets().open("sheet-print-fixture.json");java.io.ByteArrayOutputStream output=new java.io.ByteArrayOutputStream()){byte[] buffer=new byte[8192];int count;while((count=input.read(buffer))!=-1)output.write(buffer,0,count);encoded=android.util.Base64.encodeToString(output.toByteArray(),android.util.Base64.NO_WRAP);}
+            js(s,"(()=>{const bytes=Uint8Array.from(atob('"+encoded+"'),c=>c.charCodeAt(0)),d=new DataTransfer();d.items.add(new File([bytes],'print.sheet.json'));const i=document.querySelector('#file-input');i.files=d.files;i.dispatchEvent(new Event('change',{bubbles:true}));})()");
+            waitJS(s,"sheetStudio.getWorkbook().name==='인쇄 검증 문서'&&!document.querySelector('.workbook-busy')");settle(s);js(s,"sheetStudio.select(0,0,3,2)");settle(s);
+            js(s,"document.querySelector('.android-header [data-mobile=more]').click();document.querySelector('[data-mobile=read-only]').click()");waitJS(s,"sheetStudio.getMode()==='view'");
+            String before=js(s,"JSON.stringify({book:sheetStudio.getWorkbook(),history:sheetStudio.historyStats(),dirty:sheetStudio.isDirty()})");
+            openNativePrint(s,"selection","portrait");UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressBack();waitJS(s,"!document.querySelector('.sheet-print-frame')");settle(s);
+            assertEquals(before,js(s,"JSON.stringify({book:sheetStudio.getWorkbook(),history:sheetStudio.historyStats(),dirty:sheetStudio.isDirty()})"));s.onActivity(a->assertNull(a.pending));
+            openNativePrint(s,"selection","portrait");saveNativePdf(s,"print-selection",false,false,1);
+            openNativePrint(s,"sheet","landscape");saveNativePdf(s,"print-landscape",false,true,4);
+            openNativePrint(s,"sheet","landscape");saveNativePdf(s,"print-letter",true,true,4);
+            assertEquals(before,js(s,"JSON.stringify({book:sheetStudio.getWorkbook(),history:sheetStudio.historyStats(),dirty:sheetStudio.isDirty()})"));
+            js(s,"window.__badPrint='';sheetStudioAndroid.printDocument({html:'invalid',title:'invalid',paper:{name:'A4',width:210,height:297},pageCount:1}).catch(e=>window.__badPrint=e.message)");waitJS(s,"!!__badPrint");s.onActivity(a->assertNull(a.pending));
+            openNativePrint(s,"selection","portrait");UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressBack();waitJS(s,"!document.querySelector('.sheet-print-frame')");s.onActivity(a->{assertNull(a.pending);assertNull(a.sheetPrintAdapter);});
+            assertEquals("true",js(s,"!document.querySelector('[role=dialog][aria-label=\\\"앱을 닫을까요?\\\"]')"));
+        }catch(Exception|AssertionError failure){screenshot("print-failure");File dump=new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null),"sheet-qa/print-failure.xml");UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).dumpWindowHierarchy(dump);throw failure;}
+    }
+
 }

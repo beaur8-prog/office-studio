@@ -1,6 +1,6 @@
 {
   "sheet": {
-    "version": "1.0.7",
+    "version": "1.0.8",
     "assetFiles": [
       {
         "path": "android-icon.svg",
@@ -15,17 +15,17 @@
       {
         "path": "app-version.json",
         "bytes": 21,
-        "sha256": "5748e8f63082ac1544bd6822719b1869687349735cdb2c1fb7b771fb8c0fddc8"
+        "sha256": "4055aa45e549419f57fa2a6cff4c51c31d850256c2eaef09ea76d33bbf99742e"
+      },
+      {
+        "path": "assets/index-B9meK7og.js",
+        "bytes": 1033411,
+        "sha256": "ce45a60364c455f0fd734ee7c3c648835be414801b8d9faf41967cade6c7383b"
       },
       {
         "path": "assets/index-BFN4OcMv.css",
         "bytes": 62157,
         "sha256": "c70cf6c274ba7f3ddac9f1185a1022765420559c18c5ce921af690696a159f63"
-      },
-      {
-        "path": "assets/index-DNp2FE_G.js",
-        "bytes": 1030308,
-        "sha256": "c9345d4283187eba854e7f71fdfa0b78ddced0489d0f625fd832b1b8531f2264"
       },
       {
         "path": "assets/spreadsheet-BTv7Xkas.js",
@@ -38,14 +38,14 @@
         "sha256": "b0148384fbee630b679928d0a9ef71f1d9a179fe8c1a6d18d422bb4e6c1bdf61"
       },
       {
-        "path": "assets/workbook-worker-DWTJNxHi.js",
-        "bytes": 1735526,
-        "sha256": "94a8dec92858f14275c0f45009edcbb44738571a843ad17659e3d3a0c5d3fe67"
+        "path": "assets/workbook-worker-ixgEsPKL.js",
+        "bytes": 1735807,
+        "sha256": "a660e6758e8afe5d28f10ee671a610026b747cc1c4e76e4c6c208e66358750c6"
       },
       {
         "path": "index.html",
         "bytes": 784,
-        "sha256": "a10cc8faedd97450418470cefef78af7b301c12f8c42b189846627417fa8855c"
+        "sha256": "1100c87d42e5230e08aa58270dad398f2abe31c51fb5d83dd6913598f257cbd1"
       },
       {
         "path": "THIRD-PARTY-NOTICES.txt",
@@ -58,7 +58,7 @@
     "adaptiveIcon": true,
     "roundIcon": true,
     "monochromeIcon": true,
-    "sourceCommit": "418f39cf3fe4bb966714739bb66fb66adde1541b"
+    "sourceCommit": "b205b5a81c3341b06a668d2d9f6be93aed6a1073"
   },
   "slide": {
     "version": "1.0.5",
