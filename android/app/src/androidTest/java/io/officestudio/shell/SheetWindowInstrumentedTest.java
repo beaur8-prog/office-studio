@@ -38,10 +38,16 @@ public class SheetWindowInstrumentedTest {
         assertTrue("Never use the user's production package",InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName().endsWith(".qa"));
         waitJS(s,"!!window.sheetStudio && document.body.classList.contains('android-fullscreen')");
         UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        androidx.test.uiautomator.UiObject2 guide=device.findObject(androidx.test.uiautomator.By.text("Got it"));
-        if(guide==null)guide=device.wait(androidx.test.uiautomator.Until.findObject(androidx.test.uiautomator.By.text("Got it")),1500);if(guide!=null)guide.click();device.waitForIdle();
-        long end=SystemClock.uptimeMillis()+10000;boolean[] focused={false};
-        do{s.onActivity(a->focused[0]=a.hasWindowFocus());if(!focused[0])SystemClock.sleep(100);}while(!focused[0]&&SystemClock.uptimeMillis()<end);
+        // First-boot SystemUI can render the immersive guide after the page is
+        // ready and return focus slowly on a cold CI emulator. Keep checking
+        // the real guide throughout readiness instead of missing it once.
+        long end=SystemClock.uptimeMillis()+30000;boolean[] focused={false};
+        do{
+            androidx.test.uiautomator.UiObject2 guide=device.findObject(androidx.test.uiautomator.By.text("Got it"));
+            if(guide!=null)guide.click();device.waitForIdle(1000);
+            s.onActivity(a->focused[0]=a.hasWindowFocus());if(!focused[0])SystemClock.sleep(200);
+        }while(!focused[0]&&SystemClock.uptimeMillis()<end);
+        if(!focused[0])screenshot("startup-window-focus");
         assertTrue("Wait for the immersive guide to return window focus",focused[0]);
         waitJS(s,"!document.querySelector('.workbook-busy') && !!document.getElementById('android-cell-0-0')");
         // Insets and WebView focus can still settle after the OS guide closes.
