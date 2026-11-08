@@ -12,11 +12,11 @@
   try{let offset=0;while(offset<bytes.length){const reply=await request('read',{token:meta.token,offset}),text=atob(reply.chunk);if(reply.offset!==offset||!text.length||offset+text.length>bytes.length)throw new Error('파일 내용을 끝까지 읽지 못했습니다');for(let i=0;i<text.length;i++)bytes[offset+i]=text.charCodeAt(i);offset+=text.length;}return {name:meta.name,mime:meta.mime,type:meta.mime,data:bytes,requestId:meta.requestId};}
   finally{await request('release',{token:meta.token}).catch(()=>{});}
  }
- async function output(file,method){
+ async function output(file,method,params={}){
   const bytes=file.data instanceof Uint8Array?file.data:new Uint8Array(file.data);
   if(bytes.byteLength>limit)throw new Error('Android 파일은 128 MiB 이하여야 합니다');
   const transfer=await request('begin',{name:file.name,mime:file.mime||file.type||'application/octet-stream',bytes:bytes.byteLength});
-  try{for(let offset=0;offset<bytes.length;offset+=24576)await request('append',{token:transfer.token,offset,chunk:encode(bytes.subarray(offset,offset+24576))});return await request(method,{token:transfer.token});}
+  try{for(let offset=0;offset<bytes.length;offset+=24576)await request('append',{token:transfer.token,offset,chunk:encode(bytes.subarray(offset,offset+24576))});return await request(method,{...params,token:transfer.token});}
   catch(error){await request('abort',{token:transfer.token}).catch(()=>{});throw error;}
  }
  const openFile=async()=>readFile(await request('open'));
@@ -32,7 +32,7 @@
   SystemBars:{hide:()=>request('systemBars',{hidden:true}),show:()=>request('systemBars',{hidden:false})}
  }:{};
  window.Capacitor={getPlatform:()=> 'android',isNativePlatform:()=>true,Plugins:nativePlugins,isPluginAvailable:name=>Object.hasOwn(nativePlugins,name),registerPlugin:name=>nativePlugins[name]};
- window.wordAndroid={...(window.__studioHostConfig?.studio==='word'?{setImmersiveMode:enabled=>request('systemBars',{hidden:!!enabled})}:{}),openFile,saveFile:async file=>(await save(file)).completed?'completed':'cancelled',shareFile:async file=>(await share(file)).completed?'completed':'cancelled',onOpenFile:subscribe,onBack:fn=>{backListeners.add(fn);return()=>backListeners.delete(fn);},close:()=>{void request('close');}};
+ window.wordAndroid={...(window.__studioHostConfig?.studio==='word'?{setImmersiveMode:enabled=>request('systemBars',{hidden:!!enabled}),printDocument:async document=>(await output(document,'wordPrint',{pageWidthMils:document.pageWidthMils,pageHeightMils:document.pageHeightMils,pages:document.pages})).status}:{}),openFile,saveFile:async file=>(await save(file)).completed?'completed':'cancelled',shareFile:async file=>(await share(file)).completed?'completed':'cancelled',onOpenFile:subscribe,onBack:fn=>{backListeners.add(fn);return()=>backListeners.delete(fn);},close:()=>{void request('close');}};
  window.sheetStudioAndroid={protocolVersion:1,platform:'android',resumeSession:true,openFile,saveCopy:save,shareFile:share,writeClipboard:clipboard,onOpenFile:subscribe,takeRequestedFile:async()=>null};
  window.slideStudioAndroid={openFile,saveFile:async file=>(await save(file)).completed===true,shareFile:share,onOpenFile:subscribe,print:async()=>request('print')};
  Object.defineProperty(navigator,'canShare',{configurable:true,value:({files}={})=>!!files&&files.length===1&&files[0].size<=limit});

@@ -20,10 +20,10 @@ adb shell getprop ro.build.version.sdk >> "$out/$profile-device.txt"
 adb shell settings put global window_animation_scale 0
 adb shell settings put global transition_animation_scale 0
 adb shell settings put global animator_duration_scale 0
-adb shell am instrument -w -r -e studioQaProfile "$profile" -e class io.officestudio.shell.WordViewerInstrumentedTest io.officestudio.word.test/androidx.test.runner.AndroidJUnitRunner > "$out/$profile.log" 2>&1
+adb shell am instrument -w -r -e studioQaProfile "$profile" -e class io.officestudio.shell.WordViewerInstrumentedTest,io.officestudio.shell.WordPrintInstrumentedTest io.officestudio.word.test/androidx.test.runner.AndroidJUnitRunner > "$out/$profile.log" 2>&1
 cat "$out/$profile.log"
 adb pull /sdcard/Android/data/io.officestudio.word/files/viewer-qa "$out/$profile-shots" || true
 adb logcat -d > "$out/$profile-logcat.txt"
 adb exec-out screencap -p > "$out/$profile.png"
-grep -q 'OK (3 tests)' "$out/$profile.log"
+grep -q 'OK (5 tests)' "$out/$profile.log"
 if grep -Eq 'FAILURES!!!|INSTRUMENTATION_FAILED|Process crashed' "$out/$profile.log"; then exit 1; fi

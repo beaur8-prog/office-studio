@@ -31,6 +31,7 @@ public class MainActivity extends Activity {
     final Map<String, ImportFile> imports = new ConcurrentHashMap<>();
     Transfer transfer;
     Pending pending;
+    WordPrintSession wordPrint;
     ValueCallback<Uri[]> chooser;
     Uri incoming;
     boolean ready, destroyed, immersive;
@@ -131,6 +132,21 @@ public class MainActivity extends Activity {
             case "clipboard":android.content.ClipboardManager clipboard=(android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);clipboard.setPrimaryClip(a.optString("html").isEmpty()?ClipData.newPlainText("Studio",a.optString("text")):ClipData.newHtmlText("Studio",a.optString("text"),a.optString("html")));success(id,reply,true);break;
             case "readClipboard":android.content.ClipboardManager cm=(android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);ClipData clip=cm.getPrimaryClip();String text=clip!=null&&clip.getItemCount()>0?clip.getItemAt(0).coerceToText(this).toString():"";if(text.length()>1024*1024)throw new IOException("클립보드 내용이 너무 큽니다");success(id,reply,text);break;
             case "close":success(id,reply,true);finish();break;
+            case "wordPrint":{
+                if(!BuildConfig.STUDIO.equals("word"))throw new IOException("지원하지 않는 Android 요청입니다");
+                if(pending!=null||chooser!=null||wordPrint!=null)throw new IOException("다른 파일 작업이 진행 중입니다");
+                Transfer t=transfer;
+                if(t==null||!t.token.equals(a.getString("token"))||t.size!=t.written||t.size==0||!t.mime.equals("text/html"))throw new IOException("인쇄 데이터를 완성하지 못했습니다.");
+                int width=a.getInt("pageWidthMils"),height=a.getInt("pageHeightMils"),count=a.getInt("pages");
+                if(width<1000||height<1000||width>48000||height>48000||count<1||count>10000)throw new IOException("인쇄 용지 정보를 확인하지 못했습니다.");
+                t.out.close();transfer=null;
+                Pending request=new Pending(id,"wordPrint",reply,t.file);pending=request;
+                wordPrint=new WordPrintSession(this,t.file,width,height,count,io,(status,error)->{
+                    if(pending==request)pending=null;wordPrint=null;
+                    if(error!=null)failure(id,reply,error);else success(id,reply,obj("status",status));
+                });
+                wordPrint.start();break;
+            }
             case "print":if(pending!=null)throw new IOException("다른 파일 작업이 진행 중입니다");pending=new Pending(id,"print",reply,null);PrintDocumentAdapter delegate=web.createPrintDocumentAdapter(getString(R.string.app_name));PrintDocumentAdapter adapter=new PrintDocumentAdapter(){@Override public void onStart(){delegate.onStart();}@Override public void onLayout(PrintAttributes old,PrintAttributes next,CancellationSignal signal,LayoutResultCallback cb,Bundle extras){delegate.onLayout(old,next,signal,cb,extras);}@Override public void onWrite(android.print.PageRange[] pages,ParcelFileDescriptor dest,CancellationSignal signal,WriteResultCallback cb){delegate.onWrite(pages,dest,signal,cb);}@Override public void onFinish(){delegate.onFinish();if(pending!=null&&pending.method.equals("print")){Pending x=pending;pending=null;success(x.id,x.reply,obj("completed",true));}}};((PrintManager)getSystemService(PRINT_SERVICE)).print(getString(R.string.app_name),adapter,new PrintAttributes.Builder().build());break;
             default:failure(id,reply,new IOException("지원하지 않는 Android 요청입니다"));
         }
@@ -199,5 +215,5 @@ public class MainActivity extends Activity {
         }
     }
     @Override protected void onPause(){if(web!=null)web.evaluateJavascript("document.dispatchEvent(new Event('visibilitychange'));window.dispatchEvent(new Event('pagehide'));",null);super.onPause();}
-    @Override protected void onDestroy(){destroyed=true;try{unregisterReceiver(shareReceiver);}catch(Exception ignored){}if(chooser!=null)chooser.onReceiveValue(null);io.execute(()->{if(transfer!=null)try{transfer.out.close();transfer.file.delete();}catch(Exception ignored){}for(ImportFile f:imports.values())f.file.delete();imports.clear();});io.shutdown();if(web!=null){root.removeView(web);web.destroy();}super.onDestroy();}
+    @Override protected void onDestroy(){destroyed=true;if(wordPrint!=null)wordPrint.close();try{unregisterReceiver(shareReceiver);}catch(Exception ignored){}if(chooser!=null)chooser.onReceiveValue(null);io.execute(()->{if(transfer!=null)try{transfer.out.close();transfer.file.delete();}catch(Exception ignored){}for(ImportFile f:imports.values())f.file.delete();imports.clear();});io.shutdown();if(web!=null){root.removeView(web);web.destroy();}super.onDestroy();}
 }

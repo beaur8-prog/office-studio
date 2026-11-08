@@ -60,13 +60,22 @@ jobs:
           cp tests/fixtures/hwp/landscape-pagination.hwp ../office/android/app/src/debug/assets/qa/
           node --input-type=module <<'JS'
           import fs from 'node:fs/promises';
-          import {Document,Packer,Paragraph} from 'docx';
+          import {Document,Packer,Paragraph,Table,TableRow,TableCell,ImageRun,SectionType,PageOrientation} from 'docx';
+          import sharp from 'sharp';
           const root='../office/android/app/src/word/assets/public/index.html';
           let html=await fs.readFile(root,'utf8');
           html=html.replace('<head>','<head><script>window.__studioHostConfig={studio:"word",version:"1.0.1"};</script><script src="../studio-host.js"></script>');
           await fs.writeFile(root,html);
           const doc=new Document({sections:[{children:[1,2,3].map(i=>new Paragraph({text:`QA PAGE ${i}`,pageBreakBefore:i>1}))}]});
           await fs.writeFile('../office/android/app/src/debug/assets/qa/viewer.docx',await Packer.toBuffer(doc));
+          const image=await sharp({create:{width:80,height:40,channels:4,background:'#e32727'}}).png().toBuffer();
+          const printDoc=new Document({sections:[{children:[
+            new Paragraph('PRINT PAGE 1 한글 인쇄 확인'),
+            new Table({rows:[new TableRow({children:[new TableCell({columnSpan:2,children:[new Paragraph('PRINT MERGED CELL 123456789')]})]}),new TableRow({children:[new TableCell({children:[new Paragraph('LEFT CELL')]}),new TableCell({children:[new Paragraph('RIGHT CELL')]})]})]}),
+            new Paragraph({children:[new ImageRun({type:'png',data:image,transformation:{width:80,height:40}})]}),
+            new Paragraph({text:'PRINT PAGE 2 LAST PORTRAIT',pageBreakBefore:true})
+          ]},{properties:{type:SectionType.NEXT_PAGE,page:{size:{width:16838,height:11906,orientation:PageOrientation.LANDSCAPE}}},children:[new Paragraph('PRINT PAGE 3 LANDSCAPE END 987654321')]}]});
+          await fs.writeFile('../office/android/app/src/debug/assets/qa/print.docx',await Packer.toBuffer(printDoc));
           JS
       - name: Test native bridge flavor boundaries
         working-directory: office
