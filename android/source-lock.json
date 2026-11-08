@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "1.0.4",
+  "version": "1.0.5",
   "versionCode": 2,
   "apps": {
     "sheet": {
@@ -13,11 +13,11 @@
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",
-      "ref": "codex/android-1.0.2",
-      "sourceCommit": "656b54417f1f66f43698c73ce318374ead8ff635",
-      "version": "1.0.2",
-      "versionCode": 3,
-      "upstreamCommit": "1ee351b9398c99a5f411e3e9dd941ce5707fbb21"
+      "ref": "codex/android-1.0.3",
+      "sourceCommit": "448121d45db84cc64880dfd490966fd4528fe03a",
+      "version": "1.0.3",
+      "versionCode": 4,
+      "upstreamCommit": "80e04b9fc84f7970d2498e9d8aa1eb3ce8e03d4a"
     },
     "word": {
       "repository": "beaur8-prog/word-studio",
@@ -32,13 +32,13 @@
   "gradle": "8.13",
   "webkit": "1.14.0",
   "changedApps": [
-    "sheet"
+    "slide"
   ],
   "tests": {
     "executed": false,
     "status": "skipped",
-    "reason": "Fast publication without tests as previously requested"
+    "reason": "Fast release without tests as previously requested"
   },
   "combinedZIP": false,
-  "nativeSlideHostUpstreamCommit": "584be72a8d8cc57a493f00eeea3c847d9d9f8cbb"
+  "nativeSlideHostUpstreamCommit": "8d121c3116af7aba700f06fe21d6082c703fab21"
 }
