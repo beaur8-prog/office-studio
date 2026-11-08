@@ -25,7 +25,11 @@
  async function flushIncoming(){if(importing||!listeners.size||!incoming.length)return;importing=true;const meta=incoming.shift();try{const file=await readFile(meta);if(file)for(const receive of [...listeners])receive(file);}catch(error){alert(error.message);}finally{importing=false;if(incoming.length)void flushIncoming();}}
  const save=file=>output(file,'save'),share=file=>output(file,'share');
  const clipboard=async value=>request('clipboard',{text:typeof value==='string'?value:value.text||'',html:typeof value==='object'?value.html||'':''});
- window.Capacitor={getPlatform:()=> 'android',isNativePlatform:()=>true};
+ const nativePlugins=window.__studioHostConfig?.studio==='slide'?{
+  SystemBars:{hide:()=>request('systemBars',{hidden:true}),show:()=>request('systemBars',{hidden:false})},
+  ScreenOrientation:{lock:({orientation})=>request('orientation',{orientation}),unlock:()=>request('orientation',{orientation:'unlock'})}
+ }:{};
+ window.Capacitor={getPlatform:()=> 'android',isNativePlatform:()=>true,Plugins:nativePlugins,isPluginAvailable:name=>Object.hasOwn(nativePlugins,name),registerPlugin:name=>nativePlugins[name]};
  window.wordAndroid={openFile,saveFile:async file=>(await save(file)).completed?'completed':'cancelled',shareFile:async file=>(await share(file)).completed?'completed':'cancelled',onOpenFile:subscribe,onBack:fn=>{backListeners.add(fn);return()=>backListeners.delete(fn);},close:()=>{void request('close');}};
  window.sheetStudioAndroid={protocolVersion:1,platform:'android',resumeSession:true,openFile,saveCopy:save,shareFile:share,writeClipboard:clipboard,onOpenFile:subscribe,takeRequestedFile:async()=>null};
  window.slideStudioAndroid={openFile,saveFile:async file=>(await save(file)).completed===true,shareFile:share,onOpenFile:subscribe,print:async()=>request('print')};

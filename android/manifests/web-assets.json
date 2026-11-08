@@ -50,7 +50,7 @@
     "monochromeIcon": true
   },
   "slide": {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "assetFiles": [
       {
         "path": "assets/__vite-browser-external-BIHI7g3E.js",
@@ -218,14 +218,14 @@
         "sha256": "e25d2d98eb5361bf9df83a5f53a73708042cf7d530d97d6b96ea7a2d831d65d5"
       },
       {
-        "path": "assets/index-C2bQlAfF.css",
-        "bytes": 109319,
-        "sha256": "984da2d46f9735955fa9f67e97540aa7146ab1471ee9d92ad117370d6cd5ce19"
+        "path": "assets/index-B8-ijbkr.css",
+        "bytes": 108985,
+        "sha256": "6f72a62c5c4ca91d3843ddf73d4c3a234a5f39aa05d31c77d00009984e999028"
       },
       {
-        "path": "assets/index-t5UmXScs.js",
-        "bytes": 2098258,
-        "sha256": "b30eab0693f36a3f13bfb8efdf7c08271199f1a9e9442a0acf2d7a9854f6175b"
+        "path": "assets/index-Dhan7iUx.js",
+        "bytes": 2098733,
+        "sha256": "e8b5379c36ea7beaa9ba3223b1a9e13f51340db0a6048694c7daf312cc5ad7db"
       },
       {
         "path": "assets/metafile.worker-CvWubWPQ.js",
@@ -233,9 +233,9 @@
         "sha256": "9267eb37280c16ffdeea6239932e8dd1d1e4fe43205f436c9fb50f484783a531"
       },
       {
-        "path": "assets/UTIF-fT7WMwOR.js",
+        "path": "assets/UTIF-DKIx2JPe.js",
         "bytes": 85484,
-        "sha256": "d4b56fd1f6c57a5218a9d60f17f24cdf618f20e2a1df1172378dd9f7546a93f0"
+        "sha256": "a3b02a91f58819c4be8f3d827c12710c781e02c11c8ef7f91032ea5c5429e80c"
       },
       {
         "path": "fonts/NanumBarunGothic.ttf",
@@ -255,7 +255,7 @@
       {
         "path": "index.html",
         "bytes": 479,
-        "sha256": "c4d854328873bc4f0c1304ff1109ff66183f222425c808b978601d01c3e36a33"
+        "sha256": "e9aa722b64a6feada48fb00b818eac9a0ad71c62b8dc2d6547615b13c498aaa3"
       },
       {
         "path": "licenses/Apache-POI-LICENSE.txt",

@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.0.0",
-  "versionCode": 1,
+  "version": "1.0.1",
+  "versionCode": 2,
   "apps": {
     "sheet": {
       "repository": "beaur8-prog/sheet-studio",
@@ -11,9 +11,11 @@
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",
-      "ref": "release/android-1.0.0",
-      "sourceCommit": "ebf6010b0231b492eb45c35cbc75cb5bd22dc1eb",
-      "version": "1.0.0"
+      "ref": "codex/android-1.0.1",
+      "sourceCommit": "440b6191e9379aa35de98f8fb5e4884e57be25a6",
+      "version": "1.0.1",
+      "versionCode": 2,
+      "upstreamCommit": "0dd3e1a4841c8ab3ec87b5391d5b2f40ad9134eb"
     },
     "word": {
       "repository": "beaur8-prog/word-studio",
@@ -26,5 +28,13 @@
   "targetSdk": 36,
   "androidGradlePlugin": "8.13.2",
   "gradle": "8.13",
-  "webkit": "1.14.0"
+  "webkit": "1.14.0",
+  "changedApps": [
+    "slide"
+  ],
+  "tests": {
+    "executed": false,
+    "status": "skipped",
+    "reason": "Explicit user request to release without tests"
+  }
 }
