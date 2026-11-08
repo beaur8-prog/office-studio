@@ -10,9 +10,9 @@
 
 # 오피스 스튜디오 Android
 
-**Office Studio Android 1.0.5 · 2026년 11월 08일 · Slide Studio 업데이트**
+**Office Studio Android 1.0.6 · 2026년 11월 08일 · Word Studio 업데이트**
 
-Slide Studio를 **1.0.3**로 갱신했습니다. Sheet Studio **1.0.2**, Word Studio **1.0.0**은 기존 파일을 그대로 제공합니다.
+Word Studio를 **1.0.1**로 갱신했습니다. Sheet Studio **1.0.2**, Slide Studio **1.0.3**은 기존 파일을 그대로 제공합니다.
 
 표·발표 자료·문서를 보고 기본 터치 편집을 할 수 있는 **Sheet Studio·Slide Studio·Word Studio**를 제공합니다. 세 앱은 각각 설치하며 앱 목록에 고유한 아이콘으로 표시됩니다.
 
@@ -24,9 +24,9 @@ Slide Studio를 **1.0.3**로 갱신했습니다. Sheet Studio **1.0.2**, Word St
 | --- | --- | --- | --- |
 | ![Sheet Studio 아이콘](https://github.com/beaur8-prog/office-studio/releases/download/android-v1.0.0/Sheet-Studio-Android-icon.png) | **Sheet Studio 1.0.2** | [APK 받기](https://github.com/beaur8-prog/office-studio/releases/download/android-v1.0.4/Sheet-Studio-1.0.2-Android.apk) | 5.9 MiB |
 | ![Slide Studio 아이콘](https://github.com/beaur8-prog/office-studio/releases/download/android-v1.0.0/Slide-Studio-Android-icon.png) | **Slide Studio 1.0.3** | [APK 받기](https://github.com/beaur8-prog/office-studio/releases/download/android-v1.0.5/Slide-Studio-1.0.3-Android.apk) | 12.9 MiB |
-| ![Word Studio 아이콘](https://github.com/beaur8-prog/office-studio/releases/download/android-v1.0.0/Word-Studio-Android-icon.png) | **Word Studio 1.0.0** | [APK 받기](https://github.com/beaur8-prog/office-studio/releases/download/android-v1.0.0/Word-Studio-1.0.0-Android.apk) | 36.3 MiB |
+| ![Word Studio 아이콘](https://github.com/beaur8-prog/office-studio/releases/download/android-v1.0.0/Word-Studio-Android-icon.png) | **Word Studio 1.0.1** | [APK 받기](https://github.com/beaur8-prog/office-studio/releases/download/android-v1.0.6/Word-Studio-1.0.1-Android.apk) | 36.3 MiB |
 
-[SHA-256 확인 파일](https://github.com/beaur8-prog/office-studio/releases/download/android-v1.0.5/SHA256SUMS-android.txt) · [빌드 구성·포함 소스](https://github.com/beaur8-prog/office-studio/releases/download/android-v1.0.5/BUILD-android.json) · [1.0.0 배포 당시 검증 기록](https://github.com/beaur8-prog/office-studio/releases/download/android-v1.0.0/ANDROID-VERIFICATION.json) · [GitHub 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/android-v1.0.5)
+[SHA-256 확인 파일](https://github.com/beaur8-prog/office-studio/releases/download/android-v1.0.6/SHA256SUMS-android.txt) · [빌드 구성·포함 소스](https://github.com/beaur8-prog/office-studio/releases/download/android-v1.0.6/BUILD-android.json) · [1.0.0 배포 당시 검증 기록](https://github.com/beaur8-prog/office-studio/releases/download/android-v1.0.0/ANDROID-VERIFICATION.json) · [GitHub 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/android-v1.0.6)
 
 ## 2. 설치와 실행
 
@@ -41,7 +41,7 @@ Slide Studio를 **1.0.3**로 갱신했습니다. Sheet Studio **1.0.2**, Word St
 
 - **Sheet Studio:** XLSX·CSV 등의 표 보기, 시트 이동·검색·계산값·차트 확인과 기본 셀 편집. 편집하려면 편집 모드로 전환하고, 사본 저장에서 XLSX 등 필요한 형식을 선택합니다. XLSM은 원본 보기·공유 중심으로 사용하며 매크로 작업은 PC에서 진행합니다.
 - **Slide Studio:** PPTX 보기·슬라이드 이동·검색·발표와 기본 터치 편집. 뷰어 상단의 **편집** 버튼으로 바로 편집 모드로 전환합니다. 1.0.2에는 발표 확대·이동, 이름이 표시된 터치 도구와 Android 화면 가장자리 여백 개선을 포함합니다. PPTX 저장은 Android 파일 선택기에서 사본 위치를 정하고 완료합니다. 지원하지 않는 원본 요소가 있으면 저장 안내를 확인하고 중요한 파일은 원본과 비교하세요.
-- **Word Studio:** DOCX·텍스트와 HWP/HWPX 보기, 문서 검색·쪽 이동·기본 편집. 편집한 문서는 DOCX 사본으로 저장할 수 있습니다. HWP/HWPX 원본 파일에 직접 덮어쓰는 방식은 아닙니다.
+- **Word Studio:** DOCX·텍스트와 HWP/HWPX 보기, 문서 검색·쪽 이동·기본 편집. 1.0.1에는 문서·편집 페이지 맞춤과 전체화면 스와이프 뷰어를 포함합니다. 편집한 문서는 DOCX 사본으로 저장할 수 있습니다. HWP/HWPX 원본 파일에 직접 덮어쓰는 방식은 아닙니다.
 
 읽기 화면과 편집 화면을 구분하며, 중요한 원본은 보관하고 사본으로 작업하세요. Android판은 모바일 보기·기본 편집 중심이며 PC판의 고급 메뉴·출력 기능과 차이가 있습니다.
 
@@ -67,7 +67,7 @@ Slide Studio를 **1.0.3**로 갱신했습니다. Sheet Studio **1.0.2**, Word St
 ```text
 575b9dd9e48b9648fb6f1adfc03f666d3d895f82dcb1c4afc55a146fa128a74b  Sheet-Studio-1.0.2-Android.apk
 747c6dea2123031552f416c4b204fb7f9f4183dad6e676881a4cd04d218e5a6f  Slide-Studio-1.0.3-Android.apk
-cd4cb5cafcdfbf5f1bb18df971cb82b8ccd33e689bf386754e849f2d301d3664  Word-Studio-1.0.0-Android.apk
+aad384d3bea58f3669ce4b656870715a8421f48930886eb282384def973dcfc8  Word-Studio-1.0.1-Android.apk
 ```
 
 세 앱은 같은 정식 배포 서명으로 확인했습니다. 서명 인증서 SHA-256:
@@ -78,8 +78,8 @@ c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b
 
 ## 7. 이번 배포의 확인 범위
 
-**이번 Slide Studio 1.0.3은 추가 설치·실행·기능 테스트를 생략하고 배포했습니다.** 최신 뷰어 편집 바로가기와 시작·뷰어·편집 화면의 상태바 숨김 개선을 포함합니다. 빌드 후 서명·앱 ID·버전·크기와 SHA-256을 기록했습니다. 기존 앱 ID와 서명 키를 유지하고 versionCode를 4로 올렸습니다.
+**이번 Word Studio 1.0.1은 추가 설치·실행·기능 테스트를 생략하고 배포했습니다.** 문서·편집 페이지 맞춤과 전체화면 스와이프 뷰어, 카메라 안전 여백 개선 및 해당 네이티브 연결을 포함합니다. 빌드 후 서명·앱 ID·버전·크기와 SHA-256을 기록했습니다. 기존 앱 ID와 서명 키를 유지하고 versionCode를 2로 올렸습니다.
 
-Sheet Studio **1.0.2**, Word Studio **1.0.0**은 기존 파일을 유지합니다. 위 1.0.0 검증 기록은 이전 배포 당시 결과입니다.
+Sheet Studio **1.0.2**, Slide Studio **1.0.3**은 기존 파일을 유지합니다. 위 1.0.0 검증 기록은 이전 배포 당시 결과입니다.
 
 이 문서는 리토스의 읽기 전용 공유 페이지입니다. 설치 파일은 GitHub에서도 받을 수 있습니다.
