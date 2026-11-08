@@ -5,3 +5,9 @@ archive/
 *.log
 .DS_Store
 scripts/publish-lithos.cjs
+
+android/.gradle/
+android/**/build/
+android/local.properties
+android/app/src/*/assets/public/
+android/generated-icons/

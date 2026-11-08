@@ -1,0 +1,1 @@
+<resources><style name="AppTheme" parent="@style/BaseAppTheme"><item name="android:windowSplashScreenBackground">@color/brand</item><item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item><item name="android:windowSplashScreenIconBackgroundColor">@color/brand</item></style></resources>

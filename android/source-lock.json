@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "version": "1.0.0",
+  "versionCode": 1,
+  "apps": {
+    "sheet": {
+      "repository": "beaur8-prog/sheet-studio",
+      "ref": "release/android-1.0.0",
+      "sourceCommit": "9e7c433a41e326f6c4de2fac3473d389a0383c46",
+      "version": "1.0.0"
+    },
+    "slide": {
+      "repository": "beaur8-prog/slide-studio",
+      "ref": "release/android-1.0.0",
+      "sourceCommit": "ebf6010b0231b492eb45c35cbc75cb5bd22dc1eb",
+      "version": "1.0.0"
+    },
+    "word": {
+      "repository": "beaur8-prog/word-studio",
+      "ref": "release/android-1.0.0",
+      "sourceCommit": "493c0492dc0fce75f3dab411317acbdfc1ae98ca",
+      "version": "1.0.0"
+    }
+  },
+  "minSdk": 29,
+  "targetSdk": 36,
+  "androidGradlePlugin": "8.13.2",
+  "gradle": "8.13",
+  "webkit": "1.14.0"
+}
