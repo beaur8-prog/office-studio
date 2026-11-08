@@ -286,7 +286,18 @@ public class SheetWindowInstrumentedTest {
         if(object==null){screenshot("print-"+name);File file=new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null),"sheet-qa/print-window.xml");device.dumpWindowHierarchy(file);fail("Missing print control: "+name);}
         return object;
     }
+    void waitPrintReturn(ActivityScenario<MainActivity> s) throws Exception {
+        UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());boolean[] focus={false};long end=SystemClock.uptimeMillis()+20000;
+        do{s.onActivity(a->focus[0]=a.hasWindowFocus());if(focus[0]&&InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName().equals(device.getCurrentPackageName()))return;SystemClock.sleep(150);}while(SystemClock.uptimeMillis()<end);
+        screenshot("print-return-focus");fail("Print activity must return focus to Sheet before the next action");
+    }
+    void clickPrint(androidx.test.uiautomator.BySelector selector,String name) throws Exception {
+        long end=SystemClock.uptimeMillis()+30000;
+        do{try{androidx.test.uiautomator.UiObject2 target=printObject(selector,name);if(target.isEnabled()){target.click();return;}}catch(androidx.test.uiautomator.StaleObjectException replacingWindow){/* Re-query the control after a system activity/layout transition. */}SystemClock.sleep(150);}while(SystemClock.uptimeMillis()<end);
+        fail("Print control did not stabilize: "+name);
+    }
     void openNativePrint(ActivityScenario<MainActivity> s,String scope,String orientation) throws Exception {
+        waitPrintReturn(s);
         js(s,"document.querySelector('.android-header [data-mobile=more]').click()");
         waitJS(s,"!!document.querySelector('[data-mobile=print]')");js(s,"document.querySelector('[data-mobile=print]').click()");
         waitJS(s,"!!document.querySelector('#print-scope')");
@@ -295,19 +306,19 @@ public class SheetWindowInstrumentedTest {
     }
     void saveNativePdf(ActivityScenario<MainActivity> s,String name,boolean letter,boolean landscape,int pages) throws Exception {
         UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        androidx.test.uiautomator.UiObject2 destination=printObject(androidx.test.uiautomator.By.res("com.android.printspooler","destination_spinner"),"destination");
-        if(!device.hasObject(androidx.test.uiautomator.By.text("Save as PDF"))){destination.click();printObject(androidx.test.uiautomator.By.text("Save as PDF"),"pdf-destination").click();}
+        printObject(androidx.test.uiautomator.By.res("com.android.printspooler","destination_spinner"),"destination");
+        if(!device.hasObject(androidx.test.uiautomator.By.text("Save as PDF"))){clickPrint(androidx.test.uiautomator.By.res("com.android.printspooler","destination_spinner"),"destination");clickPrint(androidx.test.uiautomator.By.text("Save as PDF"),"pdf-destination");}
         if(letter){
-            if(!device.hasObject(androidx.test.uiautomator.By.res("com.android.printspooler","paper_size_spinner")))printObject(androidx.test.uiautomator.By.res("com.android.printspooler","expand_collapse_handle"),"options").click();
-            printObject(androidx.test.uiautomator.By.res("com.android.printspooler","paper_size_spinner"),"paper").click();printObject(androidx.test.uiautomator.By.text(java.util.regex.Pattern.compile("(?i)(?:NA )?Letter.*")),"letter").click();
+            if(!device.hasObject(androidx.test.uiautomator.By.res("com.android.printspooler","paper_size_spinner")))clickPrint(androidx.test.uiautomator.By.res("com.android.printspooler","expand_collapse_handle"),"options");
+            clickPrint(androidx.test.uiautomator.By.res("com.android.printspooler","paper_size_spinner"),"paper");clickPrint(androidx.test.uiautomator.By.text(java.util.regex.Pattern.compile("(?i)(?:NA )?Letter.*")),"letter");
         }
         long end=SystemClock.uptimeMillis()+45000;androidx.test.uiautomator.UiObject2 button=null;
-        do{button=device.findObject(androidx.test.uiautomator.By.res("com.android.printspooler","print_button"));if(button!=null&&button.isEnabled())break;SystemClock.sleep(200);}while(SystemClock.uptimeMillis()<end);
-        screenshot("print-preview-"+name);assertNotNull(button);assertTrue("PDF preview must finish",button.isEnabled());button.click();
+        do{button=device.findObject(androidx.test.uiautomator.By.res("com.android.printspooler","print_button"));try{if(button!=null&&button.isEnabled())break;}catch(androidx.test.uiautomator.StaleObjectException replacingWindow){button=null;}SystemClock.sleep(200);}while(SystemClock.uptimeMillis()<end);
+        screenshot("print-preview-"+name);assertNotNull(button);clickPrint(androidx.test.uiautomator.By.res("com.android.printspooler","print_button"),"save-pdf");
         end=SystemClock.uptimeMillis()+20000;while(!device.getCurrentPackageName().contains("documentsui")&&SystemClock.uptimeMillis()<end)SystemClock.sleep(150);
         assertTrue("PDF uses the system save picker",device.getCurrentPackageName().contains("documentsui"));
         printObject(androidx.test.uiautomator.By.clazz("android.widget.EditText"),"filename").setText("sheet-studio-"+name+".pdf");
-        printObject(androidx.test.uiautomator.By.text(java.util.regex.Pattern.compile("(?i)save")),"save").click();
+        clickPrint(androidx.test.uiautomator.By.text(java.util.regex.Pattern.compile("(?i)save")),"save");
         waitJS(s,"!document.querySelector('.sheet-print-frame')");settle(s);
         File folder=new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null),"sheet-qa");assertTrue(folder.isDirectory()||folder.mkdirs());File target=new File(folder,name+".pdf");
         String result=device.executeShellCommand("cp /sdcard/Download/sheet-studio-"+name+".pdf "+target.getAbsolutePath());assertTrue(result,target.isFile());
