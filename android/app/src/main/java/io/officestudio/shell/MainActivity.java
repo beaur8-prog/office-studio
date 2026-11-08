@@ -280,7 +280,7 @@ public class MainActivity extends Activity {
     @Override public boolean dispatchKeyEvent(KeyEvent event) {
         if ((BuildConfig.STUDIO.equals("sheet") || BuildConfig.STUDIO.equals("slide")) && event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE) {
             if(event.getAction()==KeyEvent.ACTION_DOWN && event.getRepeatCount()==0 && web!=null && !destroyed)
-                web.evaluateJavascript("window.OfficeStudioHost?.escape?.()",null);
+                web.evaluateJavascript(BuildConfig.STUDIO.equals("sheet")?"window.dispatchEvent(new Event('sheet-studio-android-escape',{cancelable:true}))":"window.OfficeStudioHost?.escape?.()",null);
             return true;
         }
         // Word's read-only page can lack a focused input. Keep Escape in the
@@ -305,7 +305,7 @@ public class MainActivity extends Activity {
     @Override public void onConfigurationChanged(android.content.res.Configuration config) {
         super.onConfigurationChanged(config);publishSheetInput();if(root!=null)ViewCompat.requestApplyInsets(root);
     }
-    @Override public void onBackPressed(){if(BuildConfig.STUDIO.equals("sheet")&&root!=null){WindowInsetsCompat insets=ViewCompat.getRootWindowInsets(root);if(insets!=null&&insets.isVisible(WindowInsetsCompat.Type.ime())){WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView()).hide(WindowInsetsCompat.Type.ime());return;}}if(fullscreen!=null){hideFullscreen();return;}if(web==null){finish();return;}web.evaluateJavascript("window.OfficeStudioHost?window.OfficeStudioHost.back():false",value->{if("false".equals(value)||"null".equals(value))finish();});}
+    @Override public void onBackPressed(){if(BuildConfig.STUDIO.equals("sheet")&&root!=null){WindowInsetsCompat insets=ViewCompat.getRootWindowInsets(root);if(insets!=null&&insets.isVisible(WindowInsetsCompat.Type.ime())){WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView()).hide(WindowInsetsCompat.Type.ime());return;}}if(fullscreen!=null){hideFullscreen();return;}if(web==null){finish();return;}if(BuildConfig.STUDIO.equals("sheet")){web.evaluateJavascript("window.dispatchEvent(new Event('sheet-studio-android-back',{cancelable:true}))",null);return;}web.evaluateJavascript("window.OfficeStudioHost?window.OfficeStudioHost.back():false",value->{if("false".equals(value)||"null".equals(value))finish();});}
     @Override protected void onPause(){if(web!=null)web.evaluateJavascript("document.dispatchEvent(new Event('visibilitychange'));window.dispatchEvent(new Event('pagehide'));",null);super.onPause();}
     @Override protected void onDestroy(){destroyed=true;try{unregisterReceiver(shareReceiver);}catch(Exception ignored){}if(chooser!=null)chooser.onReceiveValue(null);io.execute(()->{if(transfer!=null)try{transfer.out.close();transfer.file.delete();}catch(Exception ignored){}for(ImportFile f:imports.values())f.file.delete();imports.clear();});io.shutdown();if(web!=null){root.removeView(web);web.destroy();}super.onDestroy();}
 }

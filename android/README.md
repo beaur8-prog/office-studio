@@ -67,3 +67,9 @@ Sheet만 versionName 1.0.2/versionCode 3으로 빌드합니다. 기존 키와 �
 실제 개발 원본과 원격 Android 브랜치의 일치 커밋 `ccba472`를 확인했습니다. 문서·편집 페이지 맞춤과 전체화면 스와이프 뷰어 개선을 포함하며 호스트 `8e56284`의 Word 전체화면·카메라 여백·포커스 복귀를 연결했습니다. 기존 Sheet·Slide 호스트 정책과 APK는 유지합니다.
 
 Word만 versionName 1.0.1/versionCode 2로 빌드하고 기존 앱 ID·서명 키를 사용합니다. 빌드 캐시를 재사용하며 설치·실행·기능 테스트와 통합 ZIP 생성은 생략합니다. `android-v1.0.6`에는 Word APK·빌드 기록·체크섬 세 파일을 게시하고 기존 Android 공유 주소를 갱신합니다.
+
+## Sheet 1.0.4 개발 · 전체화면 입력과 Esc
+
+`codex/android-sheet-input-20261108`은 최신 통합 호스트 `7c3f7f8`을 기준으로 Sheet만 수정한다. Sheet의 Esc와 Back은 전용 DOM 이벤트를 직접 보내며 공통 브리지가 없다고 Activity를 자동 종료하지 않는다. 문서 저장·종료 확인을 거친 명시적 close API는 유지한다. Sheet는 source-lock.json의 정확한 소스로 빌드하고 Word/Slide의 소스·버전·공개 APK는 변경하지 않는다.
+
+시험은 `-PsheetQa`, 별도 ID `io.officestudio.sheet.qa`, versionName 1.0.4-qa/versionCode 5만 사용한다. `node android/qa/prepare-sheet-assets.cjs <정확한 Sheet 소스>` 후 `./gradlew -PsheetQa :app:assembleSheetDebug :app:assembleSheetDebugAndroidTest`로 만든다. 공개 배포·리토스 갱신은 수행하지 않는다. 결과는 `android/qa/SHEET-RUNTIME-20261108.md`에 기록한다.

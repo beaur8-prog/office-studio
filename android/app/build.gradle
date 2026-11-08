@@ -5,11 +5,11 @@ android {
  buildToolsVersion '36.0.0'
  defaultConfig { minSdk 29; targetSdk 36; versionCode 1; versionName '1.0.0'; testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner' }
  signingConfigs { release { storeFile file(System.getenv('OFFICE_ANDROID_KEYSTORE') ?: '/nonexistent/release.p12'); storePassword System.getenv('OFFICE_ANDROID_PASSWORD'); keyAlias 'office-studio-android'; keyPassword System.getenv('OFFICE_ANDROID_PASSWORD') } }
- buildTypes { release { debuggable false; minifyEnabled false; signingConfig signingConfigs.release } }
- testBuildType 'release'
+ buildTypes { debug { if(project.hasProperty('sheetQa')) { applicationIdSuffix '.qa'; versionNameSuffix '-qa' } }; release { debuggable false; minifyEnabled false; signingConfig signingConfigs.release } }
+ testBuildType(project.hasProperty('sheetQa')?'debug':'release')
  flavorDimensions += 'studio'
  productFlavors {
-  sheet { dimension 'studio'; versionCode 4; versionName '1.0.3'; applicationId 'io.officestudio.sheet'; resValue 'string','app_name','Sheet Studio'; buildConfigField 'String','STUDIO','"sheet"' }
+  sheet { dimension 'studio'; versionCode 5; versionName '1.0.4'; applicationId 'io.officestudio.sheet'; resValue 'string','app_name','Sheet Studio'; buildConfigField 'String','STUDIO','"sheet"' }
   slide { dimension 'studio'; versionCode 5; versionName '1.0.4'; applicationId 'io.officestudio.slide'; resValue 'string','app_name','Slide Studio'; buildConfigField 'String','STUDIO','"slide"' }
   word { dimension 'studio'; versionCode 3; versionName '1.0.2'; applicationId 'io.officestudio.word'; resValue 'string','app_name','Word Studio'; buildConfigField 'String','STUDIO','"word"' }
  }
