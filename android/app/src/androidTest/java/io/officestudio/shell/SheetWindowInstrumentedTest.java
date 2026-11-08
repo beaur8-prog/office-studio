@@ -32,14 +32,14 @@ public class SheetWindowInstrumentedTest {
     void waitJS(ActivityScenario<MainActivity> s,String expression) throws Exception {
         long end=SystemClock.uptimeMillis()+60000;
         while(SystemClock.uptimeMillis()<end){if("true".equals(js(s,expression)))return;SystemClock.sleep(150);}
-        fail("Timed out: "+expression+"; body="+js(s,"document.body.innerText.slice(-900)"));
+        screenshot("failed-wait");fail("Timed out: "+expression+"; body="+js(s,"document.body.innerText.slice(-900)"));
     }
     void ready(ActivityScenario<MainActivity> s) throws Exception {
         assertTrue("Never use the user's production package",InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName().endsWith(".qa"));
         waitJS(s,"!!window.sheetStudio && document.body.classList.contains('android-fullscreen')");
         UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         androidx.test.uiautomator.UiObject2 guide=device.findObject(androidx.test.uiautomator.By.text("Got it"));
-        if(guide!=null)guide.click();
+        if(guide==null)guide=device.wait(androidx.test.uiautomator.Until.findObject(androidx.test.uiautomator.By.text("Got it")),1500);if(guide!=null)guide.click();device.waitForIdle();
     }
     void screenshot(String name){
         File dir=new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null),"sheet-qa");
@@ -48,9 +48,9 @@ public class SheetWindowInstrumentedTest {
     }
     void tap(ActivityScenario<MainActivity> s,String selector) throws Exception {
         JSONObject p=new JSONObject(js(s,"(()=>{const r=document.querySelector("+JSONObject.quote(selector)+").getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2,width:innerWidth}})()"));
-        s.onActivity(a->{try{float scale=a.web.getWidth()/(float)p.getDouble("width"),x=(float)p.getDouble("x")*scale,y=(float)p.getDouble("y")*scale;long t=SystemClock.uptimeMillis();
-            MotionEvent down=MotionEvent.obtain(t,t,MotionEvent.ACTION_DOWN,x,y,0),up=MotionEvent.obtain(t,t+80,MotionEvent.ACTION_UP,x,y,0);down.setSource(InputDevice.SOURCE_TOUCHSCREEN);up.setSource(InputDevice.SOURCE_TOUCHSCREEN);a.web.dispatchTouchEvent(down);a.web.dispatchTouchEvent(up);down.recycle();up.recycle();
-        }catch(Exception e){throw new AssertionError(e);}});
+        int[] point=new int[2];
+        s.onActivity(a->{try{int[] origin=new int[2];a.web.getLocationOnScreen(origin);float scale=a.web.getWidth()/(float)p.getDouble("width");point[0]=origin[0]+(int)(p.getDouble("x")*scale);point[1]=origin[1]+(int)(p.getDouble("y")*scale);}catch(Exception e){throw new AssertionError(e);}});
+        assertTrue(UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).click(point[0],point[1]));
     }
     void setDraft(ActivityScenario<MainActivity> s,String value) throws Exception {
         js(s,"(()=>{const i=document.querySelector('#formula');i.value="+JSONObject.quote(value)+";i.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:'insertText'}));})()");

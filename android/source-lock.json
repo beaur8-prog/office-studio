@@ -6,7 +6,7 @@
     "sheet": {
       "repository": "beaur8-prog/sheet-studio",
       "ref": "main",
-      "sourceCommit": "f09716208596d2e6c76e73341948408b11856f11",
+      "sourceCommit": "42b93a34ba7f9cf1ca81b28c443999049437b3b8",
       "version": "1.0.2",
       "versionCode": 3,
       "upstreamCommit": "cd475449a9517ff61a638cb2cfaddeb6088230c6"
@@ -43,7 +43,7 @@
   "nativeSlideHostUpstreamCommit": "584be72a8d8cc57a493f00eeea3c847d9d9f8cbb",
   "development": {
     "status": "development verification; not publicly published",
-    "sheetSourceCommit": "f09716208596d2e6c76e73341948408b11856f11",
+    "sheetSourceCommit": "42b93a34ba7f9cf1ca81b28c443999049437b3b8",
     "sheetRendererVersion": "0.7.43",
     "nativeBaselineCommit": "8146a96f4fd847a3b3d757d175a6f641604724b2",
     "changes": [
