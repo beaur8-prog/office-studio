@@ -2,7 +2,7 @@
   "schema": 1,
   "tag": "android-v1.0.0",
   "filename": "ANDROID-VALIDATION-INPUTS.zip",
-  "sha256": "ca6d9c4521213cef89a539e4a5c55bf935341b5e03b686d599989eb6382f6965",
+  "sha256": "1a22820d7ee520eb9edde4ecc8fb2416ca4c724ed925ace128e9c2004d66ee45",
   "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b",
   "productionApks": [
     {
