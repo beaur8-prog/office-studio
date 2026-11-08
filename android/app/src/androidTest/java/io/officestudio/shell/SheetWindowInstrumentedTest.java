@@ -87,8 +87,10 @@ public class SheetWindowInstrumentedTest {
         int[] point=new int[2];
         s.onActivity(a->{try{int[] origin=new int[2];a.web.getLocationOnScreen(origin);float scale=a.web.getWidth()/(float)p.getDouble("width");point[0]=origin[0]+(int)(p.getDouble("x")*scale);point[1]=origin[1]+(int)(p.getDouble("y")*scale);}catch(Exception e){throw new AssertionError(e);}});
         long time=SystemClock.uptimeMillis();
-        MotionEvent down=MotionEvent.obtain(time,time,MotionEvent.ACTION_DOWN,point[0],point[1],0),up=MotionEvent.obtain(time,time+1,MotionEvent.ACTION_UP,point[0],point[1],0);
-        down.setSource(InputDevice.SOURCE_TOUCHSCREEN);up.setSource(InputDevice.SOURCE_TOUCHSCREEN);
+        MotionEvent.PointerProperties finger=new MotionEvent.PointerProperties();finger.id=0;finger.toolType=MotionEvent.TOOL_TYPE_FINGER;
+        MotionEvent.PointerCoords at=new MotionEvent.PointerCoords();at.x=point[0];at.y=point[1];at.pressure=1;at.size=1;
+        MotionEvent down=MotionEvent.obtain(time,time,MotionEvent.ACTION_DOWN,1,new MotionEvent.PointerProperties[]{finger},new MotionEvent.PointerCoords[]{at},0,0,1,1,0,0,InputDevice.SOURCE_TOUCHSCREEN,0);
+        at.pressure=0;MotionEvent up=MotionEvent.obtain(time,time+1,MotionEvent.ACTION_UP,1,new MotionEvent.PointerProperties[]{finger},new MotionEvent.PointerCoords[]{at},0,0,1,1,0,0,InputDevice.SOURCE_TOUCHSCREEN,0);
         try{assertTrue(InstrumentationRegistry.getInstrumentation().getUiAutomation().injectInputEvent(down,true));assertTrue(InstrumentationRegistry.getInstrumentation().getUiAutomation().injectInputEvent(up,true));}finally{down.recycle();up.recycle();}
     }
     void setDraft(ActivityScenario<MainActivity> s,String value) throws Exception {
@@ -289,7 +291,7 @@ public class SheetWindowInstrumentedTest {
         waitJS(s,"!!document.querySelector('[data-mobile=print]')");js(s,"document.querySelector('[data-mobile=print]').click()");
         waitJS(s,"!!document.querySelector('#print-scope')");
         js(s,"(()=>{const q=document.querySelector('#print-scope');q.value="+JSONObject.quote(scope)+";q.dispatchEvent(new Event('change'));document.querySelector('#print-orientation').value="+JSONObject.quote(orientation)+";document.querySelector('#print-object-layout').value='pages';if("+JSONObject.quote(scope)+"==='selection'){document.querySelector('#print-charts').checked=false;document.querySelector('#print-images').checked=false;}document.querySelector('[role=dialog][aria-label=인쇄] .primary').click();})()");
-        printObject(androidx.test.uiautomator.By.res("com.android.printspooler","print_button"),"preview");
+        printObject(androidx.test.uiautomator.By.res("com.android.printspooler","destination_spinner"),"preview");
     }
     void saveNativePdf(ActivityScenario<MainActivity> s,String name,boolean letter,boolean landscape,int pages) throws Exception {
         UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -297,7 +299,7 @@ public class SheetWindowInstrumentedTest {
         if(!device.hasObject(androidx.test.uiautomator.By.text("Save as PDF"))){destination.click();printObject(androidx.test.uiautomator.By.text("Save as PDF"),"pdf-destination").click();}
         if(letter){
             if(!device.hasObject(androidx.test.uiautomator.By.res("com.android.printspooler","paper_size_spinner")))printObject(androidx.test.uiautomator.By.res("com.android.printspooler","expand_collapse_handle"),"options").click();
-            printObject(androidx.test.uiautomator.By.res("com.android.printspooler","paper_size_spinner"),"paper").click();printObject(androidx.test.uiautomator.By.text("Letter"),"letter").click();
+            printObject(androidx.test.uiautomator.By.res("com.android.printspooler","paper_size_spinner"),"paper").click();printObject(androidx.test.uiautomator.By.text(java.util.regex.Pattern.compile("(?i)(?:NA )?Letter.*")),"letter").click();
         }
         long end=SystemClock.uptimeMillis()+45000;androidx.test.uiautomator.UiObject2 button=null;
         do{button=device.findObject(androidx.test.uiautomator.By.res("com.android.printspooler","print_button"));if(button!=null&&button.isEnabled())break;SystemClock.sleep(200);}while(SystemClock.uptimeMillis()<end);
