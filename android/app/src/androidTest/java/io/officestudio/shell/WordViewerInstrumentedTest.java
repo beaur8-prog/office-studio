@@ -85,6 +85,9 @@ public class WordViewerInstrumentedTest {
             assertTrue(UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressKeyCode(KeyEvent.KEYCODE_ESCAPE));
             waitJS(scenario,"!document.querySelector('.android-presentation')&&!!document.querySelector('.tiptap[contenteditable=true]')");
             assertEquals("true",js(scenario,"document.querySelector('.tiptap').textContent.includes('ANDROID HORIZONTAL INPUT')"));
+            waitJS(scenario,"document.activeElement===document.querySelector('.tiptap')");
+            assertTrue(UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressKeyCode(KeyEvent.KEYCODE_X));
+            waitJS(scenario,"document.querySelector('.tiptap').textContent.toLowerCase().endsWith('inputx')");
             screenshot("new-page-horizontal-input");
         }
     }
