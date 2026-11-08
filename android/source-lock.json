@@ -38,8 +38,11 @@
   ],
   "tests": {
     "executed": true,
-    "status": "web and Java checks passed; native emulator pending",
-    "scope": "isolated Sheet QA only; no publication"
+    "status": "passed",
+    "scope": "isolated Sheet QA only; no publication",
+    "emulatorRun": "https://github.com/beaur8-prog/office-studio/actions/runs/42466585131",
+    "passed": 7,
+    "failed": 0
   },
   "combinedZIP": false,
   "nativeSlideHostUpstreamCommit": "44a8fc79d0f0a248fdb62b12fb80bc4cfffc7eba",
@@ -54,6 +57,6 @@
       "ignore legacy unconfirmed close; explicit sheetClose retains confirmed close",
       "Android stable presentation without feeding old display values into calculations"
     ],
-    "verification": "see android/qa/SHEET-RUNTIME-20261108.md"
+    "verification": "7 native checks passed in 150.189s; see android/qa/SHEET-RUNTIME-20261108.md"
   }
 }

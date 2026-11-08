@@ -40,4 +40,9 @@
 - 공개 통합 호스트 `b9031a7`을 기준으로 Sheet만 수정한다. Sheet 1.0.5-qa/versionCode 6, 별도 QA ID. 렌더러 0.7.46은 source-lock.json의 정확한 커밋을 사용한다.
 - 기존 다섯 검사에 `keyboardBackKeyUpAndLegacyCloseCannotCloseAfterViewerExit`, `scrollingAndEnterDoNotPaintCalculationPlaceholders`를 추가했다. Back 누름 후 웹/네이티브 뷰어 복원이 끝나기를 기다린 다음 키 뗌을 전달해 두 번째 종료가 발생하지 않는지 검사한다. 예전 공통 close 요청도 뷰어 안/밖에서 Activity를 종료하지 못하는지 확인한다. 정상 종료·복구 검사는 유지한다.
 - 일반 숫자·수식 문서에서 실제 터치·Enter·스크롤 중 프레임별 계산 중 문구를 측정한다. 느린 계산 응답의 결정적 재현은 별도 Android 브라우저 검사로 확인한다.
-- 실제 에뮬레이터 최종 결과는 완료 후 기록한다. 물리 제조사 키보드/DeX는 별도 검증이다.
+- [실제 API 35 Pixel 6 최종 실행](https://github.com/beaur8-prog/office-studio/actions/runs/42466585131): **OK (7 tests)**, 150.189초. 실패0개.
+- Back 매핑의 누름 → 웹/네이티브 뷰어 복원 확인 → 키 뗌 순서에서 앱/종료창이 추가로 닫히지 않음을 확인했다. 뷰어 안/밖의 예전 close 요청도 Activity를 종료하지 못한다. 로그의 `Escape via keyboard-back`와 `Ignored unconfirmed legacy close`로 경로를 확인했다.
+- 실제 터치·Enter·스크롤 프레임의 계산 중 문구0개, 기존 창/키보드/초안/종료 취소/정상 종료/복구 다섯 회귀도 통과했다.
+- 초기 두 CI는 앱 실행 전 Gradle 다운로드 시간 제한 및 GitHub 웹 자산 경로의 504로 중단됐다. 공식 자산 API로 동일 SHA-256 파일을 받아 최종 실행했다. 서드파티 바이너리나 다른 Gradle로 대체하지 않았다.
+- 코드: Sheet `52ab856606732b33dd87b291dee59a3d897ae6ca`, 네이티브/계측/빌드 `0a9fe357fe2b7688d818921debfc22824871befe`. 이후 결과 기록은 제품 코드 변경이 아니다.
+- 물리 제조사 키보드/DeX는 별도 검증이다. Back 매핑은 계측에서 입력기 전 KeyEvent로 전달한 검사다. 공개 배포는 하지 않았다.
