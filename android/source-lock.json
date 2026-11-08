@@ -13,11 +13,11 @@
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",
-      "ref": "codex/android-1.0.5",
-      "sourceCommit": "3c3e585fc2674eceed1354766f8df14e5648b27f",
+      "ref": "codex/android-native-window-20261108",
+      "sourceCommit": "fefde62f205e11ec3d4afb47083728980ab2ba45",
       "version": "1.0.5",
       "versionCode": 6,
-      "upstreamCommit": "c44122ba25b58fdb9ea3aae9d5c8502ce6c6cd19"
+      "upstreamCommit": "c43df0d80045af98ad85970b1644b47f4ff17d19"
     },
     "word": {
       "repository": "beaur8-prog/word-studio",
@@ -46,5 +46,36 @@
   "combinedZIP": false,
   "nativeSlideHostUpstreamCommit": "44a8fc79d0f0a248fdb62b12fb80bc4cfffc7eba",
   "nativeWordHostUpstreamCommit": "d0e5ca10fed93f9d6307640390265d56cd2ad29f",
-  "nativeSheetHostUpstreamCommit": "225cefbdc04a81bcc79639b2e106af05c39892b8"
+  "nativeSheetHostUpstreamCommit": "225cefbdc04a81bcc79639b2e106af05c39892b8",
+  "development": {
+    "status": "native-window mitigation validated; user-device symptom not reproduced; not publicly released",
+    "baselineAppVersion": "1.0.5",
+    "baselineHostCommit": "b9031a760416530074eeac1cc97061d7372d2f26",
+    "nativeImplementationCommit": "36d78d05e8020196adc8956028724e780d789d32",
+    "requiresVersionBumpBeforeRelease": true,
+    "changes": [
+      "APK presentations use original native WebView with SystemBars/ScreenOrientation, no DOM fullscreen custom view",
+      "ignore unrelated DOM fullscreenchange in native-window mode",
+      "hide IME on Slide presentation entry"
+    ],
+    "verification": {
+      "androidBrowserPassed": 41,
+      "desktopBrowserPassed": 22,
+      "windowsNativeSkipped": 1,
+      "finalWindowTestsPassed": 7,
+      "nativeAndroid": {
+        "sdk": 35,
+        "webView": "124.0.6367.219",
+        "tabletPassed": 11,
+        "phonePassed": 10,
+        "phoneTabletOnlySkipped": 1,
+        "viewerCyclesPerProfile": 6
+      },
+      "baselineObservation": "viewer Escape/Back did not close in emulator; separate fullscreen CustomView confirmed",
+      "currentObservation": "original WebView stays visible, no custom view or DOM fullscreen, crash buffer empty",
+      "build": "main and Android branch web build and debug APK/test build passed"
+    },
+    "remaining": "Need current user platform/version/device/keyboard and actual device close/crash logs; do not claim exact user cause confirmed.",
+    "note": "Root version/tests describe published baseline. Next release needs new app assets and native IME change, official signature and version bump."
+  }
 }
