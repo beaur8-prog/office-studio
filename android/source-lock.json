@@ -5,11 +5,11 @@
   "apps": {
     "sheet": {
       "repository": "beaur8-prog/sheet-studio",
-      "ref": "codex/android-1.0.4",
-      "sourceCommit": "fb4d7a58b4d10e0977e89c0efe21619df19bdc77",
-      "version": "1.0.4",
-      "versionCode": 5,
-      "upstreamCommit": "a47a7cf34298d52418702bde9b130dedc22a0a29"
+      "ref": "main",
+      "sourceCommit": "52ab856606732b33dd87b291dee59a3d897ae6ca",
+      "version": "1.0.5",
+      "versionCode": 6,
+      "upstreamCommit": "52ab856606732b33dd87b291dee59a3d897ae6ca"
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",
@@ -34,17 +34,26 @@
   "gradle": "8.13",
   "webkit": "1.14.0",
   "changedApps": [
-    "sheet",
-    "slide"
+    "sheet"
   ],
   "tests": {
-    "executed": false,
-    "status": "skipped",
-    "reason": "Fast Android publication without tests following the established user preference",
-    "explicitlyAuthorized": true
+    "executed": true,
+    "status": "web and Java checks passed; native emulator pending",
+    "scope": "isolated Sheet QA only; no publication"
   },
   "combinedZIP": false,
   "nativeSlideHostUpstreamCommit": "44a8fc79d0f0a248fdb62b12fb80bc4cfffc7eba",
   "nativeWordHostUpstreamCommit": "d0e5ca10fed93f9d6307640390265d56cd2ad29f",
-  "nativeSheetHostUpstreamCommit": "225cefbdc04a81bcc79639b2e106af05c39892b8"
+  "nativeSheetHostUpstreamCommit": "225cefbdc04a81bcc79639b2e106af05c39892b8",
+  "development": {
+    "sheetRendererVersion": "0.7.46",
+    "sheetSourceCommit": "52ab856606732b33dd87b291dee59a3d897ae6ca",
+    "nativeBaselineCommit": "b9031a760416530074eeac1cc97061d7372d2f26",
+    "changes": [
+      "Back key-down/repeat/key-up remains one viewer exit",
+      "ignore legacy unconfirmed close; explicit sheetClose retains confirmed close",
+      "Android stable presentation without feeding old display values into calculations"
+    ],
+    "verification": "see android/qa/SHEET-RUNTIME-20261108.md"
+  }
 }

@@ -73,3 +73,11 @@ Sheet만 versionName 1.0.2/versionCode 3으로 빌드합니다. 기존 키와 �
 실제 개발 원본과 원격 Android 브랜치의 일치 커밋 `ccba472`를 확인했습니다. 문서·편집 페이지 맞춤과 전체화면 스와이프 뷰어 개선을 포함하며 호스트 `8e56284`의 Word 전체화면·카메라 여백·포커스 복귀를 연결했습니다. 기존 Sheet·Slide 호스트 정책과 APK는 유지합니다.
 
 Word만 versionName 1.0.1/versionCode 2로 빌드하고 기존 앱 ID·서명 키를 사용합니다. 빌드 캐시를 재사용하며 설치·실행·기능 테스트와 통합 ZIP 생성은 생략합니다. `android-v1.0.6`에는 Word APK·빌드 기록·체크섬 세 파일을 게시하고 기존 Android 공유 주소를 갱신합니다.
+
+## Sheet 1.0.5 개발 · Esc/Back 키 뗌과 안정된 표시
+
+`codex/android-sheet-key-up-20261108`은 공개 통합 호스트 `b9031a7`의 Word/Slide 변경을 유지하고 Sheet만 수정한다. `setViewer`로 웹의 뷰어 상태를 전달받으며, Esc가 Back으로 오는 경우 입력기 전/Activity 양쪽에서 누름·반복·뗌을 소비한다. 화면 복원 후 키 뗌으로 두 번째 뒤로 가기를 실행하지 않는다. 전환 응답 대기 중 Esc도 웹에서 보관한다.
+
+Sheet `closeApp`은 명시적 `sheetClose`를 사용한다. 예전 공통 `close`는 Sheet를 종료하지 못하게 하고 Word/Slide 동작은 유지한다. `sheetClose`는 뷰어가 끝나고 문서 종료 확인·복구 저장을 거친 뒤 정상 종료한다.
+
+시험은 Sheet 1.0.5-qa/versionCode 6, 별도 `io.officestudio.sheet.qa`만 사용한다. `node android/qa/prepare-sheet-assets.cjs <정확한 Sheet 소스>` 후 `./gradlew -PsheetQa :app:assembleSheetDebug :app:assembleSheetDebugAndroidTest`로 만든다. 공개 APK·릴리스·리토스는 변경하지 않는다. 7개 실제 계측 결과는 `android/qa/SHEET-RUNTIME-20261108.md`에 기록한다.

@@ -1,12 +1,7 @@
 {
   "sheet": {
-    "version": "1.0.4",
+    "version": "1.0.5",
     "assetFiles": [
-      {
-        "path": "THIRD-PARTY-NOTICES.txt",
-        "bytes": 3500,
-        "sha256": "89f48af3064611735f2cc4894bdb94a466c2ef451b5595d44028c989cf90cbac"
-      },
       {
         "path": "android-icon.svg",
         "bytes": 326,
@@ -19,18 +14,18 @@
       },
       {
         "path": "app-version.json",
-        "bytes": 20,
-        "sha256": "f2b319952b1ece737947375f48838d6cbb7c524cd508118b082762419d78488c"
-      },
-      {
-        "path": "assets/index-0tuJc_GK.js",
-        "bytes": 1026012,
-        "sha256": "abaeed673b772a1ac80d2135f59f0c1b92c0084c716bb68002b989f6f68dfbd2"
+        "bytes": 21,
+        "sha256": "dfd1a67311d928216217df242e278dd0ed291e1f3d9f76272e3e333c0a05c1c7"
       },
       {
         "path": "assets/index-BFN4OcMv.css",
         "bytes": 62157,
         "sha256": "c70cf6c274ba7f3ddac9f1185a1022765420559c18c5ce921af690696a159f63"
+      },
+      {
+        "path": "assets/index-Br-cA_ze.js",
+        "bytes": 1028162,
+        "sha256": "a6de4bea76035b9226ad6e90a291db08e3e1ae1ce5f4e9665957a5d666b30fdf"
       },
       {
         "path": "assets/spreadsheet-BTv7Xkas.js",
@@ -49,15 +44,21 @@
       },
       {
         "path": "index.html",
-        "bytes": 788,
-        "sha256": "975cdf89adde5e6f0d33d1b1e43c04dd9087db7ca8e32eefc304d39b912b3e73"
+        "bytes": 784,
+        "sha256": "8aa449a257166d0b6644013f56e3579fe43d8ad665b57ec0a60b3079e627c8d8"
+      },
+      {
+        "path": "THIRD-PARTY-NOTICES.txt",
+        "bytes": 3500,
+        "sha256": "89f48af3064611735f2cc4894bdb94a466c2ef451b5595d44028c989cf90cbac"
       }
     ],
     "iconSourceSHA256": "180827929304256408d440428f7f736266be150b939270ea08efe92f332c864f",
     "launcherDensities": 5,
     "adaptiveIcon": true,
     "roundIcon": true,
-    "monochromeIcon": true
+    "monochromeIcon": true,
+    "sourceCommit": "52ab856606732b33dd87b291dee59a3d897ae6ca"
   },
   "slide": {
     "version": "1.0.5",
