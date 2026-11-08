@@ -43,6 +43,14 @@ public class SheetWindowInstrumentedTest {
         // the real guide throughout readiness instead of missing it once.
         long end=SystemClock.uptimeMillis()+30000;boolean[] focused={false};
         do{
+            // A cold google_apis emulator can show a Launcher ANR over the
+            // tested Activity. Dismiss only that named system failure; never
+            // dismiss a Sheet ANR or turn an app failure into a passing check.
+            if(device.hasObject(androidx.test.uiautomator.By.text("Pixel Launcher isn't responding"))){
+                screenshot("launcher-anr-interruption");
+                androidx.test.uiautomator.UiObject2 close=device.findObject(androidx.test.uiautomator.By.res("android","aerr_close"));
+                if(close!=null){android.util.Log.w("SheetQA","Closing cold emulator Pixel Launcher ANR");close.click();}
+            }
             androidx.test.uiautomator.UiObject2 guide=device.findObject(androidx.test.uiautomator.By.text("Got it"));
             if(guide!=null)guide.click();device.waitForIdle(1000);
             s.onActivity(a->focused[0]=a.hasWindowFocus());if(!focused[0])SystemClock.sleep(200);
@@ -78,7 +86,10 @@ public class SheetWindowInstrumentedTest {
         JSONObject p=new JSONObject(js(s,"(()=>{const r=document.querySelector("+JSONObject.quote(selector)+").getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2,width:innerWidth}})()"));
         int[] point=new int[2];
         s.onActivity(a->{try{int[] origin=new int[2];a.web.getLocationOnScreen(origin);float scale=a.web.getWidth()/(float)p.getDouble("width");point[0]=origin[0]+(int)(p.getDouble("x")*scale);point[1]=origin[1]+(int)(p.getDouble("y")*scale);}catch(Exception e){throw new AssertionError(e);}});
-        assertTrue(UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).click(point[0],point[1]));
+        long time=SystemClock.uptimeMillis();
+        MotionEvent down=MotionEvent.obtain(time,time,MotionEvent.ACTION_DOWN,point[0],point[1],0),up=MotionEvent.obtain(time,time+1,MotionEvent.ACTION_UP,point[0],point[1],0);
+        down.setSource(InputDevice.SOURCE_TOUCHSCREEN);up.setSource(InputDevice.SOURCE_TOUCHSCREEN);
+        try{assertTrue(InstrumentationRegistry.getInstrumentation().getUiAutomation().injectInputEvent(down,true));assertTrue(InstrumentationRegistry.getInstrumentation().getUiAutomation().injectInputEvent(up,true));}finally{down.recycle();up.recycle();}
     }
     void setDraft(ActivityScenario<MainActivity> s,String value) throws Exception {
         js(s,"(()=>{const i=document.querySelector('#formula');i.value="+JSONObject.quote(value)+";i.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:'insertText'}));})()");
@@ -304,7 +315,7 @@ public class SheetWindowInstrumentedTest {
                 assertEquals("Paper direction",landscape,page.getWidth()>page.getHeight());
                 if(letter){assertEquals(792,page.getWidth(),2);assertEquals(612,page.getHeight(),2);}
                 android.graphics.Bitmap bitmap=android.graphics.Bitmap.createBitmap(1000,Math.round(1000f*page.getHeight()/page.getWidth()),android.graphics.Bitmap.Config.ARGB_8888);bitmap.eraseColor(android.graphics.Color.WHITE);page.render(bitmap,null,null,android.graphics.pdf.PdfRenderer.Page.RENDER_MODE_FOR_PRINT);
-                int ink=0;for(int y=0;y<bitmap.getHeight();y+=2)for(int x=0;x<bitmap.getWidth();x+=2)if((bitmap.getPixel(x,y)&0xffffff)<0xe0e0e0)ink++;
+                int ink=0;for(int y=0;y<bitmap.getHeight();y+=2)for(int x=0;x<bitmap.getWidth();x+=2)if(((bitmap.getPixel(x,y)>>16)&255)<224||((bitmap.getPixel(x,y)>>8)&255)<224||(bitmap.getPixel(x,y)&255)<224)ink++;
                 assertTrue("No blank PDF page "+n,ink>50);
                 try(java.io.FileOutputStream output=new java.io.FileOutputStream(new File(folder,name+"-"+(n+1)+".png"))){bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,output);}bitmap.recycle();
             }
