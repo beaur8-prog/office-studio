@@ -1,6 +1,18 @@
 # Office Studio · Android
 
-현재 배포: Sheet 1.0.2 · Slide 1.0.3 · Word 1.0.1. Android 통합 ZIP은 제공을 중단했으며 개별 APK만 게시합니다.
+현재 배포: Sheet 1.0.3 · Slide 1.0.4 · Word 1.0.2. Android 통합 ZIP은 제공을 중단했으며 개별 APK만 게시합니다.
+
+## Android 1.0.7 · 변경 앱 배포
+
+이전 공개 APK의 upstreamCommit과 현재 개발 브랜치의 실제 제품 소스를 비교했고, 이번에는 세 앱 모두 변경되어 새로 빌드했습니다. Sheet main `92afcc3`, Slide main `4d4013d`, Word의 실제 Android 개발 브랜치 `codex/android-page-viewer`의 `b75cde0`을 사용했습니다. 각 앱의 정확한 배포 커밋은 `source-lock.json`에 고정합니다.
+
+- Sheet 1.0.3/versionCode 4: 보기·입력 설정, 화면·카메라 영역, 키보드·Esc·종료 처리를 포함합니다. 네이티브 원본 `04fc43a`를 반영했습니다.
+- Slide 1.0.4/versionCode 5: 편집 리본과 문서 안에서 동작하는 Esc 처리, 기존 파일 입출력 어댑터를 포함합니다. 네이티브 원본 `0c4c536`을 반영했습니다.
+- Word 1.0.2/versionCode 3: 편집 리본과 읽기 화면의 Esc→편집 전환을 포함합니다. 네이티브 원본 `d0e5ca1`을 반영했습니다.
+
+기존 앱 ID·서명 키·아이콘을 유지합니다. 프런트엔드 빌드 후 각 변경 앱의 `:app:assemble<Id>Release`만 실행했습니다. 설치·실행·기능·에뮬레이터·브라우저 테스트는 사용자 지시에 따라 생략했으며, 빌드·서명·APK 메타데이터·체크섬 결과와 구분합니다.
+
+`android/package-changed-apks.py`는 changedApps에 있는 앱만 새로 묶고, 나머지는 이전 공개 URL을 유지합니다. 이번 `android-v1.0.7` 공개 자산은 변경 APK 세 개, `BUILD-android.json`, `SHA256SUMS-android.txt` 다섯 개입니다. 통합 ZIP은 생성하지 않습니다. 정식 릴리스를 `--latest=false`로 공개한 뒤 `node android/publish-lithos.cjs --publish --update --skip-tests`로 기존 Android 공유 주소만 갱신합니다. Windows latest·Mac 피드, 다른 페이지와 비공개 방문 통계는 보존합니다.
 
 세 Android 전용 앱을 각각 서명한 범용 APK로 빌드합니다. Android 10(API 29) 이상과 Android System WebView 120 이상이 필요합니다. 오프라인 프런트엔드, 시스템 파일 선택기, 사본 저장·공유, 원형·적응형·단색 아이콘을 포함합니다.
 
