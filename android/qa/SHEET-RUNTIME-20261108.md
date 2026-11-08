@@ -13,3 +13,12 @@
 - 첫 시작 OS 안내창/입력 포커스 준비를 기다리고, 빈 희소 셀은 optional chaining으로 조회하며, 에뮬레이터에 화면 IME를 명시적으로 켠 조건으로 최종 재검증했다. 초기 테스트 실패를 제품 검증 통과로 계산하지 않았다.
 
 공개 APK/릴리스/리토스는 변경하지 않는다. 실제 제조사 폰과 물리 키보드 검증은 포함하지 않는다.
+
+## 0.7.44 · 편집/뷰어·태블릿 배치
+
+- Sheet 코드 `65cd5a51396eeb560c19e34e6ff4c207e9a02661`, 네이티브/계측 `07e1b0207d492baffaabafc64317a1fc68f365e9`. Sheet 1.0.3-qa/versionCode 4, 별도 `.qa` ID.
+- [최종 API 35 Pixel 6 실행](https://github.com/beaur8-prog/office-studio/actions/runs/42452508762): **OK (4 tests)**, 100.451초. 위 창/IME/종료 복구 세 검사와 새 `viewerUsesWholeViewportAndHardwareEscapeReturnsToEditingWithoutClosing` 모두 통과.
+- 실제 뷰어 격자 y=0·height=innerHeight, 실제 하드웨어 Esc 입력의 편집 복귀, 반복 Esc가 Activity를 닫지 않음과 문서·이력·dirty 불변을 검증했다. 캡처 전 계산/렌더 완료를 기다리며 입력 캡처는 A1 확정123·A2 초안456·IME가 함께 보이는 시점이다.
+- 첫 [실행](https://github.com/beaur8-prog/office-studio/actions/runs/42452054040)은 세 검사가 통과했으나 첫 OS 몰입 안내창 포커스 반환 대기에서 입력 검사 준비가 실패했다. 안내창을 대기 전체에서 확인하는 시험 코드만 보강했으며, 제품 코드는 유지한 채 최종 네 검사 모두를 재실행해 통과했다.
+- 웹 단위 537개 중 536개 통과/Windows 전용1개 제외. Android UI15개군, 모드·플랫폼 분리·설정 유지4개군, Electron 실행/데스크톱 편집 회귀 통과. 태블릿·DeX 배치는 브라우저 크기/입력장치 모의이며 실제 제조사 태블릿·DeX·물리 한글 키보드를 검증한 것은 아니다.
+- 공개 APK·리토스·Word/Slide의 작업본과 배포 파일은 유지한다. APK를 업데이트하려면 이 브랜치의 Sheet 호스트와 고정한 렌더러를 함께 포함해야 한다.

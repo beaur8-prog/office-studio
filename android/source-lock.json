@@ -36,8 +36,11 @@
   ],
   "tests": {
     "executed": true,
-    "status": "local checks passed; emulator run pending",
-    "scope": "isolated Sheet QA APK only; no publication"
+    "status": "passed",
+    "scope": "isolated Sheet QA APK only; no publication",
+    "emulatorRun": "https://github.com/beaur8-prog/office-studio/actions/runs/42452508762",
+    "passed": 4,
+    "failed": 0
   },
   "combinedZIP": false,
   "nativeSlideHostUpstreamCommit": "584be72a8d8cc57a493f00eeea3c847d9d9f8cbb",
@@ -59,7 +62,7 @@
       "localJavaCompile": "passed",
       "localRendererUI": 15,
       "localModeUI": 4,
-      "emulatorRuntime": "pending new run; see android/qa/SHEET-RUNTIME-20261108.md"
+      "emulatorRuntime": "4 passed / 0 failed; API 35 Pixel 6; run 42452508762; see android/qa/SHEET-RUNTIME-20261108.md"
     }
   }
 }
