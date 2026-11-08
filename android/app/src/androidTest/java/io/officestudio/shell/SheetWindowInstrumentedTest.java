@@ -32,7 +32,7 @@ public class SheetWindowInstrumentedTest {
     void waitJS(ActivityScenario<MainActivity> s,String expression) throws Exception {
         long end=SystemClock.uptimeMillis()+60000;
         while(SystemClock.uptimeMillis()<end){if("true".equals(js(s,expression)))return;SystemClock.sleep(150);}
-        screenshot("failed-wait");fail("Timed out: "+expression+"; body="+js(s,"document.body.innerText.slice(-900)"));
+        screenshot("failed-wait");fail("Timed out: "+expression+"; body="+js(s,"document.body.innerText.slice(-900)")+"; touches="+js(s,"JSON.stringify(window.__qaTouches)"));
     }
     void ready(ActivityScenario<MainActivity> s) throws Exception {
         assertTrue("Never use the user's production package",InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName().endsWith(".qa"));
@@ -40,6 +40,13 @@ public class SheetWindowInstrumentedTest {
         UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         androidx.test.uiautomator.UiObject2 guide=device.findObject(androidx.test.uiautomator.By.text("Got it"));
         if(guide==null)guide=device.wait(androidx.test.uiautomator.Until.findObject(androidx.test.uiautomator.By.text("Got it")),1500);if(guide!=null)guide.click();device.waitForIdle();
+        long end=SystemClock.uptimeMillis()+10000;boolean[] focused={false};
+        do{s.onActivity(a->focused[0]=a.hasWindowFocus());if(!focused[0])SystemClock.sleep(100);}while(!focused[0]&&SystemClock.uptimeMillis()<end);
+        assertTrue("Wait for the immersive guide to return window focus",focused[0]);
+        waitJS(s,"!document.querySelector('.workbook-busy') && !!document.getElementById('android-cell-0-0')");
+        // Insets and WebView focus can still settle after the OS guide closes.
+        String before=js(s,"JSON.stringify([innerWidth,innerHeight,document.querySelector('#grid').getBoundingClientRect().top])");
+        do{SystemClock.sleep(350);String after=js(s,"JSON.stringify([innerWidth,innerHeight,document.querySelector('#grid').getBoundingClientRect().top])");if(before.equals(after))break;before=after;}while(SystemClock.uptimeMillis()<end);
     }
     void screenshot(String name){
         File dir=new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null),"sheet-qa");
@@ -47,6 +54,7 @@ public class SheetWindowInstrumentedTest {
         assertTrue(UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).takeScreenshot(new File(dir,name+".png")));
     }
     void tap(ActivityScenario<MainActivity> s,String selector) throws Exception {
+        js(s,"window.__qaTouches=[];for(const type of ['pointerdown','pointerup','pointercancel'])document.addEventListener(type,e=>{window.__qaTouches.push({type:e.type,pointer:e.pointerType,target:e.target.id,cell:e.target.closest('.cell')?.getAttribute('data-r'),active:document.activeElement.id,height:innerHeight});},{capture:true,once:true});");
         JSONObject p=new JSONObject(js(s,"(()=>{const r=document.querySelector("+JSONObject.quote(selector)+").getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2,width:innerWidth}})()"));
         int[] point=new int[2];
         s.onActivity(a->{try{int[] origin=new int[2];a.web.getLocationOnScreen(origin);float scale=a.web.getWidth()/(float)p.getDouble("width");point[0]=origin[0]+(int)(p.getDouble("x")*scale);point[1]=origin[1]+(int)(p.getDouble("y")*scale);}catch(Exception e){throw new AssertionError(e);}});
@@ -76,12 +84,12 @@ public class SheetWindowInstrumentedTest {
     @Test public void liveDraftEnterKeepsImeAndCancelRestores() throws Exception {
         try(ActivityScenario<MainActivity> s=ActivityScenario.launch(MainActivity.class)){
             ready(s);tap(s,"#android-cell-0-0");waitJS(s,"document.activeElement.id==='formula'");
-            setDraft(s,"123");waitJS(s,"document.getElementById('android-cell-0-0').textContent==='123'");assertEquals("\"\"",js(s,"(sheetStudio.getCell('A1').raw??'')"));assertEquals("0",js(s,"sheetStudio.historyStats().undo"));
+            setDraft(s,"123");waitJS(s,"document.getElementById('android-cell-0-0').textContent==='123'");assertEquals("\"\"",js(s,"(sheetStudio.getCell('A1')?.raw??'')"));assertEquals("0",js(s,"sheetStudio.historyStats().undo"));
             long end=SystemClock.uptimeMillis()+10000;boolean[] ime={false};do{s.onActivity(a->{WindowInsetsCompat i=ViewCompat.getRootWindowInsets(a.root);ime[0]=i!=null&&i.isVisible(WindowInsetsCompat.Type.ime());});if(!ime[0])SystemClock.sleep(150);}while(!ime[0]&&SystemClock.uptimeMillis()<end);assertTrue("Touch entry must open a real IME",ime[0]);
             UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressKeyCode(KeyEvent.KEYCODE_ENTER);
-            waitJS(s,"sheetStudio.getSelection().r===1 && sheetStudio.getCell('A1').raw==='123' && document.activeElement.id==='formula'");
+            waitJS(s,"sheetStudio.getSelection().r===1 && sheetStudio.getCell('A1')?.raw==='123' && document.activeElement.id==='formula'");
             s.onActivity(a->assertTrue("Enter must keep the real keyboard visible",ViewCompat.getRootWindowInsets(a.root).isVisible(WindowInsetsCompat.Type.ime())));
-            screenshot("live-entry-next-cell");setDraft(s,"456");waitJS(s,"document.getElementById('android-cell-1-0').textContent==='456'");js(s,"document.querySelector('[data-action=cancel-edit]').click()");waitJS(s,"document.getElementById('android-cell-1-0').textContent===''");assertEquals("\"\"",js(s,"(sheetStudio.getCell('A2').raw??'')"));
+            screenshot("live-entry-next-cell");setDraft(s,"456");waitJS(s,"document.getElementById('android-cell-1-0').textContent==='456'");js(s,"document.querySelector('[data-action=cancel-edit]').click()");waitJS(s,"document.getElementById('android-cell-1-0').textContent===''");assertEquals("\"\"",js(s,"(sheetStudio.getCell('A2')?.raw??'')"));
         }
     }
     @Test public void backCloseFinishesActivityAndRecoverySurvives() throws Exception {
@@ -89,15 +97,15 @@ public class SheetWindowInstrumentedTest {
         try(ActivityScenario<MainActivity> s=ActivityScenario.launch(MainActivity.class)){
             ready(s);s.onActivity(activity::set);
             js(s,"(()=>{const book=sheetStudio.getWorkbook();book.name='EXIT_QA';const d=new DataTransfer();d.items.add(new File([JSON.stringify(book)],'exit.sheet.json'));const i=document.querySelector('#file-input');i.files=d.files;i.dispatchEvent(new Event('change',{bubbles:true}));})()");
-            waitJS(s,"sheetStudio.getWorkbook().name==='EXIT_QA'");tap(s,"#android-cell-0-0");waitJS(s,"document.activeElement.id==='formula'");setDraft(s,"123");js(s,"document.querySelector('[data-action=commit-edit]').click()");waitJS(s,"sheetStudio.getCell('A1').raw==='123' && !document.body.classList.contains('android-cell-editing')");
+            waitJS(s,"sheetStudio.getWorkbook().name==='EXIT_QA' && !document.querySelector('.workbook-busy')");tap(s,"#android-cell-0-0");waitJS(s,"document.activeElement.id==='formula'");setDraft(s,"123");js(s,"document.querySelector('[data-action=commit-edit]').click()");waitJS(s,"sheetStudio.getCell('A1')?.raw==='123' && !document.body.classList.contains('android-cell-editing')");
             // First Back may dismiss IME; subsequent Back opens the app exit dialog.
             for(int i=0;i<3;i++){UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressBack();SystemClock.sleep(500);if("true".equals(js(s,"!!document.querySelector('[role=dialog][aria-label=\"앱을 닫을까요?\"]')")))break;}
-            waitJS(s,"!!document.querySelector('[role=dialog][aria-label=\"앱을 닫을까요?\"]')");js(s,"document.querySelector('[data-close]').click()");waitJS(s,"!document.querySelector('.backdrop')");assertFalse(activity.get().isFinishing());assertEquals("\"123\"",js(s,"sheetStudio.getCell('A1').raw"));
+            waitJS(s,"!!document.querySelector('[role=dialog][aria-label=\"앱을 닫을까요?\"]')");js(s,"document.querySelector('[data-close]').click()");waitJS(s,"!document.querySelector('.backdrop')");assertFalse(activity.get().isFinishing());assertEquals("\"123\"",js(s,"sheetStudio.getCell('A1')?.raw"));
             UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressBack();waitJS(s,"!!document.querySelector('[role=dialog][aria-label=\"앱을 닫을까요?\"]')");screenshot("exit-confirmation");js(s,"document.querySelector('[data-modal-button=\"0\"]').click()");
             long end=SystemClock.uptimeMillis()+10000;while(!activity.get().isFinishing()&&SystemClock.uptimeMillis()<end)SystemClock.sleep(100);assertTrue("Close must finish the native Activity",activity.get().isFinishing());
         }
         try(ActivityScenario<MainActivity> s=ActivityScenario.launch(MainActivity.class)){
-            ready(s);js(s,"document.querySelector('[data-mobile=more]').click()");waitJS(s,"!!document.querySelector('[data-mobile=recover]')");js(s,"document.querySelector('[data-mobile=recover]').click()");waitJS(s,"!!document.querySelector('[data-recover-document]')");js(s,"[...document.querySelectorAll('[data-recover-document]')].find(el=>el.textContent.includes('EXIT_QA')).click()");waitJS(s,"sheetStudio.getCell('A1').raw==='123'");assertEquals("\"\"",js(s,"(sheetStudio.getCell('A2').raw??'')"));screenshot("recovery-after-exit");
+            ready(s);js(s,"document.querySelector('[data-mobile=more]').click()");waitJS(s,"!!document.querySelector('[data-mobile=recover]')");js(s,"document.querySelector('[data-mobile=recover]').click()");waitJS(s,"!!document.querySelector('[data-recover-document]')");js(s,"[...document.querySelectorAll('[data-recover-document]')].find(el=>el.textContent.includes('EXIT_QA')).click()");waitJS(s,"sheetStudio.getCell('A1')?.raw==='123'");assertEquals("\"\"",js(s,"(sheetStudio.getCell('A2')?.raw??'')"));screenshot("recovery-after-exit");
         }
     }
 }
