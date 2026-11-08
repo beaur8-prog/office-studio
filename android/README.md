@@ -45,3 +45,9 @@ SDK·Gradle·npm 캐시는 `/private/tmp/office-studio-android-build-cache`를 �
 `source-lock.json`은 Sheet 0.7.43을 고정한다. 앱 수정과 호스트를 함께 빌드해야 하며 이전 설치 APK에는 자동으로 반영되지 않는다. 기존 APK·공개 페이지는 아직 갱신하지 않는다. 시험 APK는 `-PsheetQa`에서만 `.qa` ID를 사용해 정식 설치본/사용자 자료와 분리한다. `node android/qa/prepare-sheet-assets.cjs <정확한 Sheet 소스 경로>` 후 `./gradlew -PsheetQa :app:assembleSheetDebug :app:assembleSheetDebugAndroidTest`로 만든다. 정식 배포는 기존 서명 키와 `versionCode 3`을 사용해야 한다.
 
 실제 창/키보드/Activity 종료/복구 검사는 `SheetWindowInstrumentedTest`, 실행기는 `android/qa/run-sheet-lifecycle.sh`다. 이 실행기는 **새로 만든 시험 에뮬레이터 전용**이며 실사용 폰에서 실행하지 않는다. GitHub Actions의 Sheet 전용 회귀 워크플로는 배포·리토스 갱신 없이 시험 패키지를 빌드하고 증거를 남긴다.
+
+## Sheet 0.7.44 렌더러 · Android 1.0.3 개발 수정
+
+`codex/android-sheet-viewer-20261108`은 위 Sheet 창/종료 수정을 포함하며 Android에서만 전체화면 뷰어와 편집을 전환한다. 네이티브 Sheet는 하드웨어 Esc의 down/up/repeat를 소비하고 DOM Escape를 전달해 Activity가 닫히지 않도록 한다. 페이지 준비·창 구성 변경 때 물리 키보드 연결 정보를 웹에 전달한다. 넓은 Android 태블릿·DeX는 키보드/마우스에 맞춰 리본 편집을 쓰고 작은 창은 터치 편집으로 돌아간다. Windows/macOS 앱은 이 변경 대상이 아니다.
+
+Sheet versionName 1.0.3/versionCode 4, 렌더러 0.7.44를 source-lock.json의 정확한 소스 커밋으로 조립한다. 공개 배포는 수행하지 않는다. 시험은 `-PsheetQa`, 별도 ID `io.officestudio.sheet.qa`만 사용한다. Word/Slide의 현재 다른 작업 브랜치와 공개 APK는 교체하지 않는다. 이 브랜치의 과거 Slide/Word 버전을 새 통합 패키지로 배포하지 않는다. 실제 창·IME·종료·복구 및 뷰어/하드웨어 Esc 네 가지 계측 검사를 Sheet 전용 CI로 실행한다.

@@ -121,7 +121,7 @@ public class MainActivity extends Activity {
                 if(req.isForMainFrame()&&req.hasGesture()&&(u.getScheme().equals("https")||u.getScheme().equals("mailto")))try{startActivity(new Intent(Intent.ACTION_VIEW,u));}catch(Exception ignored){}
                 return true;
             }
-            @Override public void onPageFinished(WebView view,String url){web.evaluateJavascript("window.__studioHostConfig="+obj("studio",BuildConfig.STUDIO,"version",BuildConfig.VERSION_NAME)+";",null);publishSlideInsets(true);publishSheetInsets(true);ViewCompat.requestApplyInsets(root);}
+            @Override public void onPageFinished(WebView view,String url){web.evaluateJavascript("window.__studioHostConfig="+obj("studio",BuildConfig.STUDIO,"version",BuildConfig.VERSION_NAME)+";",null);publishSlideInsets(true);publishSheetInsets(true);publishSheetInput();ViewCompat.requestApplyInsets(root);}
         });
         web.setWebChromeClient(new WebChromeClient(){
             @Override public boolean onShowFileChooser(WebView v,ValueCallback<Uri[]> callback,FileChooserParams params){
@@ -156,7 +156,7 @@ public class MainActivity extends Activity {
             case "append":work(id,reply,()->{Transfer t=transfer;if(t==null||!t.token.equals(a.getString("token")))throw new IOException("저장 요청이 만료되었습니다");String encoded=a.getString("chunk");if(encoded.length()>50000||a.getLong("offset")!=t.written)throw new IOException("저장 데이터 순서가 올바르지 않습니다");byte[] bytes=android.util.Base64.decode(encoded,android.util.Base64.DEFAULT);if(t.written+bytes.length>t.size)throw new IOException("저장 파일 크기가 일치하지 않습니다");t.out.write(bytes);t.written+=bytes.length;success(id,reply,t.written);});break;
             case "save":case "share":work(id,reply,()->{Transfer t=transfer;if(t==null||!t.token.equals(a.getString("token"))||t.size!=t.written)throw new IOException("저장 파일을 완성하지 못했습니다");t.out.close();transfer=null;runOnUiThread(()->startOutput(id,reply,t,method));});break;
             case "abort":work(id,reply,()->{Transfer t=transfer;if(t!=null&&t.token.equals(a.optString("token"))){t.out.close();t.file.delete();transfer=null;}success(id,reply,true);});break;
-            case "sheetFullscreen":if(!BuildConfig.STUDIO.equals("sheet"))throw new IOException("지원하지 않는 Android 요청입니다");boolean enabled=a.optBoolean("enabled");hiddenSystemBarTypes=enabled?((a.optBoolean("hideStatusBar",true)?WindowInsetsCompat.Type.statusBars():0)|(a.optBoolean("hideNavigationBar",true)?WindowInsetsCompat.Type.navigationBars():0)):0;applySheetSystemBars();success(id,reply,obj("enabled",enabled));break;
+            case "sheetFullscreen":if(!BuildConfig.STUDIO.equals("sheet"))throw new IOException("지원하지 않는 Android 요청입니다");boolean enabled=a.optBoolean("enabled");hiddenSystemBarTypes=enabled?((a.optBoolean("hideStatusBar",true)?WindowInsetsCompat.Type.statusBars():0)|(a.optBoolean("hideNavigationBar",true)?WindowInsetsCompat.Type.navigationBars():0)):0;applySheetSystemBars();publishSheetInput();success(id,reply,obj("enabled",enabled));break;
             case "systemBars":if(!BuildConfig.STUDIO.equals("slide"))throw new IOException("지원하지 않는 Android 요청입니다");setSlideImmersive(a.optBoolean("hidden"));success(id,reply,true);break;
             case "orientation":if(!BuildConfig.STUDIO.equals("slide"))throw new IOException("지원하지 않는 Android 요청입니다");String direction=a.getString("orientation");if(direction.equals("unlock")){if(orientationBefore!=null){setRequestedOrientation(orientationBefore);orientationBefore=null;}}else{if(!direction.equals("landscape")&&!direction.equals("portrait"))throw new IOException("잘못된 화면 방향입니다");if(orientationBefore==null)orientationBefore=getRequestedOrientation();setRequestedOrientation(direction.equals("landscape")?android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE:android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);}success(id,reply,true);break;
             case "clipboard":android.content.ClipboardManager clipboard=(android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);clipboard.setPrimaryClip(a.optString("html").isEmpty()?ClipData.newPlainText("Studio",a.optString("text")):ClipData.newHtmlText("Studio",a.optString("text"),a.optString("html")));success(id,reply,true);break;
@@ -246,6 +246,23 @@ public class MainActivity extends Activity {
         if (hasFocus && root != null && web != null) {if(BuildConfig.STUDIO.equals("sheet"))applySheetSystemBars();else if(immersive)setSlideImmersive(true);}
     }
     void hideFullscreen(){if(fullscreen==null)return;root.removeView(fullscreen);fullscreen=null;web.setVisibility(View.VISIBLE);if(fullscreenCallback!=null)fullscreenCallback.onCustomViewHidden();fullscreenCallback=null;}
+    @Override public boolean dispatchKeyEvent(KeyEvent event) {
+        if (BuildConfig.STUDIO.equals("sheet") && event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE) {
+            if(event.getAction()==KeyEvent.ACTION_DOWN && event.getRepeatCount()==0 && web!=null && !destroyed)
+                web.evaluateJavascript("window.OfficeStudioHost?.escape?.()",null);
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
+    }
+    void publishSheetInput() {
+        if(!BuildConfig.STUDIO.equals("sheet")||web==null)return;
+        android.content.res.Configuration config=getResources().getConfiguration();
+        boolean keyboard=config.keyboard==android.content.res.Configuration.KEYBOARD_QWERTY && config.hardKeyboardHidden==android.content.res.Configuration.HARDKEYBOARDHIDDEN_NO;
+        web.evaluateJavascript("window.dispatchEvent(new CustomEvent('sheet-studio-android-input',{detail:{hardwareKeyboard:"+keyboard+"}}));",null);
+    }
+    @Override public void onConfigurationChanged(android.content.res.Configuration config) {
+        super.onConfigurationChanged(config);publishSheetInput();if(root!=null)ViewCompat.requestApplyInsets(root);
+    }
     @Override public void onBackPressed(){if(BuildConfig.STUDIO.equals("sheet")&&root!=null){WindowInsetsCompat insets=ViewCompat.getRootWindowInsets(root);if(insets!=null&&insets.isVisible(WindowInsetsCompat.Type.ime())){WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView()).hide(WindowInsetsCompat.Type.ime());return;}}if(fullscreen!=null){hideFullscreen();return;}if(web==null){finish();return;}web.evaluateJavascript("window.OfficeStudioHost?window.OfficeStudioHost.back():false",value->{if("false".equals(value)||"null".equals(value))finish();});}
     @Override protected void onPause(){if(web!=null)web.evaluateJavascript("document.dispatchEvent(new Event('visibilitychange'));window.dispatchEvent(new Event('pagehide'));",null);super.onPause();}
     @Override protected void onDestroy(){destroyed=true;try{unregisterReceiver(shareReceiver);}catch(Exception ignored){}if(chooser!=null)chooser.onReceiveValue(null);io.execute(()->{if(transfer!=null)try{transfer.out.close();transfer.file.delete();}catch(Exception ignored){}for(ImportFile f:imports.values())f.file.delete();imports.clear();});io.shutdown();if(web!=null){root.removeView(web);web.destroy();}super.onDestroy();}

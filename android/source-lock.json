@@ -6,9 +6,9 @@
     "sheet": {
       "repository": "beaur8-prog/sheet-studio",
       "ref": "main",
-      "sourceCommit": "42b93a34ba7f9cf1ca81b28c443999049437b3b8",
-      "version": "1.0.2",
-      "versionCode": 3,
+      "sourceCommit": "65cd5a51396eeb560c19e34e6ff4c207e9a02661",
+      "version": "1.0.3",
+      "versionCode": 4,
       "upstreamCommit": "cd475449a9517ff61a638cb2cfaddeb6088230c6"
     },
     "slide": {
@@ -35,27 +35,31 @@
     "sheet"
   ],
   "tests": {
-    "executed": false,
-    "status": "skipped",
-    "reason": "Fast publication without application tests per established user preference"
+    "executed": true,
+    "status": "local checks passed; emulator run pending",
+    "scope": "isolated Sheet QA APK only; no publication"
   },
   "combinedZIP": false,
   "nativeSlideHostUpstreamCommit": "584be72a8d8cc57a493f00eeea3c847d9d9f8cbb",
   "development": {
     "status": "development verification; not publicly published",
-    "sheetSourceCommit": "42b93a34ba7f9cf1ca81b28c443999049437b3b8",
-    "sheetRendererVersion": "0.7.43",
+    "sheetSourceCommit": "65cd5a51396eeb560c19e34e6ff4c207e9a02661",
+    "sheetRendererVersion": "0.7.44",
     "nativeBaselineCommit": "8146a96f4fd847a3b3d757d175a6f641604724b2",
     "changes": [
       "fill native Sheet window through display cutout; keep IME resize only",
       "provide typed cutout metadata and native closeApp API",
       "preview draft in the selected cell without committing",
-      "confirm close and flush recovery before Activity finish"
+      "confirm close and flush recovery before Activity finish",
+      "Android-only full-screen viewer with top edit/menu overlay and Escape return",
+      "adaptive ribbon editing for wide Android tablet/DeX keyboard or mouse windows",
+      "native Sheet Escape consumption and physical-keyboard capability updates"
     ],
     "verification": {
       "localJavaCompile": "passed",
       "localRendererUI": 15,
-      "emulatorRuntime": "see android/qa/SHEET-RUNTIME-20261108.md"
+      "localModeUI": 4,
+      "emulatorRuntime": "pending new run; see android/qa/SHEET-RUNTIME-20261108.md"
     }
   }
 }

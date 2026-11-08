@@ -37,6 +37,11 @@
  Object.defineProperty(navigator,'share',{configurable:true,value:async({files})=>{if(!files||files.length!==1)throw new Error('한 번에 파일 하나를 공유할 수 있습니다');const file=files[0],result=await share({name:file.name,mime:file.type,data:new Uint8Array(await file.arrayBuffer())});if(!result.completed)throw new DOMException('공유를 취소했습니다','AbortError');}});
  try{Object.defineProperty(navigator,'clipboard',{configurable:true,value:{readText:async()=>request('readClipboard'),writeText:clipboard,write:async items=>{if(items?.length){const blob=await items[0].getType('text/plain');await clipboard(await blob.text());}}}});}catch{}
  window.OfficeStudioHost={request,receive(meta){if(incoming.length){void request('release',{token:meta.token});alert('열기 대기 중인 파일이 있습니다. 잠시 뒤 다시 열어 주세요.');return;}incoming.push(meta);void flushIncoming();},back(){if(backListeners.size){for(const back of [...backListeners])back();return true;}const names=['sheet-studio-android-back','slide-studio-android-back'];for(const name of names){const event=new Event(name,{cancelable:true});window.dispatchEvent(event);if(event.defaultPrevented)return true;}if(window.sheetStudio?.flushRecovery){void Promise.resolve(window.sheetStudio.flushRecovery()).then(()=>request('close')).catch(error=>alert('복구 저장에 실패했습니다. 사본 저장 후 다시 종료해 주세요. '+error.message));return true;}return false;}};
+ // Escape is an editor/viewer command. Never translate it into Android Back.
+ window.OfficeStudioHost.escape=()=>{
+  const target=document.activeElement||document,event=new KeyboardEvent('keydown',{key:'Escape',code:'Escape',bubbles:true,cancelable:true});
+  target.dispatchEvent(event);return event.defaultPrevented;
+ };
  // Existing recovery/original-download controls may create detached anchors.
  // Keep those bytes in the Android save picker instead of a WebView blob URL.
  const urls=new Map(),create=URL.createObjectURL.bind(URL),revoke=URL.revokeObjectURL.bind(URL),click=HTMLAnchorElement.prototype.click;

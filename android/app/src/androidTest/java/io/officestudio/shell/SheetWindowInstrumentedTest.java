@@ -48,6 +48,10 @@ public class SheetWindowInstrumentedTest {
         String before=js(s,"JSON.stringify([innerWidth,innerHeight,document.querySelector('#grid').getBoundingClientRect().top])");
         do{SystemClock.sleep(350);String after=js(s,"JSON.stringify([innerWidth,innerHeight,document.querySelector('#grid').getBoundingClientRect().top])");if(before.equals(after))break;before=after;}while(SystemClock.uptimeMillis()<end);
     }
+    void settle(ActivityScenario<MainActivity> s) throws Exception {
+        js(s,"window.__qaPainted=false;sheetStudio.whenIdle().then(()=>window.__qaPainted=true)");
+        waitJS(s,"window.__qaPainted && !document.querySelector('.workbook-busy')");SystemClock.sleep(150);
+    }
     void screenshot(String name){
         File dir=new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null),"sheet-qa");
         assertTrue(dir.isDirectory()||dir.mkdirs());
@@ -76,8 +80,8 @@ public class SheetWindowInstrumentedTest {
     }
     @Test public void cameraAndSystemRowsBelongToTheRealWindowInBothOrientations() throws Exception {
         try(ActivityScenario<MainActivity> s=ActivityScenario.launch(MainActivity.class)){
-            ready(s);assertFullWindow(s);screenshot("portrait-full-window");
-            s.onActivity(a->a.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE));waitJS(s,"innerWidth>innerHeight");SystemClock.sleep(400);assertFullWindow(s);screenshot("landscape-full-window");
+            ready(s);assertFullWindow(s);settle(s);screenshot("portrait-full-window");
+            s.onActivity(a->a.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE));waitJS(s,"innerWidth>innerHeight");SystemClock.sleep(400);assertFullWindow(s);settle(s);screenshot("landscape-full-window");
             s.onActivity(a->a.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT));
         }
     }
@@ -89,7 +93,7 @@ public class SheetWindowInstrumentedTest {
             UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressKeyCode(KeyEvent.KEYCODE_ENTER);
             waitJS(s,"sheetStudio.getSelection().r===1 && sheetStudio.getCell('A1')?.raw==='123' && document.activeElement.id==='formula'");
             s.onActivity(a->assertTrue("Enter must keep the real keyboard visible",ViewCompat.getRootWindowInsets(a.root).isVisible(WindowInsetsCompat.Type.ime())));
-            screenshot("live-entry-next-cell");setDraft(s,"456");waitJS(s,"document.getElementById('android-cell-1-0').textContent==='456'");js(s,"document.querySelector('[data-action=cancel-edit]').click()");waitJS(s,"document.getElementById('android-cell-1-0').textContent===''");assertEquals("\"\"",js(s,"(sheetStudio.getCell('A2')?.raw??'')"));
+            setDraft(s,"456");waitJS(s,"document.getElementById('android-cell-1-0').textContent==='456'");settle(s);screenshot("live-entry-next-cell");js(s,"document.querySelector('[data-action=cancel-edit]').click()");waitJS(s,"document.getElementById('android-cell-1-0').textContent===''");assertEquals("\"\"",js(s,"(sheetStudio.getCell('A2')?.raw??'')"));
         }
     }
     @Test public void backCloseFinishesActivityAndRecoverySurvives() throws Exception {
@@ -101,11 +105,29 @@ public class SheetWindowInstrumentedTest {
             // First Back may dismiss IME; subsequent Back opens the app exit dialog.
             for(int i=0;i<3;i++){UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressBack();SystemClock.sleep(500);if("true".equals(js(s,"!!document.querySelector('[role=dialog][aria-label=\"앱을 닫을까요?\"]')")))break;}
             waitJS(s,"!!document.querySelector('[role=dialog][aria-label=\"앱을 닫을까요?\"]')");js(s,"document.querySelector('[data-close]').click()");waitJS(s,"!document.querySelector('.backdrop')");assertFalse(activity.get().isFinishing());assertEquals("\"123\"",js(s,"sheetStudio.getCell('A1')?.raw"));
-            UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressBack();waitJS(s,"!!document.querySelector('[role=dialog][aria-label=\"앱을 닫을까요?\"]')");screenshot("exit-confirmation");js(s,"document.querySelector('[data-modal-button=\"0\"]').click()");
+            UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressBack();waitJS(s,"!!document.querySelector('[role=dialog][aria-label=\"앱을 닫을까요?\"]')");settle(s);screenshot("exit-confirmation");js(s,"document.querySelector('[data-modal-button=\"0\"]').click()");
             long end=SystemClock.uptimeMillis()+10000;while(!activity.get().isFinishing()&&SystemClock.uptimeMillis()<end)SystemClock.sleep(100);assertTrue("Close must finish the native Activity",activity.get().isFinishing());
         }
         try(ActivityScenario<MainActivity> s=ActivityScenario.launch(MainActivity.class)){
-            ready(s);js(s,"document.querySelector('[data-mobile=more]').click()");waitJS(s,"!!document.querySelector('[data-mobile=recover]')");js(s,"document.querySelector('[data-mobile=recover]').click()");waitJS(s,"!!document.querySelector('[data-recover-document]')");js(s,"[...document.querySelectorAll('[data-recover-document]')].find(el=>el.textContent.includes('EXIT_QA')).click()");waitJS(s,"sheetStudio.getCell('A1')?.raw==='123'");assertEquals("\"\"",js(s,"(sheetStudio.getCell('A2')?.raw??'')"));screenshot("recovery-after-exit");
+            ready(s);js(s,"document.querySelector('[data-mobile=more]').click()");waitJS(s,"!!document.querySelector('[data-mobile=recover]')");js(s,"document.querySelector('[data-mobile=recover]').click()");waitJS(s,"!!document.querySelector('[data-recover-document]')");js(s,"[...document.querySelectorAll('[data-recover-document]')].find(el=>el.textContent.includes('EXIT_QA')).click()");waitJS(s,"sheetStudio.getCell('A1')?.raw==='123'");assertEquals("\"\"",js(s,"(sheetStudio.getCell('A2')?.raw??'')"));settle(s);screenshot("recovery-after-exit");
         }
     }
+    @Test public void viewerUsesWholeViewportAndHardwareEscapeReturnsToEditingWithoutClosing() throws Exception {
+        AtomicReference<MainActivity> activity=new AtomicReference<>();
+        try(ActivityScenario<MainActivity> s=ActivityScenario.launch(MainActivity.class)){
+            ready(s);s.onActivity(activity::set);
+            String before=js(s,"JSON.stringify({book:sheetStudio.getWorkbook(),history:sheetStudio.historyStats(),dirty:sheetStudio.isDirty()})");
+            tap(s,".android-header [data-mobile=mode]");waitJS(s,"sheetStudio.getMode()==='view' && document.body.classList.contains('viewer-mode')");settle(s);
+            assertEquals("true",js(s,"(()=>{const r=document.querySelector('#grid-shell').getBoundingClientRect();return r.top===0 && Math.abs(r.height-innerHeight)<1})()"));
+            screenshot("viewer-whole-window");
+            UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressKeyCode(KeyEvent.KEYCODE_ESCAPE);
+            waitJS(s,"sheetStudio.getMode()==='edit' && !document.body.classList.contains('viewer-mode')");settle(s);
+            assertFalse("Escape must not finish Activity",activity.get().isFinishing());
+            assertEquals(before,js(s,"JSON.stringify({book:sheetStudio.getWorkbook(),history:sheetStudio.historyStats(),dirty:sheetStudio.isDirty()})"));
+            UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressKeyCode(KeyEvent.KEYCODE_ESCAPE);
+            assertFalse("Escape key-up/repeat must not become Back",activity.get().isFinishing());
+            s.onActivity(a->androidx.core.view.WindowCompat.getInsetsController(a.getWindow(),a.getWindow().getDecorView()).hide(WindowInsetsCompat.Type.ime()));
+        }
+    }
+
 }
