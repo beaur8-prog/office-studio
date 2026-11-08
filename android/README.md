@@ -37,3 +37,11 @@ Office Android 릴리스 `android-v1.0.2`는 Sheet APK, 빌드 기록, 체크섬
 최신 앱 main `1ee351b`의 발표 확대·이름 있는 터치 도구·안전 여백 CSS와 호스트 브랜치 `584be72`의 창·카메라 영역 수정을 함께 포함합니다. Sheet의 상태바 API는 유지하고 Slide만 versionName 1.0.2/versionCode 3으로 빌드합니다. 기존 앱 ID와 서명 키를 재사용합니다.
 
 SDK·Gradle·npm 캐시는 `/private/tmp/office-studio-android-build-cache`를 재사용하며 `:app:assembleSlideRelease`만 실행합니다. 설치·실행·브라우저·에뮬레이터 테스트와 ZIP 생성은 생략합니다. `android-v1.0.3`에는 Slide APK·빌드 기록·체크섬 세 파일을 게시하고 기존 공유 주소를 갱신합니다. Sheet 1.0.1과 Word 1.0.0은 기존 파일을 유지합니다.
+
+## Sheet 0.7.43 렌더러 · Android 1.0.2 개발 수정
+
+`codex/android-sheet-lifecycle-20261108`은 정식 Android 1.0.1의 창·뒤로 가기 결함을 수정한다. Sheet에서만 네이티브 부모의 카메라/system-bar padding을 제거하고 cutout 진입을 허용한다. 키보드 높이만 네이티브에서 소비하고, 카메라/시스템줄 좌표는 렌더러로 보낸다. Sheet `closeApp()`을 네이티브 `close`와 연결하며 IME가 보이는 첫 Back은 IME부터 숨긴다. Word/Slide 코드는 보존한다.
+
+`source-lock.json`은 Sheet 0.7.43을 고정한다. 앱 수정과 호스트를 함께 빌드해야 하며 이전 설치 APK에는 자동으로 반영되지 않는다. 기존 APK·공개 페이지는 아직 갱신하지 않는다. 시험 APK는 `-PsheetQa`에서만 `.qa` ID를 사용해 정식 설치본/사용자 자료와 분리한다. `node android/qa/prepare-sheet-assets.cjs <정확한 Sheet 소스 경로>` 후 `./gradlew -PsheetQa :app:assembleSheetDebug :app:assembleSheetDebugAndroidTest`로 만든다. 정식 배포는 기존 서명 키와 `versionCode 3`을 사용해야 한다.
+
+실제 창/키보드/Activity 종료/복구 검사는 `SheetWindowInstrumentedTest`, 실행기는 `android/qa/run-sheet-lifecycle.sh`다. 이 실행기는 **새로 만든 시험 에뮬레이터 전용**이며 실사용 폰에서 실행하지 않는다. GitHub Actions의 Sheet 전용 회귀 워크플로는 배포·리토스 갱신 없이 시험 패키지를 빌드하고 증거를 남긴다.

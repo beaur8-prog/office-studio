@@ -1,12 +1,7 @@
 {
   "sheet": {
-    "version": "1.0.1",
+    "version": "1.0.2",
     "assetFiles": [
-      {
-        "path": "THIRD-PARTY-NOTICES.txt",
-        "bytes": 3500,
-        "sha256": "89f48af3064611735f2cc4894bdb94a466c2ef451b5595d44028c989cf90cbac"
-      },
       {
         "path": "android-icon.svg",
         "bytes": 326,
@@ -19,18 +14,18 @@
       },
       {
         "path": "app-version.json",
-        "bytes": 20,
-        "sha256": "6a33e5f4b8fe43d76bfa8ad1c14fbbae5a9abad68194dc331b17c8b0d1415185"
+        "bytes": 21,
+        "sha256": "587bba857e018775677703a8b70ed1f48b6d6224896f27424ba402531bc675f4"
       },
       {
-        "path": "assets/index-9GD8aNcM.js",
-        "bytes": 1017031,
-        "sha256": "9baf86d739d6431e789644982d1159b2aec6f8f876d3e4f9e1a524550c4c07d8"
+        "path": "assets/index-CQXSOoDZ.js",
+        "bytes": 1019879,
+        "sha256": "617ed3a955dd6458c8117d54ca6ec53cc81dd17d72e57f9ade3b52c65397e34f"
       },
       {
-        "path": "assets/index-BNATsQxm.css",
-        "bytes": 53915,
-        "sha256": "698ae0199e357288ba28e20a2156fd935e814e99a26e878bf81510a94e439e50"
+        "path": "assets/index-CrvSO6ZQ.css",
+        "bytes": 55760,
+        "sha256": "78acd937f6eb7d2784a0a85d9efb293979fa197e1002cee41e8ada69c6c7dd12"
       },
       {
         "path": "assets/spreadsheet-BTv7Xkas.js",
@@ -49,15 +44,21 @@
       },
       {
         "path": "index.html",
-        "bytes": 784,
-        "sha256": "172c5109c55bd72d7c655e9952b59dad9cfb29f3144d5d31b55a18cc47838fc0"
+        "bytes": 708,
+        "sha256": "9be550d15ab04d7f26081d47c38cba524582071eda68aa22cb698bdd5c9d918b"
+      },
+      {
+        "path": "THIRD-PARTY-NOTICES.txt",
+        "bytes": 3500,
+        "sha256": "89f48af3064611735f2cc4894bdb94a466c2ef451b5595d44028c989cf90cbac"
       }
     ],
     "iconSourceSHA256": "180827929304256408d440428f7f736266be150b939270ea08efe92f332c864f",
     "launcherDensities": 5,
     "adaptiveIcon": true,
     "roundIcon": true,
-    "monochromeIcon": true
+    "monochromeIcon": true,
+    "sourceCommit": "f09716208596d2e6c76e73341948408b11856f11"
   },
   "slide": {
     "version": "1.0.2",

@@ -13,3 +13,6 @@ android/app/src/*/assets/public/
 android/generated-icons/
 
 android/__pycache__/
+
+.android/
+sheet-source/
