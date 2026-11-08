@@ -10,16 +10,17 @@ const modulePath='/Applications/Lithos.app/Contents/Resources/app.asar/electron/
 const hash=x=>crypto.createHash('sha256').update(x).digest('hex');
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 async function main(){
- const publish=process.argv.includes('--publish');
+ const publish=process.argv.includes('--publish'),skipTests=process.argv.includes('--skip-tests');
+ const version=JSON.parse(await fs.readFile(path.join(root,'android/source-lock.json'),'utf8')).version;
  const e={pid,directory,vaultRoot,publish,source:'앱/오피스 스튜디오 Android 다운로드.md',title:'오피스 스튜디오 Android'};
  if(publish){
   e.update=process.argv.includes('--update');if(e.update){const previous=JSON.parse(await fs.readFile(path.join(root,'publication/android/PUBLISHED.json'),'utf8'));e.previousHash=previous.contentSHA256;e.previousURL=previous.url;e.previousToken=new URL(previous.url).pathname.split('/').at(-1);}
-  const build=JSON.parse(await fs.readFile(path.join(root,'release/android/1.0.0/BUILD-android.json'),'utf8'));
-  const proof=JSON.parse(await fs.readFile(path.join(root,'release/android/1.0.0/ANDROID-VERIFICATION.json'),'utf8'));
-  if(!build.checks.nativeDeviceTests||!proof.passed||proof.profiles.length!==2||proof.profiles.some(p=>!p.passed))throw Error('Android native verification is incomplete');
+  const build=JSON.parse(await fs.readFile(path.join(root,'release/android',version,'BUILD-android.json'),'utf8'));
+  if(skipTests){if(build.tests?.status!=='skipped'||build.tests?.executed!==false||build.tests?.explicitlyAuthorized!==true)throw Error('Explicit no-test release record required');}
+  else{const proof=JSON.parse(await fs.readFile(path.join(root,'release/android',version,'ANDROID-VERIFICATION.json'),'utf8'));if(!build.checks?.nativeDeviceTests||!proof.passed||proof.profiles.length!==2||proof.profiles.some(p=>!p.passed))throw Error('Android native verification is incomplete');}
   e.content=await fs.readFile(path.join(root,'publication/android/downloads-ready.md'),'utf8');e.contentHash=hash(e.content);
   if(!e.content.startsWith('> **Android 설치 안내')||!e.content.includes('# 오피스 스튜디오 Android'))throw Error('Android draft format changed');
-  for(const app of build.apps){const response=await fetch('https://github.com/beaur8-prog/office-studio/releases/download/android-v1.0.0/'+app.filename,{method:'HEAD'});if(!response.ok||Number(response.headers.get('content-length'))!==app.bytes)throw Error('Public APK download unavailable: '+app.id);}
+  for(const app of build.apps){const response=await fetch(app.downloadURL||('https://github.com/beaur8-prog/office-studio/releases/download/android-v'+version+'/'+app.filename),{method:'HEAD'});if(!response.ok||Number(response.headers.get('content-length'))!==app.bytes)throw Error('Public APK download unavailable: '+app.id);}
  }
  if(execFileSync('ps',['-p',String(pid),'-o','command='],{encoding:'utf8'}).trim()!=='/Applications/Lithos.app/Contents/MacOS/Lithos')throw Error('Lithos process identity changed');
  if(await fetch('http://127.0.0.1:9229/json/list').then(()=>true,()=>false))throw Error('Existing inspector left untouched');
@@ -76,7 +77,7 @@ async function main(){
   }`})).value;
   await fs.mkdir(path.join(root,'test-results/android-lithos'),{recursive:true});
   await fs.writeFile(path.join(root,'test-results/android-lithos',publish?'maintenance-receipt.json':'ready.json'),JSON.stringify(result,null,2)+'\n');
-  if(publish){await fs.mkdir(path.join(root,'publication/android'),{recursive:true});const publicRecord={version:'1.0.0',title:result.title,url:result.url,source:result.source,contentSHA256:result.contentSHA256,readOnly:true,expiresAt:result.expiresAt};await fs.writeFile(path.join(root,'publication/android/PUBLISHED.json'),JSON.stringify(publicRecord,null,2)+'\n');}
+  if(publish){await fs.mkdir(path.join(root,'publication/android'),{recursive:true});const publicRecord={version,title:result.title,url:result.url,source:result.source,contentSHA256:result.contentSHA256,readOnly:true,expiresAt:result.expiresAt};await fs.writeFile(path.join(root,'publication/android/PUBLISHED.json'),JSON.stringify(publicRecord,null,2)+'\n');}
   console.log(JSON.stringify(result,null,2));
  }finally{
   if(owns){try{await call('Runtime.releaseObjectGroup',{objectGroup:'android-publication'});await call('Runtime.evaluate',{expression:"setTimeout(()=>process.getBuiltinModule('inspector').close(),200);'closing'",returnByValue:true});}finally{ws.close();}

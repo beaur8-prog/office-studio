@@ -15,3 +15,11 @@ Android 릴리스는 `android-v<version>` 태그와 `--latest=false`로 게시�
 `python3 android/finalize-release.py --proofs <proofs-directory> --run <workflow-id>`는 성공한 휴대폰·태블릿 네이티브 결과와 브라우저 검사를 확인한 뒤 공개 ZIP·체크섬·검증 기록을 만듭니다. `python3 android/build-release-page.py`로 다운로드 문서와 릴리스 본문을 생성합니다. 공개 GitHub 릴리스에는 검증된 APK 세 개, APK 묶음 ZIP, 아이콘 PNG 세 개, `BUILD-android.json`, `ANDROID-VERIFICATION.json`, `SHA256SUMS-android.txt`만 올립니다.
 
 `node android/publish-lithos.cjs --publish`는 공개 다운로드와 검증 기록을 확인하고 실행 중인 리토스에 **새 Android 페이지**를 만듭니다. 기존 페이지·서비스·터널을 유지하고 기존 방문 통계의 직렬 저장 큐 안에서 Android 카운터만 추가합니다. 외부에서 통계는 보이지 않습니다. 이 명령은 로컬 배포 운영자용이며 다운로드 사용자에게 필요하지 않습니다.
+
+## Slide Studio 1.0.1 단독 갱신
+
+이번 배포는 최신 Slide main `0dd3e1a`의 발표 화면·터치 조작 개선과 기존 Android 파일 입출력 연결을 합칩니다. 네이티브 호스트에서 SystemBars·ScreenOrientation API를 제공하고 `versionName 1.0.1`, `versionCode 2`로 빌드합니다. Sheet·Word는 공개된 1.0.0 APK를 바이트 변경 없이 ZIP에 다시 담습니다. 앱 ID와 기존 서명 키를 유지합니다.
+
+이번 요청은 추가 테스트 없이 배포하도록 명시되어 설치·실행·기능·에뮬레이터·브라우저 테스트를 수행하지 않았습니다. APK 조립과 서명·매니페스트·자산 포함·체크섬 기록만 수행하며 `BUILD-android.json`의 테스트 상태는 `skipped`입니다. 이전 1.0.0 검사 결과와 별도로 기록합니다.
+
+앱 소스를 잠금 커밋에 맞춘 뒤 `npm run build`, `node android/prepare-web.cjs slide`, `cd android && ./gradlew :app:assembleSlideRelease`로 Slide만 빌드합니다. `package-slide-update.py`는 인접 `baseline/`에 내려받은 기존 Sheet·Word APK, `BUILD-android-1.0.0.json` 및 운영 기록을 사용해 새 APK·ZIP·체크섬을 만듭니다. `build-slide-update-page.py`로 기존 페이지 갱신안을 만들고 공개 배포 후 `node android/publish-lithos.cjs --publish --update --skip-tests`로 같은 공유 주소를 갱신합니다. `--skip-tests`는 명시적으로 승인된 테스트 생략 기록이 있을 때만 허용합니다.
