@@ -6,10 +6,10 @@
     "sheet": {
       "repository": "beaur8-prog/sheet-studio",
       "ref": "main",
-      "sourceCommit": "6584ca09841cb503cf8349a0e934dca5bab5b73c",
+      "sourceCommit": "01c99a380079d6b0f123df5c4cc2b3b497e2e992",
       "version": "1.0.4",
       "versionCode": 5,
-      "upstreamCommit": "6584ca09841cb503cf8349a0e934dca5bab5b73c"
+      "upstreamCommit": "01c99a380079d6b0f123df5c4cc2b3b497e2e992"
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",
@@ -47,7 +47,7 @@
   "nativeSheetHostUpstreamCommit": "04fc43a285c29669fcdcbdef3069cac71092f46b",
   "development": {
     "sheetRendererVersion": "0.7.45",
-    "sheetSourceCommit": "6584ca09841cb503cf8349a0e934dca5bab5b73c",
+    "sheetSourceCommit": "01c99a380079d6b0f123df5c4cc2b3b497e2e992",
     "nativeBaselineCommit": "7c3f7f87e1c914671e46d7f846805dcede8d677d",
     "changes": [
       "fullscreen layout independent of read-only permissions",
