@@ -73,24 +73,31 @@ public class SheetWindowInstrumentedTest {
             s.onActivity(a->a.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT));
         }
     }
-    @Test public void liveDraftEnterKeepsImeAndCloseReallyFinishesWhileRecoverySurvives() throws Exception {
-        AtomicReference<MainActivity> activity=new AtomicReference<>();
+    @Test public void liveDraftEnterKeepsImeAndCancelRestores() throws Exception {
         try(ActivityScenario<MainActivity> s=ActivityScenario.launch(MainActivity.class)){
-            ready(s);s.onActivity(activity::set);tap(s,"#android-cell-0-0");waitJS(s,"document.activeElement.id==='formula'");
-            setDraft(s,"123");waitJS(s,"document.getElementById('android-cell-0-0').textContent==='123'");assertEquals("\"\"",js(s,"sheetStudio.getCell('A1').raw"));assertEquals("0",js(s,"sheetStudio.historyStats().undo"));
+            ready(s);tap(s,"#android-cell-0-0");waitJS(s,"document.activeElement.id==='formula'");
+            setDraft(s,"123");waitJS(s,"document.getElementById('android-cell-0-0').textContent==='123'");assertEquals("\"\"",js(s,"(sheetStudio.getCell('A1').raw??'')"));assertEquals("0",js(s,"sheetStudio.historyStats().undo"));
             long end=SystemClock.uptimeMillis()+10000;boolean[] ime={false};do{s.onActivity(a->{WindowInsetsCompat i=ViewCompat.getRootWindowInsets(a.root);ime[0]=i!=null&&i.isVisible(WindowInsetsCompat.Type.ime());});if(!ime[0])SystemClock.sleep(150);}while(!ime[0]&&SystemClock.uptimeMillis()<end);assertTrue("Touch entry must open a real IME",ime[0]);
             UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressKeyCode(KeyEvent.KEYCODE_ENTER);
             waitJS(s,"sheetStudio.getSelection().r===1 && sheetStudio.getCell('A1').raw==='123' && document.activeElement.id==='formula'");
             s.onActivity(a->assertTrue("Enter must keep the real keyboard visible",ViewCompat.getRootWindowInsets(a.root).isVisible(WindowInsetsCompat.Type.ime())));
-            screenshot("live-entry-next-cell");setDraft(s,"456");waitJS(s,"document.getElementById('android-cell-1-0').textContent==='456'");js(s,"document.querySelector('[data-action=cancel-edit]').click()");waitJS(s,"document.getElementById('android-cell-1-0').textContent===''");assertEquals("\"\"",js(s,"sheetStudio.getCell('A2').raw"));
+            screenshot("live-entry-next-cell");setDraft(s,"456");waitJS(s,"document.getElementById('android-cell-1-0').textContent==='456'");js(s,"document.querySelector('[data-action=cancel-edit]').click()");waitJS(s,"document.getElementById('android-cell-1-0').textContent===''");assertEquals("\"\"",js(s,"(sheetStudio.getCell('A2').raw??'')"));
+        }
+    }
+    @Test public void backCloseFinishesActivityAndRecoverySurvives() throws Exception {
+        AtomicReference<MainActivity> activity=new AtomicReference<>();
+        try(ActivityScenario<MainActivity> s=ActivityScenario.launch(MainActivity.class)){
+            ready(s);s.onActivity(activity::set);
+            js(s,"(()=>{const book=sheetStudio.getWorkbook();book.name='EXIT_QA';const d=new DataTransfer();d.items.add(new File([JSON.stringify(book)],'exit.sheet.json'));const i=document.querySelector('#file-input');i.files=d.files;i.dispatchEvent(new Event('change',{bubbles:true}));})()");
+            waitJS(s,"sheetStudio.getWorkbook().name==='EXIT_QA'");tap(s,"#android-cell-0-0");waitJS(s,"document.activeElement.id==='formula'");setDraft(s,"123");js(s,"document.querySelector('[data-action=commit-edit]').click()");waitJS(s,"sheetStudio.getCell('A1').raw==='123' && !document.body.classList.contains('android-cell-editing')");
             // First Back may dismiss IME; subsequent Back opens the app exit dialog.
             for(int i=0;i<3;i++){UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressBack();SystemClock.sleep(500);if("true".equals(js(s,"!!document.querySelector('[role=dialog][aria-label=\"앱을 닫을까요?\"]')")))break;}
             waitJS(s,"!!document.querySelector('[role=dialog][aria-label=\"앱을 닫을까요?\"]')");js(s,"document.querySelector('[data-close]').click()");waitJS(s,"!document.querySelector('.backdrop')");assertFalse(activity.get().isFinishing());assertEquals("\"123\"",js(s,"sheetStudio.getCell('A1').raw"));
             UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressBack();waitJS(s,"!!document.querySelector('[role=dialog][aria-label=\"앱을 닫을까요?\"]')");screenshot("exit-confirmation");js(s,"document.querySelector('[data-modal-button=\"0\"]').click()");
-            end=SystemClock.uptimeMillis()+10000;while(!activity.get().isFinishing()&&SystemClock.uptimeMillis()<end)SystemClock.sleep(100);assertTrue("Close must finish the native Activity",activity.get().isFinishing());
+            long end=SystemClock.uptimeMillis()+10000;while(!activity.get().isFinishing()&&SystemClock.uptimeMillis()<end)SystemClock.sleep(100);assertTrue("Close must finish the native Activity",activity.get().isFinishing());
         }
         try(ActivityScenario<MainActivity> s=ActivityScenario.launch(MainActivity.class)){
-            ready(s);js(s,"document.querySelector('[data-mobile=more]').click()");waitJS(s,"!!document.querySelector('[data-mobile=recover]')");js(s,"document.querySelector('[data-mobile=recover]').click()");waitJS(s,"!!document.querySelector('[data-recover-document]')");js(s,"document.querySelector('[data-recover-document]').click()");waitJS(s,"sheetStudio.getCell('A1').raw==='123'");assertEquals("\"\"",js(s,"sheetStudio.getCell('A2').raw"));screenshot("recovery-after-exit");
+            ready(s);js(s,"document.querySelector('[data-mobile=more]').click()");waitJS(s,"!!document.querySelector('[data-mobile=recover]')");js(s,"document.querySelector('[data-mobile=recover]').click()");waitJS(s,"!!document.querySelector('[data-recover-document]')");js(s,"[...document.querySelectorAll('[data-recover-document]')].find(el=>el.textContent.includes('EXIT_QA')).click()");waitJS(s,"sheetStudio.getCell('A1').raw==='123'");assertEquals("\"\"",js(s,"(sheetStudio.getCell('A2').raw??'')"));screenshot("recovery-after-exit");
         }
     }
 }
