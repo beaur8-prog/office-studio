@@ -1,6 +1,8 @@
 package io.officestudio.shell;
 
 import android.os.SystemClock;
+import android.content.res.Configuration;
+import android.view.inputmethod.InputMethodManager;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.KeyEvent;
@@ -18,6 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import java.io.File;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -178,6 +181,81 @@ public class WordViewerInstrumentedTest {
             assertEquals("true",js(scenario,"(()=>{const label=document.querySelector('.android-tablet-editor[data-active=true] .zoom-value');return !label||/^\\d+%$/.test(label.textContent.trim())})()"));
             screenshot("editor-pinch");
         }
+    }
+    @Test public void hardwareKeyboardEscapeInNormalModeKeepsTheActivityAndDocument() throws Exception {
+        UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        String previousIme=device.executeShellCommand("settings get secure show_ime_with_hard_keyboard").trim();
+        int keyboard=-1;
+        for(int id:InputDevice.getDeviceIds()){
+            InputDevice input=InputDevice.getDevice(id);
+            if(input!=null&&input.supportsSource(InputDevice.SOURCE_KEYBOARD)&&input.getKeyboardType()==InputDevice.KEYBOARD_TYPE_ALPHABETIC){keyboard=id;if(!input.isVirtual())break;}
+        }
+        assertTrue("A hardware alphabetic keyboard must be attached to the AVD",keyboard>=0);
+        final int keyboardId=keyboard;
+        try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(MainActivity.class)){
+            waitJS(scenario,"!!document.querySelector('.android-start button')");assertFormFactor(scenario);dismissImmersiveGuide();
+            AtomicReference<MainActivity> original=new AtomicReference<>();
+            scenario.onActivity(activity->{
+                original.set(activity);
+                Configuration config=activity.getResources().getConfiguration();
+                assertEquals(Configuration.KEYBOARD_QWERTY,config.keyboard);
+                assertFalse("Normal tablet mode, not a desktop/multiwindow session",activity.isInMultiWindowMode());
+                assertFalse(activity.isInPictureInPictureMode());
+                assertNotEquals(Configuration.UI_MODE_TYPE_DESK,config.uiMode&Configuration.UI_MODE_TYPE_MASK);
+            });
+            InputDevice input=InputDevice.getDevice(keyboardId);
+            JSONObject environment=new JSONObject().put("api",android.os.Build.VERSION.SDK_INT).put("android",android.os.Build.VERSION.RELEASE)
+                .put("keyboardDeviceId",keyboardId).put("keyboardName",input.getName()).put("keyboardSources",input.getSources())
+                .put("keyboardIsVirtual",input.isVirtual()).put("normalWindowMode",true).put("bluetoothRadioTested",false);
+            File dir=new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null),"viewer-qa");
+            assertTrue(dir.isDirectory()||dir.mkdirs());
+            try(java.io.FileWriter writer=new java.io.FileWriter(new File(dir,"keyboard-environment.json"))){writer.write(environment.toString(2));}
+            js(scenario,"[...document.querySelectorAll('.android-start button')].find(b=>b.textContent==='새 문서').click()");
+            waitJS(scenario,"!!document.querySelector('.tiptap[contenteditable=true]')");
+            js(scenario,"(()=>{const e=document.querySelector('.tiptap');e.focus();document.execCommand('insertText',false,'BT ESC KEEP');window.hardwareEscapeCount=0;window.addEventListener('studio-native-escape',()=>window.hardwareEscapeCount++)})()");
+            for(boolean showIme:new boolean[]{false,true}){
+                device.executeShellCommand("settings put secure show_ime_with_hard_keyboard "+(showIme?"1":"0"));
+                js(scenario,"document.querySelector('.tiptap').focus()");
+                scenario.onActivity(activity->{
+                    InputMethodManager ime=(InputMethodManager)activity.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+                    if(showIme)ime.showSoftInput(activity.web,InputMethodManager.SHOW_IMPLICIT);
+                    else ime.hideSoftInputFromWindow(activity.web.getWindowToken(),0);
+                });
+                long deadline=SystemClock.uptimeMillis()+10000;AtomicReference<Boolean> shown=new AtomicReference<>(null);
+                do{
+                    scenario.onActivity(activity->shown.set(ViewCompat.getRootWindowInsets(activity.root).isVisible(WindowInsetsCompat.Type.ime())));
+                    if(Boolean.valueOf(showIme).equals(shown.get()))break;
+                    SystemClock.sleep(100);
+                }while(SystemClock.uptimeMillis()<deadline);
+                assertEquals("IME state must be measured before testing Escape",Boolean.valueOf(showIme),shown.get());
+                js(scenario,"window.hardwareEscapeCount=0;[...document.querySelectorAll('[aria-label=\"전체 화면 뷰어\"]')].find(b=>b.getBoundingClientRect().height>0).click()");
+                waitJS(scenario,"!!document.querySelector('.android-presentation')");
+                long down=SystemClock.uptimeMillis();
+                injectKeyboard(keyboardId,KeyEvent.KEYCODE_ESCAPE,KeyEvent.ACTION_DOWN,0,down);
+                SystemClock.sleep(150);injectKeyboard(keyboardId,KeyEvent.KEYCODE_ESCAPE,KeyEvent.ACTION_DOWN,1,down);
+                injectKeyboard(keyboardId,KeyEvent.KEYCODE_ESCAPE,KeyEvent.ACTION_UP,0,down);
+                waitJS(scenario,"!document.querySelector('.android-presentation')&&!!document.querySelector('.tiptap[contenteditable=true]')");
+                assertEquals("A held Escape must close the viewer exactly once", "1",js(scenario,"window.hardwareEscapeCount"));
+                scenario.onActivity(activity->{assertSame(original.get(),activity);assertFalse(activity.isFinishing());assertFalse(activity.isDestroyed());});
+                assertEquals("RESUMED",scenario.getState().name());
+                waitJS(scenario,"document.activeElement===document.querySelector('.tiptap')");
+                long typed=SystemClock.uptimeMillis();injectKeyboard(keyboardId,KeyEvent.KEYCODE_X,KeyEvent.ACTION_DOWN,0,typed);injectKeyboard(keyboardId,KeyEvent.KEYCODE_X,KeyEvent.ACTION_UP,0,typed);
+                waitJS(scenario,"document.querySelector('.tiptap').textContent.toLowerCase().endsWith('"+(showIme?"xx":"x")+"')");
+                long again=SystemClock.uptimeMillis();injectKeyboard(keyboardId,KeyEvent.KEYCODE_ESCAPE,KeyEvent.ACTION_DOWN,0,again);injectKeyboard(keyboardId,KeyEvent.KEYCODE_ESCAPE,KeyEvent.ACTION_UP,0,again);
+                waitJS(scenario,"!document.querySelector('.android-presentation')&&document.querySelector('.tiptap').textContent.includes('BT ESC KEEP')");
+                scenario.onActivity(activity->{assertSame(original.get(),activity);assertFalse(activity.isFinishing());});
+                assertEquals("RESUMED",scenario.getState().name());
+                screenshot(showIme?"hardware-escape-ime-visible":"hardware-escape-ime-hidden");
+            }
+        }finally{
+            if(previousIme.matches("[01]"))device.executeShellCommand("settings put secure show_ime_with_hard_keyboard "+previousIme);
+            else device.executeShellCommand("settings delete secure show_ime_with_hard_keyboard");
+        }
+    }
+    void injectKeyboard(int device,int code,int action,int repeat,long down){
+        KeyEvent event=new KeyEvent(down,SystemClock.uptimeMillis(),action,code,repeat,0,device,code==KeyEvent.KEYCODE_ESCAPE?1:0,
+            KeyEvent.FLAG_FROM_SYSTEM|(repeat>0?KeyEvent.FLAG_LONG_PRESS:0),InputDevice.SOURCE_KEYBOARD);
+        assertTrue(InstrumentationRegistry.getInstrumentation().getUiAutomation().injectInputEvent(event,true));
     }
     void pinch(int width,int height){
         long down=SystemClock.uptimeMillis();

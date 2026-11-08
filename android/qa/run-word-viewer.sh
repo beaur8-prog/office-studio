@@ -15,6 +15,8 @@ adb shell am force-stop io.officestudio.word
 adb shell pm clear io.officestudio.word
 adb shell wm size > "$out/$profile-device.txt"
 adb shell wm density >> "$out/$profile-device.txt"
+adb shell getprop ro.build.version.release >> "$out/$profile-device.txt"
+adb shell getprop ro.build.version.sdk >> "$out/$profile-device.txt"
 adb shell settings put global window_animation_scale 0
 adb shell settings put global transition_animation_scale 0
 adb shell settings put global animator_duration_scale 0
@@ -23,5 +25,5 @@ cat "$out/$profile.log"
 adb pull /sdcard/Android/data/io.officestudio.word/files/viewer-qa "$out/$profile-shots" || true
 adb logcat -d > "$out/$profile-logcat.txt"
 adb exec-out screencap -p > "$out/$profile.png"
-grep -q 'OK (2 tests)' "$out/$profile.log"
+grep -q 'OK (3 tests)' "$out/$profile.log"
 if grep -Eq 'FAILURES!!!|INSTRUMENTATION_FAILED|Process crashed' "$out/$profile.log"; then exit 1; fi
