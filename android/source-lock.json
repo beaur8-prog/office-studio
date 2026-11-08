@@ -14,10 +14,10 @@
     "slide": {
       "repository": "beaur8-prog/slide-studio",
       "ref": "codex/android-object-menu-20261108",
-      "sourceCommit": "cf8461f098a8d93cf8dfaebc11ea896a1fb96709",
+      "sourceCommit": "8235d7ceb7818438253ac4f467eae5eb6b0296bb",
       "version": "1.0.6",
       "versionCode": 7,
-      "upstreamCommit": "2e7c238be5b5514c759fa14bd1ac1fb6fedbe8d5"
+      "upstreamCommit": "d3e566af6f4429fde975019ea363a6af7217aacf"
     },
     "word": {
       "repository": "beaur8-prog/word-studio",
@@ -47,7 +47,7 @@
   "nativeWordHostUpstreamCommit": "9bae920e13a49fff7ed7c3b6b54fdad5e7de678c",
   "nativeSheetHostUpstreamCommit": "225cefbdc04a81bcc79639b2e106af05c39892b8",
   "development": {
-    "status": "object-menu and presentation-controls fixes validated; not publicly released",
+    "status": "object-menu, presentation-controls and printing changes validated; not publicly released",
     "baselineAppVersion": "1.0.6",
     "baselineHostCommit": "0b0e61a641b669ddbe8115aad0291d45eddc1dcd",
     "nativeVerificationCommit": "5b3dcb2de684492a46c445f0944f4f53ccf25024",
@@ -98,6 +98,33 @@
         "nativeBuildPassed": true
       },
       "report": "android/qa/SLIDE-PRESENTATION-TOOLS-2026-11-08.md",
+      "publicReleaseUpdated": false
+    },
+    "printing": {
+      "nativeImplementationCommit": "3161d4eaf42a99f18ba962708158f435cba8e3bd",
+      "nativeVerificationCommit": "6809ca7bc15255484c3cdd28b6e97ddb3e1d510a",
+      "report": "android/qa/SLIDE-PRINT-2026-11-08.md",
+      "verification": {
+        "browserPassed": 8,
+        "nativeSystemPrintPassed": 1,
+        "nativeSdk": 36,
+        "nativeWebView": "133.0.6943.137",
+        "nativeResolution": "1280x800",
+        "pdfPages": 2,
+        "pdfPageSizePoints": [
+          841,
+          595
+        ],
+        "pdfVisuallyVerified": true,
+        "nativeCrashBufferEmpty": true,
+        "oneUIHardwareTested": false,
+        "physicalPrinterTested": false,
+        "webBuildsPassed": [
+          "main",
+          "Android 1.0.6 source branch"
+        ],
+        "nativeDebugBuildPassed": true
+      },
       "publicReleaseUpdated": false
     }
   }
