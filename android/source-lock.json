@@ -19,8 +19,8 @@
     },
     "word": {
       "repository": "beaur8-prog/word-studio",
-      "ref": "release/android-1.0.0",
-      "sourceCommit": "493c0492dc0fce75f3dab411317acbdfc1ae98ca",
+      "ref": "codex/android-page-viewer",
+      "sourceCommit": "9f1c4def34a47fe888e1b66cec6323ae39ecf5ed",
       "version": "1.0.0"
     }
   },
