@@ -29,4 +29,8 @@
 - Sheet 1.0.4-qa/versionCode 5, 별도 `.qa` ID. 렌더러는 source-lock.json에 고정한 0.7.45.
 - 공통 OfficeStudioHost가 없는 상태에서도 실제 Esc와 Android Back이 전체화면만 종료하는 검사, 전체화면 셀 입력·실제 IME 유지·Esc 초안 보존 검사를 포함한 5개 계측 시나리오를 사용한다.
 - 로컬 Java/계측 컴파일과 전체 QA APK 빌드를 검사했다. 웹 단위 536개 통과/Windows 전용1개 제외, Android UI15개군 및 전체화면·태블릿 UI7개군, Electron/기존 데스크톱 편집 회귀 통과.
-- 실제 에뮬레이터 최종 결과는 완료 후 기록한다. 공개 배포는 하지 않는다.
+- [최종 실제 API 35 Pixel 6 실행](https://github.com/beaur8-prog/office-studio/actions/runs/42462060236): **OK (5 tests)**, 100.17초. 실패0개.
+- 공통 호스트 제거 후 실제 Esc·Back의 화면 복원/Activity 미종료, 전체화면 입력·Enter의 실제 IME 유지·Esc 초안/이력 불변, 창/미리보기/종료/복구 세 가지 기존 회귀 모두 통과했다. `SheetInput: Escape via pre-ime` 로그가 실제 입력기 전 경로를 확인한다.
+- [초기 실행](https://github.com/beaur8-prog/office-studio/actions/runs/42461275596)의 전체화면 터치 입력/Esc 두 실패를 확인하고 스마트폰 입력 대기와 키보드 연결 정보를 분리했다. WebView 입력기 전 Esc 처리와 화면 전환 안정화 대기를 보강한 뒤 위 다섯 검사를 재실행했다.
+- 검증 코드: Sheet `8d433b8db31c1c1efd7d4ae1a3b217b8787660d3`, 네이티브/계측 `80cfbcab146278de37d09e7d4accc3be655311c6`. 이후 결과 메타데이터 기록은 제품 코드 변경이 아니다.
+- 공개 배포는 하지 않는다. 실물 제조사 태블릿·DeX·물리 한글 키보드는 별도 검증 대상이다.

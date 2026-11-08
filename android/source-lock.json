@@ -38,8 +38,11 @@
   ],
   "tests": {
     "executed": true,
-    "status": "local renderer and Java compile passed; native emulator pending",
-    "scope": "Sheet isolated QA only; no public deployment"
+    "status": "passed",
+    "scope": "Sheet isolated QA only; no public deployment",
+    "emulatorRun": "https://github.com/beaur8-prog/office-studio/actions/runs/42462060236",
+    "passed": 5,
+    "failed": 0
   },
   "combinedZIP": false,
   "nativeSlideHostUpstreamCommit": "0c4c536778fd602650a2e999e7337ce4738f1030",
@@ -55,6 +58,6 @@
       "wide Android tablet mouse/keyboard commands share desktop editing engine",
       "consume Escape before IME and at Activity; do not arm phone input from keyboard capability alone"
     ],
-    "verification": "see android/qa/SHEET-RUNTIME-20261108.md"
+    "verification": "5 native tests passed, 100.17s; API35 Pixel6; see android/qa/SHEET-RUNTIME-20261108.md"
   }
 }
