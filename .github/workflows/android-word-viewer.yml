@@ -19,6 +19,14 @@ jobs:
   word-viewer:
     runs-on: ubuntu-24.04
     timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - profile: phone
+            device: pixel_6
+          - profile: tablet
+            device: pixel_c
     steps:
       - uses: actions/checkout@v4
         with:
@@ -97,13 +105,14 @@ jobs:
           api-level: 35
           target: google_apis
           arch: x86_64
-          profile: pixel_6
+          profile: ${{ matrix.device }}
+          avd-name: word-viewer-${{ matrix.profile }}
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -memory 3072 -camera-back none
-          script: cd office && bash android/qa/run-word-viewer.sh
+          script: cd office && bash android/qa/run-word-viewer.sh ${{ matrix.profile }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: word-android-viewer-validation
+          name: word-android-viewer-validation-${{ matrix.profile }}
           retention-days: 3
           path: office/test-results/android-word-viewer/

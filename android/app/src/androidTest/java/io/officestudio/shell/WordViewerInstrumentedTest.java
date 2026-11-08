@@ -40,6 +40,11 @@ public class WordViewerInstrumentedTest {
     void openFixture(ActivityScenario<MainActivity> scenario,String name) throws Exception {
         js(scenario,"fetch('/assets/qa/"+name+"').then(r=>r.blob()).then(b=>{const d=new DataTransfer();d.items.add(new File([b],'"+name+"'));const i=document.querySelector('input[type=file]');i.files=d.files;i.dispatchEvent(new Event('change',{bubbles:true}));})");
     }
+    void assertFormFactor(ActivityScenario<MainActivity> scenario) throws Exception {
+        waitJS(scenario,"typeof window.__studioHostConfig?.tablet==='boolean'");
+        boolean tablet="tablet".equals(InstrumentationRegistry.getArguments().getString("studioQaProfile","phone"));
+        assertEquals("Native hardware form factor must match the QA profile",String.valueOf(tablet),js(scenario,"window.__studioHostConfig.tablet"));
+    }
     void dismissImmersiveGuide(){
         UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         // A fresh CI emulator can show a launcher ANR while our Activity is
@@ -63,6 +68,7 @@ public class WordViewerInstrumentedTest {
         try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(MainActivity.class)){
             waitJS(scenario,"!!document.querySelector('.android-start button')");
             waitJS(scenario,"typeof window.wordAndroid.setImmersiveMode==='function'");
+            assertFormFactor(scenario);
             SystemClock.sleep(700);dismissImmersiveGuide();
             UiDevice keys=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
             assertTrue(keys.pressKeyCode(KeyEvent.KEYCODE_ESCAPE));
@@ -102,7 +108,7 @@ public class WordViewerInstrumentedTest {
     }
     @Test public void realWebViewSwipesPinchesAndHwpViewerKeepTheSelectedPage() throws Exception {
         try(ActivityScenario<MainActivity> scenario=ActivityScenario.launch(MainActivity.class)){
-            waitJS(scenario,"!!document.querySelector('.android-start button')");openFixture(scenario,"viewer.docx");
+            waitJS(scenario,"!!document.querySelector('.android-start button')");assertFormFactor(scenario);openFixture(scenario,"viewer.docx");
             waitJS(scenario,"!!document.querySelector('.android-paper-viewport')");
             dismissImmersiveGuide();
             js(scenario,"document.querySelector('[aria-label=\"전체 화면 뷰어\"]').click()");
