@@ -55,7 +55,7 @@
     "verification": {
       "localJavaCompile": "passed",
       "localRendererUI": 15,
-      "emulatorRuntime": "pending"
+      "emulatorRuntime": "see android/qa/SHEET-RUNTIME-20261108.md"
     }
   }
 }

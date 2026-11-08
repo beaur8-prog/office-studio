@@ -2,6 +2,15 @@ name: Sheet Android real window and exit regression
 on:
   push:
     branches: [codex/android-sheet-lifecycle-20261108]
+    paths:
+      - .github/workflows/android-sheet-lifecycle.yml
+      - android/app/**
+      - android/source-lock.json
+      - android/qa/prepare-sheet-assets.cjs
+      - android/qa/run-sheet-lifecycle.sh
+concurrency:
+  group: sheet-android-lifecycle-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
@@ -33,7 +42,7 @@ jobs:
       - name: Prepare locked assets and isolated test APK
         run: |
           node android/qa/prepare-sheet-assets.cjs sheet-source
-          sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;36.0.0'
           cd android
           ./gradlew -PsheetQa :app:assembleSheetDebug :app:assembleSheetDebugAndroidTest
       - name: Enable emulator acceleration

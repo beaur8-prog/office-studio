@@ -84,9 +84,9 @@ public class SheetWindowInstrumentedTest {
             s.onActivity(a->assertTrue("Enter must keep the real keyboard visible",ViewCompat.getRootWindowInsets(a.root).isVisible(WindowInsetsCompat.Type.ime())));
             screenshot("live-entry-next-cell");setDraft(s,"456");waitJS(s,"document.getElementById('android-cell-1-0').textContent==='456'");js(s,"document.querySelector('[data-action=cancel-edit]').click()");waitJS(s,"document.getElementById('android-cell-1-0').textContent===''");assertEquals("\"\"",js(s,"sheetStudio.getCell('A2').raw"));
             // First Back may dismiss IME; subsequent Back opens the app exit dialog.
-            for(int i=0;i<3;i++){s.onActivity(MainActivity::onBackPressed);SystemClock.sleep(500);if("true".equals(js(s,"!!document.querySelector('[role=dialog][aria-label=\"앱을 닫을까요?\"]')")))break;}
+            for(int i=0;i<3;i++){UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressBack();SystemClock.sleep(500);if("true".equals(js(s,"!!document.querySelector('[role=dialog][aria-label=\"앱을 닫을까요?\"]')")))break;}
             waitJS(s,"!!document.querySelector('[role=dialog][aria-label=\"앱을 닫을까요?\"]')");js(s,"document.querySelector('[data-close]').click()");waitJS(s,"!document.querySelector('.backdrop')");assertFalse(activity.get().isFinishing());assertEquals("\"123\"",js(s,"sheetStudio.getCell('A1').raw"));
-            s.onActivity(MainActivity::onBackPressed);waitJS(s,"!!document.querySelector('[role=dialog][aria-label=\"앱을 닫을까요?\"]')");screenshot("exit-confirmation");js(s,"document.querySelector('[data-modal-button=\"0\"]').click()");
+            UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressBack();waitJS(s,"!!document.querySelector('[role=dialog][aria-label=\"앱을 닫을까요?\"]')");screenshot("exit-confirmation");js(s,"document.querySelector('[data-modal-button=\"0\"]').click()");
             end=SystemClock.uptimeMillis()+10000;while(!activity.get().isFinishing()&&SystemClock.uptimeMillis()<end)SystemClock.sleep(100);assertTrue("Close must finish the native Activity",activity.get().isFinishing());
         }
         try(ActivityScenario<MainActivity> s=ActivityScenario.launch(MainActivity.class)){
