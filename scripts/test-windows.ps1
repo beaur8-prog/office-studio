@@ -14,9 +14,24 @@ if ((Get-FileHash $setup -Algorithm SHA256).Hash.ToLowerInvariant() -ne $build.s
 $report = [ordered]@{ suiteVersion = $lock.version; setupSHA256 = $build.sha256; passed = $false }
 
 function Entries([string]$name) {
-  if (-not (Test-Path 'HKCU:/Software/Microsoft/Windows/CurrentVersion/Uninstall')) { return @() }
-  @(Get-ItemProperty 'HKCU:/Software/Microsoft/Windows/CurrentVersion/Uninstall/*' |
-    Where-Object { $_.PSObject.Properties['DisplayName'] -and $_.DisplayName -eq $name })
+  $registryRoot = 'HKCU:/Software/Microsoft/Windows/CurrentVersion/Uninstall'
+  if (-not (Test-Path -LiteralPath $registryRoot)) { return @() }
+  try { $keys = @(Get-ChildItem -LiteralPath $registryRoot -ErrorAction Stop) }
+  catch {
+    if (-not (Test-Path -LiteralPath $registryRoot)) { return @() }
+    throw
+  }
+  foreach ($key in $keys) {
+    # The NSIS temporary uninstaller can remove a child between enumeration
+    # and reading its properties. Ignore only an observably removed key;
+    # access, provider and other registry failures must still fail the test.
+    try { $entry = Get-ItemProperty -LiteralPath $key.PSPath -ErrorAction Stop }
+    catch {
+      if (-not (Test-Path -LiteralPath $key.PSPath)) { continue }
+      throw
+    }
+    if ($entry.PSObject.Properties['DisplayName'] -and $entry.DisplayName -eq $name) { $entry }
+  }
 }
 function Run-Setup([string]$file, [string[]]$arguments) {
   $process = Start-Process -FilePath $file -ArgumentList $arguments -PassThru
@@ -57,7 +72,7 @@ function Remove-App($app) {
   $arguments = if ($app.id -eq 'slide') { @('/S') } else { @('/S','/currentuser') }
   Run-Setup $uninstaller $arguments
   $deadline = (Get-Date).AddSeconds(60)
-  while (@(Entries $app.product).Count -ne 0 -and (Get-Date) -lt $deadline) { Start-Sleep -Milliseconds 250 }
+  while ((@(Entries $app.product).Count -ne 0 -or (Test-Path (Join-Path $directory "$($app.product).exe"))) -and (Get-Date) -lt $deadline) { Start-Sleep -Milliseconds 250 }
   if (@(Entries $app.product).Count -ne 0) { throw "Uninstall registration remains: $($app.product)" }
   if (Test-Path (Join-Path $directory "$($app.product).exe")) { throw 'Executable remains after uninstall.' }
   Assert-Preserved $app.product
