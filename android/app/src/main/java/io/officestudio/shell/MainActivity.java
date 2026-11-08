@@ -175,6 +175,21 @@ public class MainActivity extends Activity {
         if(!css.equals(lastCutoutCss)){lastCutoutCss=css;web.evaluateJavascript(css,null);}
     }
     void hideFullscreen(){if(fullscreen==null)return;root.removeView(fullscreen);fullscreen=null;web.setVisibility(View.VISIBLE);if(fullscreenCallback!=null)fullscreenCallback.onCustomViewHidden();fullscreenCallback=null;}
+    @Override public boolean dispatchKeyEvent(KeyEvent event){
+        // Some Android WebViews consume Escape without a DOM keydown when the
+        // read-only page has no focused input. Route key-up to Word's viewer;
+        // outside that viewer keep normal Android/WebView handling intact.
+        if(BuildConfig.STUDIO.equals("word")&&web!=null&&!destroyed&&fullscreen==null
+            &&event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE&&event.getAction()==KeyEvent.ACTION_UP){
+            KeyEvent original=new KeyEvent(event);
+            web.evaluateJavascript("(()=>{const viewer=document.querySelector('.android-presentation');if(!viewer)return false;viewer.dispatchEvent(new Event('studio-presentation-edit'));return true;})()",handled->{
+                if(destroyed)return;
+                if("true".equals(handled))web.requestFocus();else super.dispatchKeyEvent(original);
+            });
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
+    }
     @Override public void onBackPressed(){if(fullscreen!=null){hideFullscreen();return;}if(web==null){finish();return;}web.evaluateJavascript("window.OfficeStudioHost?window.OfficeStudioHost.back():false",value->{if("false".equals(value)||"null".equals(value))finish();});}
     @Override public void onWindowFocusChanged(boolean focused){
         super.onWindowFocusChanged(focused);
