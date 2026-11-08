@@ -61,6 +61,25 @@ jobs:
       - name: Test native bridge flavor boundaries
         working-directory: office
         run: node --test android/qa/word-immersive.test.cjs
+      - name: Fetch verified official Gradle distribution
+        working-directory: office/android
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # The distribution website redirect can return 504. Use GitHub's
+          # documented release download and keep the wrapper's pinned checksum.
+          mkdir -p "$RUNNER_TEMP/word-viewer-gradle"
+          gh release download v8.13.0 --repo gradle/gradle-distributions --pattern gradle-8.13-bin.zip --dir "$RUNNER_TEMP/word-viewer-gradle"
+          python3 <<'PY'
+          import hashlib, os
+          from pathlib import Path
+          properties = Path('gradle/wrapper/gradle-wrapper.properties')
+          text = properties.read_text()
+          archive = Path(os.environ['RUNNER_TEMP']) / 'word-viewer-gradle/gradle-8.13-bin.zip'
+          expected = next(line.split('=', 1)[1] for line in text.splitlines() if line.startswith('distributionSha256Sum='))
+          assert hashlib.sha256(archive.read_bytes()).hexdigest() == expected, 'Gradle checksum mismatch'
+          properties.write_text('\n'.join('distributionUrl=' + archive.as_uri() if line.startswith('distributionUrl=') else line for line in text.splitlines()) + '\n')
+          PY
       - name: Compile isolated debug APKs
         working-directory: office/android
         run: |
