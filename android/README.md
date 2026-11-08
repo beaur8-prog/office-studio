@@ -1,8 +1,14 @@
 # Office Studio Android · 로컬 첨부 배포
 
-현재 앱: Sheet 1.0.4 · Slide 1.0.6 · Word 1.0.4. 기존 Android 공유 주소를 유지합니다.
+현재 앱: Sheet 1.0.5 · Slide 1.0.6 · Word 1.0.4. 기존 Android 공유 주소를 유지합니다.
 
 Android는 **로컬에서 빌드·서명 → 파일·버전·서명·체크섬 확인 → 리토스 첨부 게시**로 배포합니다. GitHub 릴리스 생성, APK 업로드, APK 재다운로드는 하지 않습니다. 소스의 Git pull·commit·push와 버전 태그 관리는 그대로 사용합니다. `distribution-policy.json`으로 이 방식을 고정합니다.
+
+## Sheet 1.0.5 · 로컬 첨부 갱신
+
+최신 main `4c661c1`의 안정적인 셀 숫자 표시·숫자 너비·마우스 크기 조절·평균 수식의 범위 제안/선택을 포함합니다. 호스트 `902b585`의 Sheet 뷰어 상태, Esc가 Back으로 전달될 때 누름·반복·뗌 소비, 확인된 `sheetClose`만 종료하는 계약을 반영합니다. 기존 Word·Slide 호스트 코드는 유지합니다.
+
+Sheet만 versionName 1.0.5/versionCode 6으로 조립·서명하고 로컬 첨부로 게시합니다. 설치·실행·기능·에뮬레이터 검사는 이번 요청에서 생략합니다. Word 1.0.4·Slide 1.0.6의 APK·주소·체크섬을 유지합니다. Office Android 문서 버전은 1.0.12입니다.
 
 ## Word 1.0.4 · 로컬 첨부 갱신
 

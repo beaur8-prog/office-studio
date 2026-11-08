@@ -84,7 +84,7 @@ build = {
     sha(out / 'BUILD-android.json') + '  BUILD-android.json\n')
 
 changes = {
-    'sheet': '전체화면 셀 입력·수식 참조, 태블릿 편집과 키보드·Esc·Back 처리 개선',
+    'sheet': '숫자 표시·열 너비 조절·평균 수식 범위 선택과 Esc·Back 처리 개선',
     'slide': '발표 화면을 원래 앱 창에서 유지, IME 숨김과 Android 16 Esc·Back 처리 개선',
     'word': '느린 드래그 페이지 넘김과 태블릿 확대 배율 표시 개선',
 }
@@ -122,6 +122,9 @@ for a in apps:
     if a['rebuilt']:
         old = next(x for x in prior['apps'] if x['id'] == a['id'])
         body = body.replace(old['sha256'] + '  ' + old['filename'], a['sha256'] + '  ' + a['filename'])
+if 'sheet' in changed:
+    body = body.replace('1.0.4에는 전체화면 셀 입력·수식 참조와 태블릿 편집 개선을 포함합니다.',
+                        '1.0.5에는 숫자 표시·열 너비 조절·평균 수식 범위 선택과 Esc·뒤로가기 처리 개선을 포함합니다.')
 if 'slide' in changed:
     body = body.replace('1.0.5에는 태블릿 편집 화면 개선과 발표 종료·Esc·Back 처리를 포함합니다.',
                         '1.0.6에는 원래 앱 창에서 발표 화면 유지와 키보드 숨김, Android 16 Esc·뒤로가기 처리 개선을 포함합니다.')

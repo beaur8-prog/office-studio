@@ -35,6 +35,7 @@ public class MainActivity extends Activity {
     Uri incoming;
     boolean ready, destroyed, immersive;
     boolean slideBackKeyDown;
+    boolean sheetViewer, sheetBackKeyDown;
     int slideNavigationGeneration;
     Insets slideSafeInsets = Insets.NONE;
     String insetStyle;
@@ -71,7 +72,7 @@ public class MainActivity extends Activity {
         root=new FrameLayout(this);web=new WebView(this){
             @Override public boolean onKeyPreIme(int keyCode,KeyEvent event){
                 if(handleSlideNavigationKey(event))return true;
-                if(BuildConfig.STUDIO.equals("sheet")&&keyCode==KeyEvent.KEYCODE_ESCAPE){sheetEscape(event,"pre-ime");return true;}
+                if(BuildConfig.STUDIO.equals("sheet")&&sheetKey(event,true))return true;
                 return super.onKeyPreIme(keyCode,event);
             }
         };root.addView(web,new FrameLayout.LayoutParams(-1,-1));setContentView(root);
@@ -182,12 +183,14 @@ public class MainActivity extends Activity {
             case "append":work(id,reply,()->{Transfer t=transfer;if(t==null||!t.token.equals(a.getString("token")))throw new IOException("저장 요청이 만료되었습니다");String encoded=a.getString("chunk");if(encoded.length()>50000||a.getLong("offset")!=t.written)throw new IOException("저장 데이터 순서가 올바르지 않습니다");byte[] bytes=android.util.Base64.decode(encoded,android.util.Base64.DEFAULT);if(t.written+bytes.length>t.size)throw new IOException("저장 파일 크기가 일치하지 않습니다");t.out.write(bytes);t.written+=bytes.length;success(id,reply,t.written);});break;
             case "save":case "share":work(id,reply,()->{Transfer t=transfer;if(t==null||!t.token.equals(a.getString("token"))||t.size!=t.written)throw new IOException("저장 파일을 완성하지 못했습니다");t.out.close();transfer=null;runOnUiThread(()->startOutput(id,reply,t,method));});break;
             case "abort":work(id,reply,()->{Transfer t=transfer;if(t!=null&&t.token.equals(a.optString("token"))){t.out.close();t.file.delete();transfer=null;}success(id,reply,true);});break;
+            case "sheetViewer":if(!BuildConfig.STUDIO.equals("sheet"))throw new IOException("지원하지 않는 Android 요청입니다");sheetViewer=a.optBoolean("enabled");success(id,reply,obj("enabled",sheetViewer));break;
+            case "sheetClose":if(!BuildConfig.STUDIO.equals("sheet"))throw new IOException("지원하지 않는 Android 요청입니다");if(sheetViewer){sheetEscape(null,"close-while-viewer");throw new IOException("전체화면을 끝낸 뒤 닫기를 다시 선택하세요");}success(id,reply,true);finish();break;
             case "sheetFullscreen":if(!BuildConfig.STUDIO.equals("sheet"))throw new IOException("지원하지 않는 Android 요청입니다");boolean enabled=a.optBoolean("enabled");hiddenSystemBarTypes=enabled?((a.optBoolean("hideStatusBar",true)?WindowInsetsCompat.Type.statusBars():0)|(a.optBoolean("hideNavigationBar",true)?WindowInsetsCompat.Type.navigationBars():0)):0;applySheetSystemBars();publishSheetInput();success(id,reply,obj("enabled",enabled));break;
             case "systemBars":if(BuildConfig.STUDIO.equals("slide")){setSlideImmersive(a.optBoolean("hidden"));}else if(BuildConfig.STUDIO.equals("word")){immersive=a.optBoolean("hidden");WindowInsetsControllerCompat wordBars=WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView());wordBars.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);if(immersive)wordBars.hide(WindowInsetsCompat.Type.systemBars());else wordBars.show(WindowInsetsCompat.Type.systemBars());ViewCompat.requestApplyInsets(root);}else throw new IOException("지원하지 않는 Android 요청입니다");success(id,reply,true);break;
             case "orientation":if(!BuildConfig.STUDIO.equals("slide"))throw new IOException("지원하지 않는 Android 요청입니다");String direction=a.getString("orientation");if(direction.equals("unlock")){if(orientationBefore!=null){setRequestedOrientation(orientationBefore);orientationBefore=null;}}else{if(!direction.equals("landscape")&&!direction.equals("portrait"))throw new IOException("잘못된 화면 방향입니다");if(orientationBefore==null)orientationBefore=getRequestedOrientation();setRequestedOrientation(direction.equals("landscape")?android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE:android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);}success(id,reply,true);break;
             case "clipboard":android.content.ClipboardManager clipboard=(android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);clipboard.setPrimaryClip(a.optString("html").isEmpty()?ClipData.newPlainText("Studio",a.optString("text")):ClipData.newHtmlText("Studio",a.optString("text"),a.optString("html")));success(id,reply,true);break;
             case "readClipboard":android.content.ClipboardManager cm=(android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);ClipData clip=cm.getPrimaryClip();String text=clip!=null&&clip.getItemCount()>0?clip.getItemAt(0).coerceToText(this).toString():"";if(text.length()>1024*1024)throw new IOException("클립보드 내용이 너무 큽니다");success(id,reply,text);break;
-            case "close":success(id,reply,true);if(BuildConfig.STUDIO.equals("slide"))requestSlideBack();else finish();break;
+            case "close":success(id,reply,true);if(BuildConfig.STUDIO.equals("sheet")){if(BuildConfig.DEBUG)android.util.Log.d("SheetInput","Ignored unconfirmed legacy close");}else if(BuildConfig.STUDIO.equals("slide"))requestSlideBack();else finish();break;
             case "print":if(pending!=null)throw new IOException("다른 파일 작업이 진행 중입니다");pending=new Pending(id,"print",reply,null);PrintDocumentAdapter delegate=web.createPrintDocumentAdapter(getString(R.string.app_name));PrintDocumentAdapter adapter=new PrintDocumentAdapter(){@Override public void onStart(){delegate.onStart();}@Override public void onLayout(PrintAttributes old,PrintAttributes next,CancellationSignal signal,LayoutResultCallback cb,Bundle extras){delegate.onLayout(old,next,signal,cb,extras);}@Override public void onWrite(android.print.PageRange[] pages,ParcelFileDescriptor dest,CancellationSignal signal,WriteResultCallback cb){delegate.onWrite(pages,dest,signal,cb);}@Override public void onFinish(){delegate.onFinish();if(pending!=null&&pending.method.equals("print")){Pending x=pending;pending=null;success(x.id,x.reply,obj("completed",true));}}};((PrintManager)getSystemService(PRINT_SERVICE)).print(getString(R.string.app_name),adapter,new PrintAttributes.Builder().build());break;
             default:failure(id,reply,new IOException("지원하지 않는 Android 요청입니다"));
         }
@@ -302,10 +305,22 @@ public class MainActivity extends Activity {
         });
     }
     void sheetEscape(KeyEvent event,String route){
-        if(event.getAction()==KeyEvent.ACTION_DOWN&&event.getRepeatCount()==0&&web!=null&&!destroyed){
+        if((event==null||event.getAction()==KeyEvent.ACTION_DOWN&&event.getRepeatCount()==0)&&web!=null&&!destroyed){
             if(BuildConfig.DEBUG)android.util.Log.d("SheetInput","Escape via "+route);
             web.evaluateJavascript("window.dispatchEvent(new Event('sheet-studio-android-escape',{cancelable:true}))",null);
         }
+    }
+    boolean sheetKey(KeyEvent event,boolean beforeIme){
+        if(event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE){sheetEscape(event,beforeIme?"pre-ime":"activity");return true;}
+        if(event.getKeyCode()!=KeyEvent.KEYCODE_BACK||beforeIme&&!sheetViewer&&!sheetBackKeyDown)return false;
+        if(event.getAction()==KeyEvent.ACTION_DOWN&&event.getRepeatCount()==0){
+            sheetBackKeyDown=true;
+            if(sheetViewer)sheetEscape(event,"keyboard-back");
+            else if(web!=null&&!destroyed)web.evaluateJavascript("window.dispatchEvent(new Event('sheet-studio-android-back',{cancelable:true}))",null);
+        }
+        // Consume key-up even when the first edge has already restored editing.
+        if(event.getAction()==KeyEvent.ACTION_UP)sheetBackKeyDown=false;
+        return true;
     }
     boolean handleSlideNavigationKey(KeyEvent event) {
         if(!BuildConfig.STUDIO.equals("slide"))return false;
@@ -326,7 +341,7 @@ public class MainActivity extends Activity {
     }
     @Override public boolean dispatchKeyEvent(KeyEvent event) {
         if(handleSlideNavigationKey(event))return true;
-        if(BuildConfig.STUDIO.equals("sheet")&&event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE){sheetEscape(event,"activity");return true;}
+        if(BuildConfig.STUDIO.equals("sheet")&&sheetKey(event,false))return true;
         // Own the whole Escape press, not only key-up. Passing either half to
         // WebView/Android can turn the same press into a second back/close.
         if(BuildConfig.STUDIO.equals("word")&&event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE){
@@ -347,7 +362,7 @@ public class MainActivity extends Activity {
     @Override public void onConfigurationChanged(android.content.res.Configuration config) {
         super.onConfigurationChanged(config);publishSheetInput();if(root!=null)ViewCompat.requestApplyInsets(root);
     }
-    @Override public void onBackPressed(){if(BuildConfig.STUDIO.equals("slide")){requestSlideBack();return;}if(BuildConfig.STUDIO.equals("sheet")&&root!=null){WindowInsetsCompat insets=ViewCompat.getRootWindowInsets(root);if(insets!=null&&insets.isVisible(WindowInsetsCompat.Type.ime())){WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView()).hide(WindowInsetsCompat.Type.ime());return;}}if(fullscreen!=null){hideFullscreen();return;}if(web==null){finish();return;}if(BuildConfig.STUDIO.equals("sheet")){web.evaluateJavascript("window.dispatchEvent(new Event('sheet-studio-android-back',{cancelable:true}))",null);return;}web.evaluateJavascript("window.OfficeStudioHost?window.OfficeStudioHost.back():false",value->{if("false".equals(value)||"null".equals(value))finish();});}
+    @Override public void onBackPressed(){if(BuildConfig.STUDIO.equals("slide")){requestSlideBack();return;}if(BuildConfig.STUDIO.equals("sheet")&&sheetViewer){sheetEscape(null,"system-back");return;}if(BuildConfig.STUDIO.equals("sheet")&&root!=null){WindowInsetsCompat insets=ViewCompat.getRootWindowInsets(root);if(insets!=null&&insets.isVisible(WindowInsetsCompat.Type.ime())){WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView()).hide(WindowInsetsCompat.Type.ime());return;}}if(fullscreen!=null){hideFullscreen();return;}if(web==null){finish();return;}if(BuildConfig.STUDIO.equals("sheet")){web.evaluateJavascript("window.dispatchEvent(new Event('sheet-studio-android-back',{cancelable:true}))",null);return;}web.evaluateJavascript("window.OfficeStudioHost?window.OfficeStudioHost.back():false",value->{if("false".equals(value)||"null".equals(value))finish();});}
     @Override protected void onPause(){if(web!=null)web.evaluateJavascript("document.dispatchEvent(new Event('visibilitychange'));window.dispatchEvent(new Event('pagehide'));",null);super.onPause();}
     @Override protected void onDestroy(){destroyed=true;try{unregisterReceiver(shareReceiver);}catch(Exception ignored){}if(chooser!=null)chooser.onReceiveValue(null);io.execute(()->{if(transfer!=null)try{transfer.out.close();transfer.file.delete();}catch(Exception ignored){}for(ImportFile f:imports.values())f.file.delete();imports.clear();});io.shutdown();if(web!=null){root.removeView(web);web.destroy();}super.onDestroy();}
 }

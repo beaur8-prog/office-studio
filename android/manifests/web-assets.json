@@ -1,6 +1,6 @@
 {
   "sheet": {
-    "version": "1.0.4",
+    "version": "1.0.5",
     "assetFiles": [
       {
         "path": "THIRD-PARTY-NOTICES.txt",
@@ -20,17 +20,17 @@
       {
         "path": "app-version.json",
         "bytes": 20,
-        "sha256": "f2b319952b1ece737947375f48838d6cbb7c524cd508118b082762419d78488c"
-      },
-      {
-        "path": "assets/index-0tuJc_GK.js",
-        "bytes": 1026012,
-        "sha256": "abaeed673b772a1ac80d2135f59f0c1b92c0084c716bb68002b989f6f68dfbd2"
+        "sha256": "fcae23f143de618f2ba36cfbbd4e47c4762e9ac86b0b45a461f531855b9d7d23"
       },
       {
         "path": "assets/index-BFN4OcMv.css",
         "bytes": 62157,
         "sha256": "c70cf6c274ba7f3ddac9f1185a1022765420559c18c5ce921af690696a159f63"
+      },
+      {
+        "path": "assets/index-Dvw7tDUN.js",
+        "bytes": 1030307,
+        "sha256": "712ae760d95390e53fcb3e3d46659ce3b7a5d309657e1aca36d233759e7436c2"
       },
       {
         "path": "assets/spreadsheet-BTv7Xkas.js",
@@ -43,14 +43,14 @@
         "sha256": "b0148384fbee630b679928d0a9ef71f1d9a179fe8c1a6d18d422bb4e6c1bdf61"
       },
       {
-        "path": "assets/workbook-worker-ZSSNjkDw.js",
-        "bytes": 1735272,
-        "sha256": "1f02c5c9538b7f8c8fe6e0509209e3daf2d6ea03805f5bd55e5e472166b918d8"
+        "path": "assets/workbook-worker-DWTJNxHi.js",
+        "bytes": 1735526,
+        "sha256": "94a8dec92858f14275c0f45009edcbb44738571a843ad17659e3d3a0c5d3fe67"
       },
       {
         "path": "index.html",
-        "bytes": 788,
-        "sha256": "975cdf89adde5e6f0d33d1b1e43c04dd9087db7ca8e32eefc304d39b912b3e73"
+        "bytes": 784,
+        "sha256": "8e29fc6b675edecca669a0b06e84fb2ae654e43b37459c1e491bc1f330d9d817"
       }
     ],
     "iconSourceSHA256": "180827929304256408d440428f7f736266be150b939270ea08efe92f332c864f",
