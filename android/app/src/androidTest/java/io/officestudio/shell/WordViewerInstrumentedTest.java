@@ -35,7 +35,7 @@ public class WordViewerInstrumentedTest {
         long end=SystemClock.uptimeMillis()+90000;
         while(SystemClock.uptimeMillis()<end){if("true".equals(js(scenario,expression)))return;SystemClock.sleep(250);}
         screenshot("failed-wait");
-        fail("Timed out: "+expression+"; body="+js(scenario,"document.body.innerText.slice(-1500)"));
+        fail("Timed out: "+expression+"; gestures="+js(scenario,"JSON.stringify(window.viewerGestureQA||null)")+"; body="+js(scenario,"document.body.innerText.slice(-500)"));
     }
     void openFixture(ActivityScenario<MainActivity> scenario,String name) throws Exception {
         js(scenario,"fetch('/assets/qa/"+name+"').then(r=>r.blob()).then(b=>{const d=new DataTransfer();d.items.add(new File([b],'"+name+"'));const i=document.querySelector('input[type=file]');i.files=d.files;i.dispatchEvent(new Event('change',{bubbles:true}));})");
@@ -135,6 +135,10 @@ public class WordViewerInstrumentedTest {
             openFixture(scenario,"landscape-pagination.hwp");waitJS(scenario,"!!document.querySelector('.hwp-reader [data-testid=hwp-page]')");
             js(scenario,"document.querySelector('[aria-label=\"한글 전체 화면 뷰어\"]').click()");
             waitJS(scenario,"!!document.querySelector('.android-presentation-page svg')");
+            dismissImmersiveGuide();
+            scenario.onActivity(activity->assertTrue("HWP viewer must own input focus",activity.hasWindowFocus()));
+            js(scenario,"(()=>{const v=document.querySelector('.android-presentation-viewport');window.viewerGestureQA={width:innerWidth,height:innerHeight,ratio:devicePixelRatio,rect:v.getBoundingClientRect().toJSON(),target:document.elementFromPoint(innerWidth*.8,innerHeight*.5)?.outerHTML.slice(0,180),events:[]};for(const type of ['pointerdown','pointermove','pointerup','pointercancel'])v.addEventListener(type,e=>{if(window.viewerGestureQA.events.length<30)window.viewerGestureQA.events.push([type,e.pointerType,e.clientX,e.clientY,v.scrollTop])},true)})()");
+            screenshot("hwp-before-swipe");
             assertTrue(device.swipe(w*4/5,h/2,w/5,h/2,10));waitJS(scenario,"document.querySelector('.android-presentation').dataset.page==='2'");
             scenario.onActivity(activity->{assertTrue(activity.immersive);assertEquals(View.VISIBLE,activity.web.getVisibility());});
             waitJS(scenario,"!!document.querySelector('.android-presentation-page svg')");
