@@ -1,19 +1,19 @@
 {
   "schema": 1,
-  "version": "1.0.11",
+  "version": "1.0.12",
   "mode": "lithos-attachments",
   "releaseDistribution": "local-only",
   "page": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a",
   "files": [
     {
-      "name": "Sheet-Studio-1.0.4-Android.apk",
-      "bytes": 6155380,
-      "sha256": "2dc2902100494f83d5813eb045f0325fd68261ab84573ce2169f67a8a96ca028",
-      "source": "retained-local-attachment",
-      "href": "attachments/office-studio-android/Sheet-Studio-1.0.4-Android.apk",
-      "resolved": "앱/attachments/office-studio-android/Sheet-Studio-1.0.4-Android.apk",
-      "id": "2167a46af96e778d5409fd80db61a147",
-      "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a/download/2167a46af96e778d5409fd80db61a147"
+      "name": "Sheet-Studio-1.0.5-Android.apk",
+      "bytes": 6157860,
+      "sha256": "e5e84b4dec91f829cde97b9533954cda1bdb540e7b7bf37e1a43fdd87ce3eca5",
+      "source": "local-release-file",
+      "href": "attachments/office-studio-android/Sheet-Studio-1.0.5-Android.apk",
+      "resolved": "앱/attachments/office-studio-android/Sheet-Studio-1.0.5-Android.apk",
+      "id": "9efd3336b68af670ee4164ce73a74541",
+      "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a/download/9efd3336b68af670ee4164ce73a74541"
     },
     {
       "name": "Sheet-Studio-Android-icon.png",
@@ -51,7 +51,7 @@
       "name": "Word-Studio-1.0.4-Android.apk",
       "bytes": 38120421,
       "sha256": "e2c8f1041d1d7ae4adc097fa3932c9c3a516e8c64ede25402baa36b27248ecca",
-      "source": "local-release-file",
+      "source": "retained-local-attachment",
       "href": "attachments/office-studio-android/Word-Studio-1.0.4-Android.apk",
       "resolved": "앱/attachments/office-studio-android/Word-Studio-1.0.4-Android.apk",
       "id": "b4a1cf9c382b67119ccfc0e3368e8087",
@@ -70,23 +70,23 @@
     },
     {
       "name": "BUILD-android.json",
-      "bytes": 4027,
-      "sha256": "51c811e39ec2c27826f6722741918dabad494fd7a46c1b227293b3c8bc5f3e3c",
+      "bytes": 4028,
+      "sha256": "fb0af6e6db8d7fc15f584c70bebe97e7a0e62ed73d4dd122421b6b0fc6d96391",
       "source": "local-build-metadata",
-      "href": "attachments/office-studio-android/1.0.11/BUILD-android.json",
-      "resolved": "앱/attachments/office-studio-android/1.0.11/BUILD-android.json",
-      "id": "09098fc55cf0bbf5fa27b03feb0f4997",
-      "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a/download/09098fc55cf0bbf5fa27b03feb0f4997"
+      "href": "attachments/office-studio-android/1.0.12/BUILD-android.json",
+      "resolved": "앱/attachments/office-studio-android/1.0.12/BUILD-android.json",
+      "id": "43a0d59b3abf428cd977bda5b7062d6b",
+      "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a/download/43a0d59b3abf428cd977bda5b7062d6b"
     },
     {
       "name": "SHA256SUMS-android.txt",
       "bytes": 375,
-      "sha256": "da193e3f037602d6c7c551cce0ccfe41d740dd588e40cc217beedf3a71c807c7",
+      "sha256": "c1203307af398e5558442826fe7bbf54ebdd1a106aa687cd0c13094e08475830",
       "source": "local-build-metadata",
-      "href": "attachments/office-studio-android/1.0.11/SHA256SUMS-android.txt",
-      "resolved": "앱/attachments/office-studio-android/1.0.11/SHA256SUMS-android.txt",
-      "id": "ab4fc07e3541676c87ffdc0b14bfbbe6",
-      "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a/download/ab4fc07e3541676c87ffdc0b14bfbbe6"
+      "href": "attachments/office-studio-android/1.0.12/SHA256SUMS-android.txt",
+      "resolved": "앱/attachments/office-studio-android/1.0.12/SHA256SUMS-android.txt",
+      "id": "8eb2b0bf9fbd7f3ab019cab1a70286a4",
+      "url": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a/download/8eb2b0bf9fbd7f3ab019cab1a70286a4"
     },
     {
       "name": "ANDROID-VERIFICATION.json",
