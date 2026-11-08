@@ -192,4 +192,45 @@ public class SheetWindowInstrumentedTest {
         }
     }
 
+    void mouse(ActivityScenario<MainActivity> scenario,int action,double x,double y,long downTime) {
+        float[] point=new float[2];
+        scenario.onActivity(a->{int[] origin=new int[2];a.web.getLocationOnScreen(origin);float scale=a.web.getWidth()/(float)1920;point[0]=origin[0]+(float)x*scale;point[1]=origin[1]+(float)y*scale;});
+        MotionEvent.PointerProperties property=new MotionEvent.PointerProperties();property.id=0;property.toolType=MotionEvent.TOOL_TYPE_MOUSE;
+        MotionEvent.PointerCoords coords=new MotionEvent.PointerCoords();coords.x=point[0];coords.y=point[1];coords.pressure=action==MotionEvent.ACTION_UP?0:1;coords.size=1;
+        MotionEvent event=MotionEvent.obtain(downTime,SystemClock.uptimeMillis(),action,1,new MotionEvent.PointerProperties[]{property},new MotionEvent.PointerCoords[]{coords},0,action==MotionEvent.ACTION_UP?0:MotionEvent.BUTTON_PRIMARY,1,1,0,0,InputDevice.SOURCE_MOUSE,0);
+        try{InstrumentationRegistry.getInstrumentation().sendPointerSync(event);}finally{event.recycle();}
+    }
+    @Test public void tabletNumbersDoNotShowTailDigitsAndMouseResizeCommitsOnce() throws Exception {
+        assertTrue(InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName().endsWith(".qa"));
+        UiDevice device=UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        // Only this fresh QA emulator is resized; restore its display for other cases.
+        device.executeShellCommand("wm size 1920x1200");device.executeShellCommand("wm density 160");
+        try(ActivityScenario<MainActivity> s=ActivityScenario.launch(MainActivity.class)){
+            s.onActivity(a->a.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE));ready(s);
+            waitJS(s,"innerWidth===1920 && innerHeight>=600");
+            js(s,"window.dispatchEvent(new CustomEvent('sheet-studio-android-input',{detail:{hardwareKeyboard:true}}))");
+            waitJS(s,"document.body.classList.contains('android-desktop-input')");
+            js(s,"(()=>{const book=sheetStudio.getWorkbook();book.name='WIDTH_QA';const sh=book.sheets[0];sh.cells={A1:{raw:'123456789',style:{numberFormat:'0'}},A2:{raw:'1234567',style:{format:'currency'}},A3:{raw:'=A1*10',style:{numberFormat:'0'}},B1:{raw:'123456789012'}};sh.columnWidths={0:64,1:64};for(let r=100;r<100100;r++)sh.cells['C'+r]={raw:String(r)};const d=new DataTransfer();d.items.add(new File([JSON.stringify(book)],'width.sheet.json'));const i=document.querySelector('#file-input');i.files=d.files;i.dispatchEvent(new Event('change',{bubbles:true}));})()");
+            waitJS(s,"sheetStudio.getWorkbook().name==='WIDTH_QA' && !document.querySelector('.workbook-busy')");settle(s);
+            assertEquals("true",js(s,"/^#+$/.test(document.querySelector('#android-cell-0-0').textContent) && /^#+$/.test(document.querySelector('#android-cell-1-0').textContent) && /^#+$/.test(document.querySelector('#android-cell-2-0').textContent)"));
+            assertEquals("true",js(s,"/E\\+11$/.test(document.querySelector('#android-cell-0-1').textContent)"));
+            assertEquals("\"123456789\"",js(s,"document.querySelector('#formula').value"));
+            screenshot("tablet-number-overflow");
+            JSONObject p=new JSONObject(js(s,"(()=>{const r=document.querySelector('[data-resize-col=\"0\"]').getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2}})()"));
+            long down=SystemClock.uptimeMillis();mouse(s,MotionEvent.ACTION_DOWN,p.getDouble("x"),p.getDouble("y"),down);
+            waitJS(s,"document.body.dataset.dimensionResize==='c'");settle(s);
+            js(s,"window.__widthRenders=0;window.__widthObserver=new MutationObserver(rs=>__widthRenders+=rs.length);__widthObserver.observe(document.querySelector('#cells'),{childList:true})");
+            for(int n=1;n<=20;n++){mouse(s,MotionEvent.ACTION_MOVE,p.getDouble("x")+3*n,p.getDouble("y"),down);SystemClock.sleep(16);}
+            waitJS(s,"document.querySelector('.dimension-guide-label').textContent==='열 너비: 124px'");
+            assertEquals("64",js(s,"sheetStudio.getWorkbook().sheets[0].columnWidths[0]"));assertEquals("0",js(s,"__widthRenders"));
+            screenshot("tablet-mouse-guide");js(s,"__widthObserver.disconnect()");
+            mouse(s,MotionEvent.ACTION_UP,p.getDouble("x")+60,p.getDouble("y"),down);
+            waitJS(s,"sheetStudio.getWorkbook().sheets[0].columnWidths[0]===124");settle(s);
+            assertEquals("\"123456789\"",js(s,"document.querySelector('#android-cell-0-0').textContent"));
+            assertEquals("true",js(s,"sheetStudio.getCell('A1').raw==='123456789' && !document.body.dataset.dimensionResize"));
+            js(s,"document.querySelector('#undo').click()");settle(s);assertEquals("64",js(s,"sheetStudio.getWorkbook().sheets[0].columnWidths[0]"));
+            js(s,"document.querySelector('#redo').click()");settle(s);assertEquals("124",js(s,"sheetStudio.getWorkbook().sheets[0].columnWidths[0]"));
+        }finally{device.executeShellCommand("wm size reset");device.executeShellCommand("wm density reset");}
+    }
+
 }

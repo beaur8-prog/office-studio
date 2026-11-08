@@ -6,10 +6,10 @@
     "sheet": {
       "repository": "beaur8-prog/sheet-studio",
       "ref": "main",
-      "sourceCommit": "52ab856606732b33dd87b291dee59a3d897ae6ca",
-      "version": "1.0.5",
-      "versionCode": 6,
-      "upstreamCommit": "52ab856606732b33dd87b291dee59a3d897ae6ca"
+      "sourceCommit": "3800bd13a0bf4e5d0b68d024a7857da3dc9423a6",
+      "version": "1.0.6",
+      "versionCode": 7,
+      "upstreamCommit": "3800bd13a0bf4e5d0b68d024a7857da3dc9423a6"
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",

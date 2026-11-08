@@ -1,7 +1,7 @@
 name: Sheet Android real window and exit regression
 on:
   push:
-    branches: [codex/android-sheet-key-up-20261108]
+    branches: [codex/android-sheet-number-width-20261108]
     paths:
       - .github/workflows/android-sheet-lifecycle.yml
       - android/app/**

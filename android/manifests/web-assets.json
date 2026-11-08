@@ -1,6 +1,6 @@
 {
   "sheet": {
-    "version": "1.0.5",
+    "version": "1.0.6",
     "assetFiles": [
       {
         "path": "android-icon.svg",
@@ -15,7 +15,7 @@
       {
         "path": "app-version.json",
         "bytes": 21,
-        "sha256": "dfd1a67311d928216217df242e278dd0ed291e1f3d9f76272e3e333c0a05c1c7"
+        "sha256": "5e8bda42b9ea4626de02798a35a62effd76dd13056426c45704a3fc299e1fc30"
       },
       {
         "path": "assets/index-BFN4OcMv.css",
@@ -23,9 +23,9 @@
         "sha256": "c70cf6c274ba7f3ddac9f1185a1022765420559c18c5ce921af690696a159f63"
       },
       {
-        "path": "assets/index-Br-cA_ze.js",
-        "bytes": 1028162,
-        "sha256": "a6de4bea76035b9226ad6e90a291db08e3e1ae1ce5f4e9665957a5d666b30fdf"
+        "path": "assets/index-CZ3yyCmp.js",
+        "bytes": 1030056,
+        "sha256": "147aeb3e89006f1b85bbcdd28e3d352397435b55b42b3aec489ce5330afecd5f"
       },
       {
         "path": "assets/spreadsheet-BTv7Xkas.js",
@@ -45,7 +45,7 @@
       {
         "path": "index.html",
         "bytes": 784,
-        "sha256": "8aa449a257166d0b6644013f56e3579fe43d8ad665b57ec0a60b3079e627c8d8"
+        "sha256": "a236ea0cdcce287236a0889f6e99967d1129e8b1c5cc4bce7d7d6a143ede5864"
       },
       {
         "path": "THIRD-PARTY-NOTICES.txt",
@@ -58,7 +58,7 @@
     "adaptiveIcon": true,
     "roundIcon": true,
     "monochromeIcon": true,
-    "sourceCommit": "52ab856606732b33dd87b291dee59a3d897ae6ca"
+    "sourceCommit": "3800bd13a0bf4e5d0b68d024a7857da3dc9423a6"
   },
   "slide": {
     "version": "1.0.5",
