@@ -23,9 +23,9 @@
         "sha256": "c70cf6c274ba7f3ddac9f1185a1022765420559c18c5ce921af690696a159f63"
       },
       {
-        "path": "assets/index-CZ3yyCmp.js",
-        "bytes": 1030056,
-        "sha256": "147aeb3e89006f1b85bbcdd28e3d352397435b55b42b3aec489ce5330afecd5f"
+        "path": "assets/index-C2g5TyU5.js",
+        "bytes": 1030154,
+        "sha256": "6d983db03c36110922b6b3eece306989eab63636fa2ae4f94a5d3c29b88a9e91"
       },
       {
         "path": "assets/spreadsheet-BTv7Xkas.js",
@@ -45,7 +45,7 @@
       {
         "path": "index.html",
         "bytes": 784,
-        "sha256": "a236ea0cdcce287236a0889f6e99967d1129e8b1c5cc4bce7d7d6a143ede5864"
+        "sha256": "e67fb422c2f9745a9a9f2f3f29ba8fe3de40e759a0f402922f4adc53f8008cd2"
       },
       {
         "path": "THIRD-PARTY-NOTICES.txt",
@@ -58,7 +58,7 @@
     "adaptiveIcon": true,
     "roundIcon": true,
     "monochromeIcon": true,
-    "sourceCommit": "3800bd13a0bf4e5d0b68d024a7857da3dc9423a6"
+    "sourceCommit": "8ce7d347dc229e8286f60c788dfb962b74ef75ef"
   },
   "slide": {
     "version": "1.0.5",
