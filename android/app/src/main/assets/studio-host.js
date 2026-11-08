@@ -45,8 +45,30 @@
  URL.createObjectURL=blob=>{const url=create(blob);urls.set(url,blob);return url;};
  URL.revokeObjectURL=url=>{urls.delete(url);revoke(url);};
  HTMLAnchorElement.prototype.click=function(){const blob=urls.get(this.href);if(blob&&this.download){const name=this.download;void blob.arrayBuffer().then(data=>save({name,mime:blob.type,data:new Uint8Array(data)})).catch(error=>alert(error.message));return;}return click.call(this);};
+ // A show can own a separate fullscreen view or lose keyboard focus. End it
+ // through a dedicated app event before considering any normal back action.
+ if (window.__studioHostConfig?.studio === 'slide') {
+  const endPresentation=()=>{
+   if(document.documentElement?.dataset.studioPresenting!=='true'&&!document.querySelector('.android-presentation'))return false;
+   const event=new Event('slide-studio-android-end-presentation',{cancelable:true});
+   window.dispatchEvent(event);
+   if(!event.defaultPrevented)window.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',code:'Escape',bubbles:true,cancelable:true}));
+   return true;
+  };
+  window.OfficeStudioHost.endPresentation=endPresentation;
+  window.OfficeStudioHost.slideBack=()=>{
+   if(endPresentation())return 'handled';
+   const event=new Event('slide-studio-android-back',{cancelable:true});
+   window.dispatchEvent(event);
+   if(event.defaultPrevented)return 'handled';
+   // Missing JS, a not-yet-mounted editor, and callback null are not consent
+   // to close the Activity. Only an explicit back at the home screen is.
+   return document.querySelector('.android-home')?'close':'unavailable';
+  };
+ }
  // Escape stays in the document; native consumes both hardware key edges.
  if (['sheet','slide'].includes(window.__studioHostConfig?.studio)) window.OfficeStudioHost.escape=()=>{
+  if(window.__studioHostConfig.studio==='slide'&&window.OfficeStudioHost.endPresentation())return true;
   const event=new KeyboardEvent('keydown',{key:'Escape',code:'Escape',bubbles:true,cancelable:true});
   const target=window.__studioHostConfig.studio==='sheet'?(document.activeElement||document):window;
   target.dispatchEvent(event);

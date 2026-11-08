@@ -79,8 +79,8 @@ build = {
     sha(out / 'BUILD-android.json') + '  BUILD-android.json\n')
 
 changes = {
-    'sheet': '보기·입력 설정, 화면·카메라 영역과 하드웨어 키보드·Esc·종료 처리 개선',
-    'slide': 'Android 편집 리본과 문서 안에서 동작하는 Esc 처리 개선',
+    'sheet': '전체화면 셀 입력·수식 참조, 태블릿 편집과 키보드·Esc·Back 처리 개선',
+    'slide': '태블릿 편집과 발표 종료·Esc·Back 처리 개선',
     'word': 'Android 편집 리본과 읽기 화면에서 편집으로 돌아오는 Esc 처리 개선',
 }
 day = datetime.datetime.now(ZoneInfo('Asia/Seoul')).strftime('%Y년 %m월 %d일')
@@ -90,8 +90,8 @@ body = before['content']
 body, count = re.subn(r'\*\*Office Studio Android [^\n]*\*\*',
                      f'**Office Studio Android {version} · {day} · 변경 앱 업데이트**', body, count=1)
 assert count == 1
-body, count = re.subn(r'^(?:Sheet|Slide|Word) Studio를 \*\*[^\n]+로 갱신했습니다[^\n]*$',
-                     summary + '로 갱신했습니다.' + (' 변경 없는 앱은 기존 파일을 제공합니다.' if unchanged else ''),
+body, count = re.subn(r'^(?:Sheet|Slide|Word) Studio[^\n]*로 갱신했습니다\.[^\n]*$',
+                     summary + '로 갱신했습니다.' + (' ' + ', '.join(a['name'] + ' **' + a['version'] + '**' for a in unchanged) + '은 기존 파일을 그대로 제공합니다.' if unchanged else ''),
                      body, count=1, flags=re.M)
 assert count == 1
 lines = body.splitlines()
@@ -116,10 +116,10 @@ for a in apps:
     if a['rebuilt']:
         old = next(x for x in prior['apps'] if x['id'] == a['id'])
         body = body.replace(old['sha256'] + '  ' + old['filename'], a['sha256'] + '  ' + a['filename'])
-body = body.replace('1.0.2에는 발표 확대·이동, 이름이 표시된 터치 도구와 Android 화면 가장자리 여백 개선을 포함합니다.',
-                    '1.0.4에는 편집 리본과 문서 안에서 동작하는 Esc 처리를 포함합니다.')
-body = body.replace('1.0.1에는 문서·편집 페이지 맞춤과 전체화면 스와이프 뷰어를 포함합니다.',
-                    '1.0.2에는 편집 리본과 읽기 화면에서 편집으로 돌아오는 Esc 처리를 포함합니다.')
+body = body.replace('1.0.4에는 편집 리본과 문서 안에서 동작하는 Esc 처리를 포함합니다.',
+                    '1.0.5에는 태블릿 편집 화면 개선과 발표 종료·Esc·Back 처리를 포함합니다.')
+body = body.replace('사본 저장에서 XLSX 등 필요한 형식을 선택합니다.',
+                    '사본 저장에서 XLSX 등 필요한 형식을 선택합니다. 1.0.4에는 전체화면 셀 입력·수식 참조와 태블릿 편집 개선을 포함합니다.')
 start = body.index('## 7. 이번 배포의 확인 범위')
 end = body.index('이 문서는 리토스의 읽기 전용 공유 페이지입니다.', start)
 details = '\n'.join(f"- **{a['name']} {a['version']}**: {changes[a['id']]} · versionCode {a['versionCode']}"
