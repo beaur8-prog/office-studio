@@ -48,15 +48,17 @@
   "nativeWordHostUpstreamCommit": "d0e5ca10fed93f9d6307640390265d56cd2ad29f",
   "nativeSheetHostUpstreamCommit": "225cefbdc04a81bcc79639b2e106af05c39892b8",
   "development": {
-    "status": "native-window mitigation validated; user-device symptom not reproduced; not publicly released",
+    "status": "native-window and Android 16 input fixes validated on AOSP; user-device app exit not reproduced; not publicly released",
     "baselineAppVersion": "1.0.5",
     "baselineHostCommit": "b9031a760416530074eeac1cc97061d7372d2f26",
-    "nativeImplementationCommit": "36d78d05e8020196adc8956028724e780d789d32",
+    "nativeImplementationCommit": "2642ecf2e3a5d95351a23ce5e39d137c69580a0a",
     "requiresVersionBumpBeforeRelease": true,
     "changes": [
       "APK presentations use original native WebView with SystemBars/ScreenOrientation, no DOM fullscreen custom view",
       "ignore unrelated DOM fullscreenchange in native-window mode",
-      "hide IME on Slide presentation entry"
+      "hide IME on Slide presentation entry",
+      "handle Slide Escape before IME; consume down/repeat/up, issue document command once",
+      "Android 13+ Back uses registered OnBackInvokedCallback only; retain legacy key handling below API 33"
     ],
     "verification": {
       "androidBrowserPassed": 41,
@@ -73,9 +75,40 @@
       },
       "baselineObservation": "viewer Escape/Back did not close in emulator; separate fullscreen CustomView confirmed",
       "currentObservation": "original WebView stays visible, no custom view or DOM fullscreen, crash buffer empty",
-      "build": "main and Android branch web build and debug APK/test build passed"
+      "build": "Slide debug APK/tests and Sheet/Word Java compilation passed; previous web/browser results preserved",
+      "android16Tablet": {
+        "sdk": 36,
+        "webView": "133.0.6943.137",
+        "resolution": "1752x2800",
+        "densityDpi": 280,
+        "passed": 13,
+        "legacyOnlyAssumptionSkipped": 1,
+        "registeredTests": 14,
+        "viewerCycles": 6,
+        "systemBackCommandsPerPress": 1,
+        "crashBufferEmpty": true,
+        "oneUI": false
+      },
+      "android15BackCompatibility": {
+        "sdk": 35,
+        "passed": 4,
+        "crashBufferEmpty": true
+      },
+      "newReproductions": [
+        "pre-IME Escape not consumed before fix",
+        "one system Back executes two document commands and returns show -> viewer -> home before fix; not Activity finish"
+      ]
     },
-    "remaining": "Need current user platform/version/device/keyboard and actual device close/crash logs; do not claim exact user cause confirmed.",
-    "note": "Root version/tests describe published baseline. Next release needs new app assets and native IME change, official signature and version bump."
+    "remaining": "Need actual Galaxy Tab S8+ One UI 8 validation/logs and device WebView version. External keyboard and regular tablet mode confirmed. Do not claim exact app-exit cause confirmed; API <33 runtime not tested in this follow-up.",
+    "note": "Root version/tests describe published baseline. No release or installed user APK updated. Next release needs new app assets, native input/window fixes, official signature and version bump.",
+    "userEnvironment": {
+      "appVersion": "1.0.5",
+      "model": "Samsung Galaxy Tab S8+",
+      "android": "16",
+      "oneUI": "8",
+      "keyboard": "external Bluetooth/USB keyboard (exact model unknown)",
+      "mode": "regular tablet mode; not DeX",
+      "webView": "not supplied"
+    }
   }
 }

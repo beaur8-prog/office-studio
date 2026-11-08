@@ -78,6 +78,6 @@ Word만 versionName 1.0.1/versionCode 2로 빌드하고 기존 앱 ID·서명 �
 
 `codex/android-native-window-20261108`의 앱은 네이티브 SystemBars가 제공될 때 DOM requestFullscreen()을 호출하지 않고 원래 WebView에서 발표합니다. 호스트는 발표 때 IME도 숨깁니다. 일반 브라우저/데스크톱의 기존 전체 화면은 유지합니다.
 
-공개1.0.5의 별도 CustomView 생성은 확인했지만 사용자의 앱 종료는 현재 Android15 환경에서 재현되지 않았습니다. 수정본은 태블릿11개/휴대폰10개 네이티브 검사와 뷰어6회 반복을 통과했고, 사용자 플랫폼·버전·기종·키보드 확인은 남아 있습니다. [검증 기록](qa/SLIDE-NATIVE-PRESENTATION-WINDOW-2026-11-08.md)에 관찰과 한계를 구분했습니다.
+사용자 환경은 Slide1.0.5 · Galaxy Tab S8+ · Android16 · One UI8 · 외부 키보드 · 일반 태블릿 모드로 확인됐습니다. Android16에서 시스템 Back 한 번이 두 명령을 실행해 발표에서 홈까지 이동하는 문제를 재현해, Android13 이상에서는 기존 시스템 Back 콜백만 사용하도록 수정했습니다. 입력기 이전 Esc 처리도 추가했습니다. 최종 Android16 검사13개 통과/구형 Android 전용1개 제외, Android15 핵심4개 통과이며 crash 버퍼는 비어 있습니다. 공개1.0.5의 실제 Activity 종료와 One UI8 실기기 해결은 아직 확인하지 못했습니다. [검증 기록](qa/SLIDE-NATIVE-PRESENTATION-WINDOW-2026-11-08.md)에 관찰과 한계를 구분했습니다.
 
-비공개 디버그 APK만 실행했습니다. 공개 APK/공유 문서/사용자 설치본은 갱신하지 않았으며 다음 별도 배포 때 새 자산과 IME 수정을 함께 기존 정식 서명으로 빌드하고 버전/versionCode를 올려야 합니다.
+비공개 디버그 APK만 실행했습니다. 공개 APK/공유 문서/사용자 설치본은 갱신하지 않았으며 다음 별도 배포 때 새 자산과 네이티브 창·IME·키 입력 수정을 함께 기존 정식 서명으로 빌드하고 버전/versionCode를 올려야 합니다.
