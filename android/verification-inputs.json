@@ -2,23 +2,23 @@
   "schema": 1,
   "tag": "android-v1.0.0",
   "filename": "ANDROID-VALIDATION-INPUTS.zip",
-  "sha256": "1a22820d7ee520eb9edde4ecc8fb2416ca4c724ed925ace128e9c2004d66ee45",
+  "sha256": "631c61d393e78bbb4adee150f19f2523358e668cf51a259d05137d1b39ff846d",
   "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b",
   "productionApks": [
     {
       "id": "sheet",
-      "sha256": "0c463ca836198810dccf929ead33836c720bb9550b9f95673d2e6cdda1fe29cd",
-      "bytes": 6137453
+      "sha256": "124def83d1250380c19c5c0709ecd9862281814329c30822b9319373bbb3a830",
+      "bytes": 6137353
     },
     {
       "id": "slide",
-      "sha256": "80d97a19bbe328ba2af2b7eb914bbd091649a34a120bbf53019c2f0264bea236",
-      "bytes": 13481499
+      "sha256": "e2f7b515608210a60f7323154b007f343679c0374de2d407f1b7e065121bbcd0",
+      "bytes": 13481399
     },
     {
       "id": "word",
-      "sha256": "e87a5505e7f98559fec446794d84737d887e6869427b41e463b1f405b51fa4ac",
-      "bytes": 38099869
+      "sha256": "7b9692fd4c4378088827b3c3ab9947d82d75bef48846c5f7fd319f02730515bb",
+      "bytes": 38099769
     }
   ]
 }
