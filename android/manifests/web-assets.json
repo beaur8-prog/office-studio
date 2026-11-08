@@ -1,6 +1,6 @@
 {
   "sheet": {
-    "version": "1.0.1",
+    "version": "1.0.2",
     "assetFiles": [
       {
         "path": "THIRD-PARTY-NOTICES.txt",
@@ -20,17 +20,17 @@
       {
         "path": "app-version.json",
         "bytes": 20,
-        "sha256": "6a33e5f4b8fe43d76bfa8ad1c14fbbae5a9abad68194dc331b17c8b0d1415185"
+        "sha256": "9c95b15ebede9992876d1e9964fc4f9b7d9faed4a4387aa187dec630702aeb68"
       },
       {
-        "path": "assets/index-9GD8aNcM.js",
-        "bytes": 1017031,
-        "sha256": "9baf86d739d6431e789644982d1159b2aec6f8f876d3e4f9e1a524550c4c07d8"
+        "path": "assets/index-BPSPmnXi.js",
+        "bytes": 1018046,
+        "sha256": "2f8dc86882751f1c2aa2a42c3e069ffe3ad8b8ebbc3b7ef544e9a1eefe50866f"
       },
       {
-        "path": "assets/index-BNATsQxm.css",
-        "bytes": 53915,
-        "sha256": "698ae0199e357288ba28e20a2156fd935e814e99a26e878bf81510a94e439e50"
+        "path": "assets/index-DlajnCYf.css",
+        "bytes": 55052,
+        "sha256": "9da99e2cb48803faf73464d966ce3233f378edb735dd9460f4c04fac83f76b99"
       },
       {
         "path": "assets/spreadsheet-BTv7Xkas.js",
@@ -50,7 +50,7 @@
       {
         "path": "index.html",
         "bytes": 784,
-        "sha256": "172c5109c55bd72d7c655e9952b59dad9cfb29f3144d5d31b55a18cc47838fc0"
+        "sha256": "7cde1ecbbc8be02b58731cf22145b1b3c8a6de23b19108c2e4c1e88a3d273081"
       }
     ],
     "iconSourceSHA256": "180827929304256408d440428f7f736266be150b939270ea08efe92f332c864f",
