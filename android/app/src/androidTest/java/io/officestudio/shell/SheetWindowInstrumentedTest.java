@@ -83,15 +83,26 @@ public class SheetWindowInstrumentedTest {
     }
     void tap(ActivityScenario<MainActivity> s,String selector) throws Exception {
         js(s,"window.__qaTouches=[];for(const type of ['pointerdown','pointerup','pointercancel'])document.addEventListener(type,e=>{window.__qaTouches.push({type:e.type,pointer:e.pointerType,target:e.target.id,cell:e.target.closest('.cell')?.getAttribute('data-r'),active:document.activeElement.id,height:innerHeight});},{capture:true,once:true});");
-        JSONObject p=new JSONObject(js(s,"(()=>{const r=document.querySelector("+JSONObject.quote(selector)+").getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2,width:innerWidth}})()"));
-        int[] point=new int[2];
-        s.onActivity(a->{try{int[] origin=new int[2];a.web.getLocationOnScreen(origin);float scale=a.web.getWidth()/(float)p.getDouble("width");point[0]=origin[0]+(int)(p.getDouble("x")*scale);point[1]=origin[1]+(int)(p.getDouble("y")*scale);}catch(Exception e){throw new AssertionError(e);}});
-        long time=SystemClock.uptimeMillis();
-        MotionEvent.PointerProperties finger=new MotionEvent.PointerProperties();finger.id=0;finger.toolType=MotionEvent.TOOL_TYPE_FINGER;
-        MotionEvent.PointerCoords at=new MotionEvent.PointerCoords();at.x=point[0];at.y=point[1];at.pressure=1;at.size=1;
-        MotionEvent down=MotionEvent.obtain(time,time,MotionEvent.ACTION_DOWN,1,new MotionEvent.PointerProperties[]{finger},new MotionEvent.PointerCoords[]{at},0,0,1,1,0,0,InputDevice.SOURCE_TOUCHSCREEN,0);
-        at.pressure=0;MotionEvent up=MotionEvent.obtain(time,time+1,MotionEvent.ACTION_UP,1,new MotionEvent.PointerProperties[]{finger},new MotionEvent.PointerCoords[]{at},0,0,1,1,0,0,InputDevice.SOURCE_TOUCHSCREEN,0);
-        try{assertTrue(InstrumentationRegistry.getInstrumentation().getUiAutomation().injectInputEvent(down,true));assertTrue(InstrumentationRegistry.getInstrumentation().getUiAutomation().injectInputEvent(up,true));}finally{down.recycle();up.recycle();}
+        // Transient system bars/window transitions can consume a native tap
+        // before it reaches WebView. Retry only if NO DOM pointerdown arrived;
+        // an app that receives the tap but performs the wrong action still fails.
+        for(int attempt=0;attempt<3;attempt++){
+            JSONObject p=new JSONObject(js(s,"(()=>{const r=document.querySelector("+JSONObject.quote(selector)+").getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2,width:innerWidth}})()"));
+            int[] point=new int[2];
+            s.onActivity(a->{try{int[] origin=new int[2];a.web.getLocationOnScreen(origin);float scale=a.web.getWidth()/(float)p.getDouble("width");point[0]=origin[0]+(int)(p.getDouble("x")*scale);point[1]=origin[1]+(int)(p.getDouble("y")*scale);}catch(Exception e){throw new AssertionError(e);}});
+            long time=SystemClock.uptimeMillis();
+            MotionEvent.PointerProperties finger=new MotionEvent.PointerProperties();finger.id=0;finger.toolType=MotionEvent.TOOL_TYPE_FINGER;
+            MotionEvent.PointerCoords at=new MotionEvent.PointerCoords();at.x=point[0];at.y=point[1];at.pressure=1;at.size=1;
+            MotionEvent down=MotionEvent.obtain(time,time,MotionEvent.ACTION_DOWN,1,new MotionEvent.PointerProperties[]{finger},new MotionEvent.PointerCoords[]{at},0,0,1,1,0,0,InputDevice.SOURCE_TOUCHSCREEN,0);
+            try{assertTrue(InstrumentationRegistry.getInstrumentation().getUiAutomation().injectInputEvent(down,true));}finally{down.recycle();}
+            SystemClock.sleep(24);at.pressure=0;
+            MotionEvent up=MotionEvent.obtain(time,SystemClock.uptimeMillis(),MotionEvent.ACTION_UP,1,new MotionEvent.PointerProperties[]{finger},new MotionEvent.PointerCoords[]{at},0,0,1,1,0,0,InputDevice.SOURCE_TOUCHSCREEN,0);
+            try{assertTrue(InstrumentationRegistry.getInstrumentation().getUiAutomation().injectInputEvent(up,true));}finally{up.recycle();}
+            long end=SystemClock.uptimeMillis()+1500;
+            do{if("true".equals(js(s,"window.__qaTouches.some(t=>t.type==='pointerdown')")))return;SystemClock.sleep(50);}while(SystemClock.uptimeMillis()<end);
+            android.util.Log.w("SheetQA","No WebView pointer delivered; remeasure after transient system UI: "+selector);SystemClock.sleep(350);
+        }
+        screenshot("native-tap-not-delivered");fail("Native tap never reached WebView: "+selector);
     }
     void setDraft(ActivityScenario<MainActivity> s,String value) throws Exception {
         js(s,"(()=>{const i=document.querySelector('#formula');i.value="+JSONObject.quote(value)+";i.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:'insertText'}));})()");
