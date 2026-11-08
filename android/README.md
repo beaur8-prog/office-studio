@@ -1,6 +1,6 @@
 # Office Studio · Android
 
-현재 배포: Sheet 1.0.1 · Slide 1.0.1 · Word 1.0.0. Android 통합 ZIP은 제공을 중단했으며 개별 APK만 게시합니다.
+현재 배포: Sheet 1.0.1 · Slide 1.0.2 · Word 1.0.0. Android 통합 ZIP은 제공을 중단했으며 개별 APK만 게시합니다.
 
 세 Android 전용 앱을 각각 서명한 범용 APK로 빌드합니다. Android 10(API 29) 이상과 Android System WebView 120 이상이 필요합니다. 오프라인 프런트엔드, 시스템 파일 선택기, 사본 저장·공유, 원형·적응형·단색 아이콘을 포함합니다.
 
@@ -31,3 +31,9 @@ Android 릴리스는 `android-v<version>` 태그와 `--latest=false`로 게시�
 최신 Sheet main `89053c6`의 컴팩트 화면·연속 셀 입력을 포함하며 Android 네이티브 `setFullscreen` 상태바 제어를 연결했습니다. Sheet만 versionName 1.0.1/versionCode 2로 조립·서명합니다. 설치·실행·기능 테스트는 명시적인 요청에 따라 모두 생략합니다. 빌드는 `:app:assembleSheetRelease`만 사용합니다.
 
 Office Android 릴리스 `android-v1.0.2`는 Sheet APK, 빌드 기록, 체크섬 세 파일만 제공합니다. 기존 Android 1.0.0·1.0.1 릴리스의 통합 APK ZIP도 삭제했습니다. Slide·Word APK, Windows·Mac 페이지와 업데이트 피드는 유지합니다. 이전 ZIP 생성 스크립트는 과거 배포 기록이며 현재 배포에서는 실행하지 않습니다.
+
+## Slide Studio 1.0.2 빠른 배포
+
+최신 앱 main `1ee351b`의 발표 확대·이름 있는 터치 도구·안전 여백 CSS와 호스트 브랜치 `584be72`의 창·카메라 영역 수정을 함께 포함합니다. Sheet의 상태바 API는 유지하고 Slide만 versionName 1.0.2/versionCode 3으로 빌드합니다. 기존 앱 ID와 서명 키를 재사용합니다.
+
+SDK·Gradle·npm 캐시는 `/private/tmp/office-studio-android-build-cache`를 재사용하며 `:app:assembleSlideRelease`만 실행합니다. 설치·실행·브라우저·에뮬레이터 테스트와 ZIP 생성은 생략합니다. `android-v1.0.3`에는 Slide APK·빌드 기록·체크섬 세 파일을 게시하고 기존 공유 주소를 갱신합니다. Sheet 1.0.1과 Word 1.0.0은 기존 파일을 유지합니다.
