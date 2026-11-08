@@ -1,6 +1,6 @@
 {
   "sheet": {
-    "version": "1.0.6",
+    "version": "1.0.7",
     "assetFiles": [
       {
         "path": "android-icon.svg",
@@ -15,7 +15,7 @@
       {
         "path": "app-version.json",
         "bytes": 21,
-        "sha256": "5e8bda42b9ea4626de02798a35a62effd76dd13056426c45704a3fc299e1fc30"
+        "sha256": "5748e8f63082ac1544bd6822719b1869687349735cdb2c1fb7b771fb8c0fddc8"
       },
       {
         "path": "assets/index-BFN4OcMv.css",
@@ -23,9 +23,9 @@
         "sha256": "c70cf6c274ba7f3ddac9f1185a1022765420559c18c5ce921af690696a159f63"
       },
       {
-        "path": "assets/index-C2g5TyU5.js",
-        "bytes": 1030154,
-        "sha256": "6d983db03c36110922b6b3eece306989eab63636fa2ae4f94a5d3c29b88a9e91"
+        "path": "assets/index-DNp2FE_G.js",
+        "bytes": 1030308,
+        "sha256": "c9345d4283187eba854e7f71fdfa0b78ddced0489d0f625fd832b1b8531f2264"
       },
       {
         "path": "assets/spreadsheet-BTv7Xkas.js",
@@ -38,14 +38,14 @@
         "sha256": "b0148384fbee630b679928d0a9ef71f1d9a179fe8c1a6d18d422bb4e6c1bdf61"
       },
       {
-        "path": "assets/workbook-worker-ZSSNjkDw.js",
-        "bytes": 1735272,
-        "sha256": "1f02c5c9538b7f8c8fe6e0509209e3daf2d6ea03805f5bd55e5e472166b918d8"
+        "path": "assets/workbook-worker-DWTJNxHi.js",
+        "bytes": 1735526,
+        "sha256": "94a8dec92858f14275c0f45009edcbb44738571a843ad17659e3d3a0c5d3fe67"
       },
       {
         "path": "index.html",
         "bytes": 784,
-        "sha256": "e67fb422c2f9745a9a9f2f3f29ba8fe3de40e759a0f402922f4adc53f8008cd2"
+        "sha256": "a10cc8faedd97450418470cefef78af7b301c12f8c42b189846627417fa8855c"
       },
       {
         "path": "THIRD-PARTY-NOTICES.txt",
@@ -58,7 +58,7 @@
     "adaptiveIcon": true,
     "roundIcon": true,
     "monochromeIcon": true,
-    "sourceCommit": "8ce7d347dc229e8286f60c788dfb962b74ef75ef"
+    "sourceCommit": "418f39cf3fe4bb966714739bb66fb66adde1541b"
   },
   "slide": {
     "version": "1.0.5",

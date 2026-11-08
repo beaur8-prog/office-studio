@@ -251,6 +251,19 @@ public class SheetWindowInstrumentedTest {
             assertEquals("true",js(s,"sheetStudio.getCell('A1').raw==='123456789' && !document.body.dataset.dimensionResize"));
             js(s,"document.querySelector('#undo').click()");settle(s);assertEquals("64",js(s,"sheetStudio.getWorkbook().sheets[0].columnWidths[0]"));
             js(s,"document.querySelector('#redo').click()");settle(s);assertEquals("124",js(s,"sheetStudio.getWorkbook().sheets[0].columnWidths[0]"));
+            // Real tablet ribbon path: infer and select the Average source range.
+            js(s,"sheetStudio.select(3,0);document.querySelector('[data-tab=\"수식\"]').click()");settle(s);
+            js(s,"document.querySelector('[data-action=func-average]').click()");
+            waitJS(s,"document.querySelector('#editor').value==='=AVERAGE(A1:A3)' && !document.querySelector('#editor').hidden && document.activeElement.id==='editor'");
+            assertEquals("\"A1:A3\"",js(s,"(()=>{const i=document.querySelector('#editor');return i.value.slice(i.selectionStart,i.selectionEnd)})()"));
+            screenshot("tablet-average-range");
+            UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressKeyCode(KeyEvent.KEYCODE_ENTER);
+            waitJS(s,"sheetStudio.getCell('A4')?.raw==='=AVERAGE(A1:A3)'");settle(s);
+            js(s,"window.__averageValue=null;sheetStudio.evaluateAsync('A4').then(v=>window.__averageValue=v)");
+            waitJS(s,"typeof __averageValue==='number'");
+            assertEquals("true",js(s,"Math.abs(__averageValue-(123456789+1234567+1234567890)/3)<0.0001"));
+            js(s,"document.querySelector('#undo').click()");settle(s);assertEquals("true",js(s,"!sheetStudio.getCell('A4')"));
+            js(s,"document.querySelector('#redo').click()");settle(s);assertEquals("\"=AVERAGE(A1:A3)\"",js(s,"sheetStudio.getCell('A4').raw"));
         }finally{device.executeShellCommand("wm size reset");device.executeShellCommand("wm density reset");}
     }
 
