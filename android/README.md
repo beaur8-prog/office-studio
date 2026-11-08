@@ -49,3 +49,9 @@ Sheet만 versionName 1.0.2/versionCode 3으로 빌드합니다. 기존 키와 �
 최신 앱 main `80e04b9`의 뷰어 편집 바로가기와 호스트 `8d121c3`의 시작·뷰어·편집 화면 상태바 숨김을 포함합니다. 기존 Sheet 전체화면·IME·inset 연결을 병합 과정에서 보존했습니다. Slide만 versionName 1.0.3/versionCode 4로 빌드하며 설치·실행·기능 테스트와 ZIP 생성은 생략합니다.
 
 `android/package-single-apk.py`는 source-lock의 changedApps 한 개와 현재 버전, 인접 records의 이전 빌드·페이지·캐시·변경 설명을 읽어 APK·빌드 기록·체크섬 세 파일과 문서를 준비합니다. `android-v1.0.5`로 게시하고 기존 공유 페이지를 갱신합니다.
+
+## Slide Esc·편집 리본 개발 (2026-11-08)
+
+앱·호스트의 `codex/android-editor-escape-20261108`은 Slide 1.0.3을 기준으로 물리 Esc를 앱 종료 경로와 분리합니다. 키 누름 한 번만 DOM으로 전달하고 키 해제와 자동 반복도 소비합니다. 웹에서 처리되지 않은 Esc도 Activity를 종료하지 않습니다. Sheet/Word의 키·생명주기·전체 화면 처리는 유지합니다.
+
+앱 자산에는 편집 화면 `발표` 버튼, 홈·삽입·디자인·전환·슬라이드 쇼·보기 리본, 태블릿의 도킹 도구/서식 창이 포함됩니다. 다음 APK는 **새 앱 자산과 네이티브 호스트를 함께** 빌드해야 합니다. 검증은 [상세 기록](qa/SLIDE-EDITOR-ESCAPE-2026-11-08.md)에 있습니다. 공개 APK 조립·서명·설치·배포는 하지 않았으며 다음 배포 시 Android 버전/versionCode를 올려야 합니다.

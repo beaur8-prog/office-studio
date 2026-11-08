@@ -13,11 +13,11 @@
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",
-      "ref": "codex/android-1.0.3",
-      "sourceCommit": "448121d45db84cc64880dfd490966fd4528fe03a",
+      "ref": "codex/android-editor-escape-20261108",
+      "sourceCommit": "9f546aaf90de045762466a3f904867c301838df8",
       "version": "1.0.3",
       "versionCode": 4,
-      "upstreamCommit": "80e04b9fc84f7970d2498e9d8aa1eb3ce8e03d4a"
+      "upstreamCommit": "4d4013de4ff20ad919316f967db1b028fecfa9ab"
     },
     "word": {
       "repository": "beaur8-prog/word-studio",
@@ -40,5 +40,30 @@
     "reason": "Fast release without tests as previously requested"
   },
   "combinedZIP": false,
-  "nativeSlideHostUpstreamCommit": "8d121c3116af7aba700f06fe21d6082c703fab21"
+  "nativeSlideHostUpstreamCommit": "8d121c3116af7aba700f06fe21d6082c703fab21",
+  "development": {
+    "status": "source-only; not packaged, installed or published",
+    "baselineAppVersion": "1.0.3",
+    "baselineHostCommit": "b0071f5f362f5cb988c8553b58db830551852a9b",
+    "requiresVersionBumpBeforeRelease": true,
+    "changes": [
+      "consume hardware Escape down/up/repeats without closing Activity",
+      "dedicated DOM Escape bridge",
+      "keep Escape separate from Android Back",
+      "editor show button and six ribbon tabs",
+      "docked tablet tools and inspector",
+      "align Android canvas padding with automatic fit"
+    ],
+    "verification": {
+      "browserPassed": 57,
+      "browserSkipped": 1,
+      "browserFailures": 0,
+      "nativeBridgePassed": 4,
+      "afterCanvasFix": "Android UI 22 passed; final dock/fit scenario passed again",
+      "webBuild": "passed: main and Android source branch",
+      "gradleCompile": "passed: compileSlideReleaseJavaWithJavac and compileSlideReleaseAndroidTestJavaWithJavac",
+      "nativeDeviceRuntime": "not run"
+    },
+    "note": "Root version/tests describe the baseline release. New APK must include both the pinned app assets and this native host."
+  }
 }

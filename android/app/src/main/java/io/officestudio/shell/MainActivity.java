@@ -245,6 +245,16 @@ public class MainActivity extends Activity {
         if(hasFocus&&BuildConfig.STUDIO.equals("sheet")&&sheetEdgeToEdge&&hiddenSystemBarTypes!=0&&root!=null){WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView()).hide(hiddenSystemBarTypes);ViewCompat.requestApplyInsets(root);}
     }
     void hideFullscreen(){if(fullscreen==null)return;root.removeView(fullscreen);fullscreen=null;web.setVisibility(View.VISIBLE);if(fullscreenCallback!=null)fullscreenCallback.onCustomViewHidden();fullscreenCallback=null;}
+    @Override public boolean dispatchKeyEvent(KeyEvent event) {
+        if (BuildConfig.STUDIO.equals("slide") && event.getKeyCode() == KeyEvent.KEYCODE_ESCAPE) {
+            // Do not let KEY_UP or repeats fall through to Activity/WebView's
+            // close/back path after the DOM has already ended the slideshow.
+            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getRepeatCount() == 0 && web != null && !destroyed)
+                web.evaluateJavascript("window.OfficeStudioHost?.escape?.()", null);
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
+    }
     @Override public void onBackPressed(){if(fullscreen!=null){hideFullscreen();return;}if(web==null){finish();return;}web.evaluateJavascript("window.OfficeStudioHost?window.OfficeStudioHost.back():false",value->{if("false".equals(value)||"null".equals(value))finish();});}
     @Override protected void onPause(){if(web!=null)web.evaluateJavascript("document.dispatchEvent(new Event('visibilitychange'));window.dispatchEvent(new Event('pagehide'));",null);super.onPause();}
     @Override protected void onDestroy(){destroyed=true;try{unregisterReceiver(shareReceiver);}catch(Exception ignored){}if(chooser!=null)chooser.onReceiveValue(null);io.execute(()->{if(transfer!=null)try{transfer.out.close();transfer.file.delete();}catch(Exception ignored){}for(ImportFile f:imports.values())f.file.delete();imports.clear();});io.shutdown();if(web!=null){root.removeView(web);web.destroy();}super.onDestroy();}

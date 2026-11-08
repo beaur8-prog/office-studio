@@ -43,6 +43,13 @@
  URL.createObjectURL=blob=>{const url=create(blob);urls.set(url,blob);return url;};
  URL.revokeObjectURL=url=>{urls.delete(url);revoke(url);};
  HTMLAnchorElement.prototype.click=function(){const blob=urls.get(this.href);if(blob&&this.download){const name=this.download;void blob.arrayBuffer().then(data=>save({name,mime:blob.type,data:new Uint8Array(data)})).catch(error=>alert(error.message));return;}return click.call(this);};
+ // Escape is an editing/presentation command, never a request to close the app.
+ // Native consumes both hardware key edges; the DOM handles just one keydown.
+ if (window.__studioHostConfig?.studio === 'slide') window.OfficeStudioHost.escape=()=>{
+  const event=new KeyboardEvent('keydown',{key:'Escape',code:'Escape',bubbles:true,cancelable:true});
+  window.dispatchEvent(event);
+  return event.defaultPrevented;
+ };
  const ready=()=>{void request('ready').catch(error=>alert(error.message));};
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready,{once:true});else ready();
 })();
