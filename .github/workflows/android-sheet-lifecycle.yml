@@ -40,12 +40,21 @@ jobs:
       - name: Build the exact Sheet renderer
         working-directory: sheet-source
         run: npm ci --ignore-scripts && npm run build
+      - name: Fetch checksum-pinned Gradle from the official asset API
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          archive="$RUNNER_TEMP/sheet-gradle-8.13.zip"
+          gh api repos/gradle/gradle-distributions/releases/assets/232373824 -H 'Accept: application/octet-stream' > "$archive"
+          python3 -c 'import hashlib,pathlib,re,sys; expected=re.search(r"distributionSha256Sum=(\w+)",pathlib.Path("android/gradle/wrapper/gradle-wrapper.properties").read_text()).group(1); actual=hashlib.file_digest(pathlib.Path(sys.argv[1]).open("rb"),"sha256").hexdigest(); assert actual==expected, "Gradle checksum mismatch"' "$archive"
+          unzip -q "$archive" -d "$RUNNER_TEMP/sheet-gradle"
+          echo "SHEET_GRADLE=$RUNNER_TEMP/sheet-gradle/gradle-8.13/bin/gradle" >> "$GITHUB_ENV"
       - name: Prepare locked assets and isolated test APK
         run: |
           node android/qa/prepare-sheet-assets.cjs sheet-source
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;36.0.0'
           cd android
-          ./gradlew -PsheetQa :app:assembleSheetDebug :app:assembleSheetDebugAndroidTest
+          "$SHEET_GRADLE" -PsheetQa :app:assembleSheetDebug :app:assembleSheetDebugAndroidTest
       - name: Enable emulator acceleration
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
