@@ -6,7 +6,7 @@ android {
  defaultConfig { minSdk 29; targetSdk 36; versionCode 1; versionName '1.0.0'; testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner' }
  signingConfigs { release { storeFile file(System.getenv('OFFICE_ANDROID_KEYSTORE') ?: '/nonexistent/release.p12'); storePassword System.getenv('OFFICE_ANDROID_PASSWORD'); keyAlias 'office-studio-android'; keyPassword System.getenv('OFFICE_ANDROID_PASSWORD') } }
  buildTypes { release { debuggable false; minifyEnabled false; signingConfig signingConfigs.release } }
- testBuildType 'release'
+ testBuildType (project.findProperty('studioTestBuildType') ?: 'release')
  flavorDimensions += 'studio'
  productFlavors {
   sheet { dimension 'studio'; versionCode 4; versionName '1.0.3'; applicationId 'io.officestudio.sheet'; resValue 'string','app_name','Sheet Studio'; buildConfigField 'String','STUDIO','"sheet"' }

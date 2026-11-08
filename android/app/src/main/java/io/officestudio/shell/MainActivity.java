@@ -34,6 +34,8 @@ public class MainActivity extends Activity {
     ValueCallback<Uri[]> chooser;
     Uri incoming;
     boolean ready, destroyed, immersive;
+    boolean slideBackKeyDown;
+    int slideNavigationGeneration;
     Insets slideSafeInsets = Insets.NONE;
     String insetStyle;
     Integer orientationBefore;
@@ -179,7 +181,7 @@ public class MainActivity extends Activity {
             case "orientation":if(!BuildConfig.STUDIO.equals("slide"))throw new IOException("지원하지 않는 Android 요청입니다");String direction=a.getString("orientation");if(direction.equals("unlock")){if(orientationBefore!=null){setRequestedOrientation(orientationBefore);orientationBefore=null;}}else{if(!direction.equals("landscape")&&!direction.equals("portrait"))throw new IOException("잘못된 화면 방향입니다");if(orientationBefore==null)orientationBefore=getRequestedOrientation();setRequestedOrientation(direction.equals("landscape")?android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE:android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);}success(id,reply,true);break;
             case "clipboard":android.content.ClipboardManager clipboard=(android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);clipboard.setPrimaryClip(a.optString("html").isEmpty()?ClipData.newPlainText("Studio",a.optString("text")):ClipData.newHtmlText("Studio",a.optString("text"),a.optString("html")));success(id,reply,true);break;
             case "readClipboard":android.content.ClipboardManager cm=(android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);ClipData clip=cm.getPrimaryClip();String text=clip!=null&&clip.getItemCount()>0?clip.getItemAt(0).coerceToText(this).toString():"";if(text.length()>1024*1024)throw new IOException("클립보드 내용이 너무 큽니다");success(id,reply,text);break;
-            case "close":success(id,reply,true);finish();break;
+            case "close":success(id,reply,true);if(BuildConfig.STUDIO.equals("slide"))requestSlideBack();else finish();break;
             case "print":if(pending!=null)throw new IOException("다른 파일 작업이 진행 중입니다");pending=new Pending(id,"print",reply,null);PrintDocumentAdapter delegate=web.createPrintDocumentAdapter(getString(R.string.app_name));PrintDocumentAdapter adapter=new PrintDocumentAdapter(){@Override public void onStart(){delegate.onStart();}@Override public void onLayout(PrintAttributes old,PrintAttributes next,CancellationSignal signal,LayoutResultCallback cb,Bundle extras){delegate.onLayout(old,next,signal,cb,extras);}@Override public void onWrite(android.print.PageRange[] pages,ParcelFileDescriptor dest,CancellationSignal signal,WriteResultCallback cb){delegate.onWrite(pages,dest,signal,cb);}@Override public void onFinish(){delegate.onFinish();if(pending!=null&&pending.method.equals("print")){Pending x=pending;pending=null;success(x.id,x.reply,obj("completed",true));}}};((PrintManager)getSystemService(PRINT_SERVICE)).print(getString(R.string.app_name),adapter,new PrintAttributes.Builder().build());break;
             default:failure(id,reply,new IOException("지원하지 않는 Android 요청입니다"));
         }
@@ -246,6 +248,7 @@ public class MainActivity extends Activity {
     }
     void setSlideImmersive(boolean hidden) {
         if (!BuildConfig.STUDIO.equals("slide")) return;
+        if (immersive != hidden) slideNavigationGeneration++;
         immersive = hidden;
         // Fill both the WebView and its parent so transitions/rotation cannot
         // expose the light editor window background around a presentation.
@@ -276,9 +279,37 @@ public class MainActivity extends Activity {
             "].forEach(p=>document.documentElement.style.setProperty('--office-cutout-'+p[0],p[1]+'px'));";
         if(!css.equals(lastCutoutCss)){lastCutoutCss=css;web.evaluateJavascript(css,null);}
     }
-    void hideFullscreen(){if(fullscreen==null)return;root.removeView(fullscreen);fullscreen=null;web.setVisibility(View.VISIBLE);if(fullscreenCallback!=null)fullscreenCallback.onCustomViewHidden();fullscreenCallback=null;}
+    void hideFullscreen(){if(fullscreen==null)return;root.removeView(fullscreen);fullscreen=null;web.setVisibility(View.VISIBLE);if(fullscreenCallback!=null)fullscreenCallback.onCustomViewHidden();fullscreenCallback=null;if(BuildConfig.STUDIO.equals("slide"))web.requestFocus();}
+    void requestSlideEscape() {
+        slideNavigationGeneration++;
+        if(web==null||destroyed)return;
+        android.util.Log.d("SlideNavigation","Escape: document command, never close");
+        web.evaluateJavascript("window.OfficeStudioHost?.escape?.()",null);
+    }
+    void requestSlideBack() {
+        if(web==null||destroyed)return;
+        final int generation=++slideNavigationGeneration;
+        web.evaluateJavascript("window.OfficeStudioHost?.slideBack?.() ?? 'unavailable'",value->{
+            if(destroyed||generation!=slideNavigationGeneration)return;
+            android.util.Log.d("SlideNavigation","Back result="+value);
+            if("\"close\"".equals(value)&&!immersive&&fullscreen==null)finish();
+        });
+    }
     @Override public boolean dispatchKeyEvent(KeyEvent event) {
-        if ((BuildConfig.STUDIO.equals("sheet") || BuildConfig.STUDIO.equals("slide")) && event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE) {
+        if(BuildConfig.STUDIO.equals("slide")) {
+            if(event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE) {
+                if(event.getAction()==KeyEvent.ACTION_DOWN&&event.getRepeatCount()==0)requestSlideEscape();
+                return true;
+            }
+            // Some keyboard/DeX paths report Escape as Back. Consume both
+            // edges even if the first edge has already ended fullscreen.
+            if(event.getKeyCode()==KeyEvent.KEYCODE_BACK&&(slideBackKeyDown||immersive||fullscreen!=null)) {
+                if(event.getAction()==KeyEvent.ACTION_DOWN&&event.getRepeatCount()==0){slideBackKeyDown=true;requestSlideEscape();}
+                if(event.getAction()==KeyEvent.ACTION_UP)slideBackKeyDown=false;
+                return true;
+            }
+        }
+        if (BuildConfig.STUDIO.equals("sheet") && event.getKeyCode()==KeyEvent.KEYCODE_ESCAPE) {
             if(event.getAction()==KeyEvent.ACTION_DOWN && event.getRepeatCount()==0 && web!=null && !destroyed)
                 web.evaluateJavascript("window.OfficeStudioHost?.escape?.()",null);
             return true;
@@ -305,7 +336,7 @@ public class MainActivity extends Activity {
     @Override public void onConfigurationChanged(android.content.res.Configuration config) {
         super.onConfigurationChanged(config);publishSheetInput();if(root!=null)ViewCompat.requestApplyInsets(root);
     }
-    @Override public void onBackPressed(){if(BuildConfig.STUDIO.equals("sheet")&&root!=null){WindowInsetsCompat insets=ViewCompat.getRootWindowInsets(root);if(insets!=null&&insets.isVisible(WindowInsetsCompat.Type.ime())){WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView()).hide(WindowInsetsCompat.Type.ime());return;}}if(fullscreen!=null){hideFullscreen();return;}if(web==null){finish();return;}web.evaluateJavascript("window.OfficeStudioHost?window.OfficeStudioHost.back():false",value->{if("false".equals(value)||"null".equals(value))finish();});}
+    @Override public void onBackPressed(){if(BuildConfig.STUDIO.equals("slide")){requestSlideBack();return;}if(BuildConfig.STUDIO.equals("sheet")&&root!=null){WindowInsetsCompat insets=ViewCompat.getRootWindowInsets(root);if(insets!=null&&insets.isVisible(WindowInsetsCompat.Type.ime())){WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView()).hide(WindowInsetsCompat.Type.ime());return;}}if(fullscreen!=null){hideFullscreen();return;}if(web==null){finish();return;}web.evaluateJavascript("window.OfficeStudioHost?window.OfficeStudioHost.back():false",value->{if("false".equals(value)||"null".equals(value))finish();});}
     @Override protected void onPause(){if(web!=null)web.evaluateJavascript("document.dispatchEvent(new Event('visibilitychange'));window.dispatchEvent(new Event('pagehide'));",null);super.onPause();}
     @Override protected void onDestroy(){destroyed=true;try{unregisterReceiver(shareReceiver);}catch(Exception ignored){}if(chooser!=null)chooser.onReceiveValue(null);io.execute(()->{if(transfer!=null)try{transfer.out.close();transfer.file.delete();}catch(Exception ignored){}for(ImportFile f:imports.values())f.file.delete();imports.clear();});io.shutdown();if(web!=null){root.removeView(web);web.destroy();}super.onDestroy();}
 }
