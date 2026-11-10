@@ -14,5 +14,5 @@ cat "$out/instrumentation.log"
 python3 - "$out/instrumentation.log" <<'PY'
 import pathlib,sys
 s=pathlib.Path(sys.argv[1]).read_text()
-assert 'OK (9 tests)' in s and not any(t in s for t in ['FAILURES!!!','INSTRUMENTATION_FAILED','Process crashed']),s
+assert 'OK (10 tests)' in s and not any(t in s for t in ['FAILURES!!!','INSTRUMENTATION_FAILED','Process crashed']),s
 PY

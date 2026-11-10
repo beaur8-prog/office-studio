@@ -1,6 +1,6 @@
 {
   "sheet": {
-    "version": "1.0.8",
+    "version": "1.0.9",
     "assetFiles": [
       {
         "path": "android-icon.svg",
@@ -15,12 +15,12 @@
       {
         "path": "app-version.json",
         "bytes": 21,
-        "sha256": "4055aa45e549419f57fa2a6cff4c51c31d850256c2eaef09ea76d33bbf99742e"
+        "sha256": "a4e9d81afdb0403369e6e36b32c2893bf1842b2c4ade38c7ef801156f283af46"
       },
       {
-        "path": "assets/index-B9meK7og.js",
-        "bytes": 1033411,
-        "sha256": "ce45a60364c455f0fd734ee7c3c648835be414801b8d9faf41967cade6c7383b"
+        "path": "assets/index-3tLtOnT3.js",
+        "bytes": 1036913,
+        "sha256": "3e4b50fcae2579d22865e50d2447065fa37ecf34b938c52008172f9ab0c9dd44"
       },
       {
         "path": "assets/index-BFN4OcMv.css",
@@ -45,7 +45,7 @@
       {
         "path": "index.html",
         "bytes": 784,
-        "sha256": "1100c87d42e5230e08aa58270dad398f2abe31c51fb5d83dd6913598f257cbd1"
+        "sha256": "87d2ce956393b62b31f72f1b9ec9cc136b2f389e7111ae3021eb2e8ec6cdbefd"
       },
       {
         "path": "THIRD-PARTY-NOTICES.txt",
@@ -58,7 +58,7 @@
     "adaptiveIcon": true,
     "roundIcon": true,
     "monochromeIcon": true,
-    "sourceCommit": "3b00ce0748d8a260c34c3137c78553ad64927fa9"
+    "sourceCommit": "a037d01d474a5bc07920ccc74d7fa89abd3c6d20"
   },
   "slide": {
     "version": "1.0.5",

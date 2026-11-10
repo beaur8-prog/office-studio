@@ -1,15 +1,15 @@
 {
   "schema": 1,
-  "version": "1.0.8",
+  "version": "1.0.9",
   "versionCode": 2,
   "apps": {
     "sheet": {
       "repository": "beaur8-prog/sheet-studio",
       "ref": "main",
-      "sourceCommit": "3b00ce0748d8a260c34c3137c78553ad64927fa9",
-      "version": "1.0.8",
-      "versionCode": 9,
-      "upstreamCommit": "3b00ce0748d8a260c34c3137c78553ad64927fa9"
+      "sourceCommit": "a037d01d474a5bc07920ccc74d7fa89abd3c6d20",
+      "version": "1.0.9",
+      "versionCode": 10,
+      "upstreamCommit": "a037d01d474a5bc07920ccc74d7fa89abd3c6d20"
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",
