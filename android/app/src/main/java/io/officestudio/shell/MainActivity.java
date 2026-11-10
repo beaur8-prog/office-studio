@@ -72,6 +72,10 @@ public class MainActivity extends Activity {
         }
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         root=new FrameLayout(this);web=new WebView(this){
+            @Override public boolean onGenericMotionEvent(MotionEvent event){
+                if(forwardSheetWheel(event))return true;
+                return super.onGenericMotionEvent(event);
+            }
             @Override public boolean onKeyPreIme(int keyCode,KeyEvent event){
                 if(BuildConfig.STUDIO.equals("sheet")&&sheetKey(event,true))return true;
                 return super.onKeyPreIme(keyCode,event);
@@ -274,6 +278,19 @@ public class MainActivity extends Activity {
         String script="window.dispatchEvent(new CustomEvent('sheet-studio-android-insets',{detail:"+
             obj("systemBars",sheetInsets(sheetBarInsets),"displayCutout",sheetInsets(sheetCutoutInsets),"displayCutoutRects",sheetCutoutRects)+"}));";
         if(force || !script.equals(sheetInsetScript)){sheetInsetScript=script;web.evaluateJavascript(script,null);}
+    }
+    boolean forwardSheetWheel(MotionEvent event){
+        if(!BuildConfig.STUDIO.equals("sheet")||event.getActionMasked()!=MotionEvent.ACTION_SCROLL||(KeyEvent.normalizeMetaState(event.getMetaState())&KeyEvent.META_CTRL_ON)==0||web==null)return false;
+        float amount=event.getAxisValue(MotionEvent.AXIS_VSCROLL);
+        if(!Float.isFinite(amount)||!Float.isFinite(event.getX())||!Float.isFinite(event.getY())||web.getWidth()==0||web.getHeight()==0)return true;
+        if(amount==0)return false;
+        // WebView can consume Ctrl+wheel before a cancellable DOM wheel event.
+        // Forward this one native event to the shared sheet zoom controller;
+        // ordinary scrolling and Word/Slide keep the default WebView route.
+        double x=Math.max(0,Math.min(1,event.getX()/(double)web.getWidth())),y=Math.max(0,Math.min(1,event.getY()/(double)web.getHeight()));
+        JSONObject detail=obj("ctrlKey",true,"deltaY",-((double)amount)*100,"x",x,"y",y,"buttons",event.getButtonState());
+        web.evaluateJavascript("window.dispatchEvent(new CustomEvent('sheet-studio-android-wheel',{detail:"+detail+"}));",null);
+        return true;
     }
     void applySheetSystemBars() {
         WindowInsetsControllerCompat bars=WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView());

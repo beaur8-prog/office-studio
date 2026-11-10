@@ -398,10 +398,10 @@ public class SheetWindowInstrumentedTest {
             ready(s);
             js(s,"(()=>{const b=sheetStudio.getWorkbook();b.name='ZOOM_QA';b.sheets[0].cells={A1:{raw:'10'},B1:{raw:'=SUM(A1:A1)'}};const d=new DataTransfer();d.items.add(new File([JSON.stringify(b)],'zoom.sheet.json'));const i=document.querySelector('#file-input');i.files=d.files;i.dispatchEvent(new Event('change',{bubbles:true}));})()");
             waitJS(s,"sheetStudio.getWorkbook().name==='ZOOM_QA'&&!document.querySelector('.workbook-busy')");settle(s);
-            js(s,"window.__zoomWheels=[];window.addEventListener('wheel',e=>__zoomWheels.push({ctrl:e.ctrlKey,trusted:e.isTrusted,cancelled:e.defaultPrevented}),{passive:true})");
+            js(s,"window.__zoomWheels=[];window.__zoomNative=[];window.__qaTouches=__zoomNative;window.addEventListener('wheel',e=>__zoomWheels.push({ctrl:e.ctrlKey,trusted:e.isTrusted,cancelled:e.defaultPrevented}),{passive:true});window.addEventListener('sheet-studio-android-wheel',e=>__zoomNative.push(e.detail))");
             String before=js(s,"JSON.stringify({book:sheetStudio.getWorkbook(),history:sheetStudio.historyStats(),dirty:sheetStudio.isDirty(),selection:sheetStudio.getSelection()})");
             String width=js(s,"innerWidth");nativeCtrlWheel(s,1);waitJS(s,"parseInt(document.querySelector('#zoom-label').textContent)>100");settle(s);
-            assertEquals("1",js(s,"visualViewport.scale"));assertEquals(width,js(s,"innerWidth"));assertEquals("true",js(s,"__zoomWheels.some(e=>e.ctrl&&e.trusted&&e.cancelled)"));
+            assertEquals("1",js(s,"visualViewport.scale"));assertEquals(width,js(s,"innerWidth"));assertEquals("true",js(s,"__zoomNative.some(e=>e.ctrlKey&&e.deltaY<0)&&!__zoomWheels.some(e=>e.ctrl)"));
             assertEquals(before,js(s,"JSON.stringify({book:sheetStudio.getWorkbook(),history:sheetStudio.historyStats(),dirty:sheetStudio.isDirty(),selection:sheetStudio.getSelection()})"));
             String enlarged=js(s,"parseInt(document.querySelector('#zoom-label').textContent)");nativeCtrlWheel(s,-1);waitJS(s,"parseInt(document.querySelector('#zoom-label').textContent)<"+enlarged);settle(s);
             js(s,"document.querySelector('.android-header [data-mobile=more]').click()");waitJS(s,"!!document.querySelector('[data-mobile=read-only]')");js(s,"document.querySelector('[data-mobile=read-only]').click()");waitJS(s,"sheetStudio.getMode()==='view'");
