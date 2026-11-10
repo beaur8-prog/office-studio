@@ -37,11 +37,14 @@
     "sheet"
   ],
   "tests": {
-    "executed": false,
-    "status": "pending-final-source",
+    "executed": true,
+    "status": "passed",
     "scope": "isolated Sheet QA only; no publication",
-    "previousNativeRun": "https://github.com/beaur8-prog/office-studio/actions/runs/42790105075",
-    "previousPassed": 10
+    "emulatorRun": "https://github.com/beaur8-prog/office-studio/actions/runs/42791651239",
+    "passed": 10,
+    "failed": 0,
+    "seconds": 204.327,
+    "artifactId": 13752561000
   },
   "combinedZIP": false,
   "nativeSlideHostUpstreamCommit": "44a8fc79d0f0a248fdb62b12fb80bc4cfffc7eba",
@@ -62,6 +65,7 @@
       "native Sheet Ctrl+ACTION_SCROLL forwarding; normal scrolling and other studios unchanged",
       "Android API34+ classified touchpad pinch including batched relative scale samples; touchscreen behavior retained"
     ],
-    "verification": "Final native trackpad pinch run pending; previous Ctrl-wheel source passed all 10 native checks."
+    "verification": "10 native checks passed in 204.327s, including classified batched trackpad pinch and Ctrl-wheel; see android/qa/results/sheet-gesture-zoom-20261110.md",
+    "nativeTestedCommit": "f8ff0be164810379c4acc5fde65b1d5d9bdf1411"
   }
 }
