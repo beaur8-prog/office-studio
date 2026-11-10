@@ -393,6 +393,19 @@ public class SheetWindowInstrumentedTest {
             try{assertTrue("Native Ctrl+wheel is forwarded to WebView",a.web.dispatchGenericMotionEvent(event));}finally{event.recycle();}
         });
     }
+    long trackpadDown;
+    void nativeTrackpadPinch(ActivityScenario<MainActivity> s,int action,float factor,boolean batched) throws Exception {
+        JSONObject p=new JSONObject(js(s,"(()=>{const r=document.querySelector('#grid').getBoundingClientRect();return {x:r.left+r.width*.65,y:r.top+r.height*.55,width:innerWidth}})()"));
+        s.onActivity(a->{
+            long now=SystemClock.uptimeMillis();if(action==MotionEvent.ACTION_DOWN)trackpadDown=now;
+            float scale=a.web.getWidth()/(float)p.optDouble("width");
+            MotionEvent.PointerProperties pointer=new MotionEvent.PointerProperties();pointer.id=0;pointer.toolType=MotionEvent.TOOL_TYPE_FINGER;
+            MotionEvent.PointerCoords at=new MotionEvent.PointerCoords();at.x=(float)p.optDouble("x")*scale;at.y=(float)p.optDouble("y")*scale;at.setAxisValue(MotionEvent.AXIS_GESTURE_PINCH_SCALE_FACTOR,batched?1.02f:factor);
+            MotionEvent event=MotionEvent.obtain(trackpadDown,now,action,1,new MotionEvent.PointerProperties[]{pointer},new MotionEvent.PointerCoords[]{at},0,0,1,1,0,0,InputDevice.SOURCE_MOUSE,0,0,MotionEvent.CLASSIFICATION_PINCH);
+            if(batched){at.setAxisValue(MotionEvent.AXIS_GESTURE_PINCH_SCALE_FACTOR,factor);event.addBatch(now+1,new MotionEvent.PointerCoords[]{at},0);}
+            try{assertTrue("Native classified touchpad pinch is handled",a.web.dispatchTouchEvent(event));}finally{event.recycle();}
+        });
+    }
     @Test public void ctrlMouseWheelZoomsSheetWithoutPageZoomOrDocumentEdits() throws Exception {
         try(ActivityScenario<MainActivity> s=ActivityScenario.launch(MainActivity.class)){
             ready(s);
@@ -404,6 +417,10 @@ public class SheetWindowInstrumentedTest {
             assertEquals("1",js(s,"visualViewport.scale"));assertEquals(width,js(s,"innerWidth"));assertEquals("true",js(s,"__zoomNative.some(e=>e.ctrlKey&&e.deltaY<0)&&!__zoomWheels.some(e=>e.ctrl)"));
             assertEquals(before,js(s,"JSON.stringify({book:sheetStudio.getWorkbook(),history:sheetStudio.historyStats(),dirty:sheetStudio.isDirty(),selection:sheetStudio.getSelection()})"));
             String enlarged=js(s,"parseInt(document.querySelector('#zoom-label').textContent)");nativeCtrlWheel(s,-1);waitJS(s,"parseInt(document.querySelector('#zoom-label').textContent)<"+enlarged);settle(s);
+            String base=js(s,"parseInt(document.querySelector('#zoom-label').textContent)");
+            nativeTrackpadPinch(s,MotionEvent.ACTION_DOWN,1,false);nativeTrackpadPinch(s,MotionEvent.ACTION_MOVE,1.03f,true);nativeTrackpadPinch(s,MotionEvent.ACTION_MOVE,1.1f,false);nativeTrackpadPinch(s,MotionEvent.ACTION_UP,1,false);
+            waitJS(s,"parseInt(document.querySelector('#zoom-label').textContent)===Math.round("+base+"*1.02*1.03*1.1)");settle(s);
+            assertEquals("1",js(s,"visualViewport.scale"));assertEquals(width,js(s,"innerWidth"));assertEquals(before,js(s,"JSON.stringify({book:sheetStudio.getWorkbook(),history:sheetStudio.historyStats(),dirty:sheetStudio.isDirty(),selection:sheetStudio.getSelection()})"));screenshot("native-trackpad-pinch");
             js(s,"document.querySelector('.android-header [data-mobile=more]').click()");waitJS(s,"!!document.querySelector('[data-mobile=read-only]')");js(s,"document.querySelector('[data-mobile=read-only]').click()");waitJS(s,"sheetStudio.getMode()==='view'");
             String readOnly=js(s,"JSON.stringify({book:sheetStudio.getWorkbook(),history:sheetStudio.historyStats(),dirty:sheetStudio.isDirty()})"),old=js(s,"parseInt(document.querySelector('#zoom-label').textContent)");
             nativeCtrlWheel(s,1);waitJS(s,"parseInt(document.querySelector('#zoom-label').textContent)>"+old);settle(s);

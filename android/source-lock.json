@@ -6,10 +6,10 @@
     "sheet": {
       "repository": "beaur8-prog/sheet-studio",
       "ref": "main",
-      "sourceCommit": "b69c213fed85f9224b1fb86e3512c9d3b6acbd79",
+      "sourceCommit": "4c113931f7b404e1b6147720096f9b50fdcfb255",
       "version": "1.0.9",
       "versionCode": 10,
-      "upstreamCommit": "b69c213fed85f9224b1fb86e3512c9d3b6acbd79"
+      "upstreamCommit": "4c113931f7b404e1b6147720096f9b50fdcfb255"
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",
@@ -40,7 +40,7 @@
     "executed": false,
     "status": "pending-final-source",
     "scope": "isolated Sheet QA only; no publication",
-    "previousNativeRun": "https://github.com/beaur8-prog/office-studio/actions/runs/42787740983",
+    "previousNativeRun": "https://github.com/beaur8-prog/office-studio/actions/runs/42790105075",
     "previousPassed": 10
   },
   "combinedZIP": false,
@@ -49,7 +49,7 @@
   "nativeSheetHostUpstreamCommit": "225cefbdc04a81bcc79639b2e106af05c39892b8",
   "development": {
     "sheetRendererVersion": "0.7.50",
-    "sheetSourceCommit": "b69c213fed85f9224b1fb86e3512c9d3b6acbd79",
+    "sheetSourceCommit": "4c113931f7b404e1b6147720096f9b50fdcfb255",
     "nativeBaselineCommit": "ca8638a7ea9e7907df3b9af4437ff84470b5b71d",
     "changes": [
       "Back key-down/repeat/key-up remains one viewer exit",
@@ -59,8 +59,9 @@
       "uniform scaling on system paper/margin changes, print cancellation/error cleanup",
       "readonly print preserves workbook/history and existing Sheet lifecycle protection",
       "shared trackpad pinch and Ctrl-wheel sheet zoom with stable pointer anchor",
-      "native Sheet Ctrl+ACTION_SCROLL forwarding; normal scrolling and other studios unchanged"
+      "native Sheet Ctrl+ACTION_SCROLL forwarding; normal scrolling and other studios unchanged",
+      "Android API34+ classified touchpad pinch including batched relative scale samples; touchscreen behavior retained"
     ],
-    "verification": "Final source run pending; previous source 98ad455 passed all 10 native checks."
+    "verification": "Final native trackpad pinch run pending; previous Ctrl-wheel source passed all 10 native checks."
   }
 }
