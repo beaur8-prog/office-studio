@@ -6,10 +6,10 @@
     "sheet": {
       "repository": "beaur8-prog/sheet-studio",
       "ref": "main",
-      "sourceCommit": "98ad455aa75f6bf498f7e2f62b8bb43a1a38a57c",
+      "sourceCommit": "b69c213fed85f9224b1fb86e3512c9d3b6acbd79",
       "version": "1.0.9",
       "versionCode": 10,
-      "upstreamCommit": "98ad455aa75f6bf498f7e2f62b8bb43a1a38a57c"
+      "upstreamCommit": "b69c213fed85f9224b1fb86e3512c9d3b6acbd79"
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",
@@ -37,29 +37,30 @@
     "sheet"
   ],
   "tests": {
-    "executed": true,
-    "status": "passed",
+    "executed": false,
+    "status": "pending-final-source",
     "scope": "isolated Sheet QA only; no publication",
-    "emulatorRun": "https://github.com/beaur8-prog/office-studio/actions/runs/42488723539",
-    "passed": 9,
-    "failed": 0
+    "previousNativeRun": "https://github.com/beaur8-prog/office-studio/actions/runs/42787740983",
+    "previousPassed": 10
   },
   "combinedZIP": false,
   "nativeSlideHostUpstreamCommit": "44a8fc79d0f0a248fdb62b12fb80bc4cfffc7eba",
   "nativeWordHostUpstreamCommit": "d0e5ca10fed93f9d6307640390265d56cd2ad29f",
   "nativeSheetHostUpstreamCommit": "225cefbdc04a81bcc79639b2e106af05c39892b8",
   "development": {
-    "sheetRendererVersion": "0.7.49",
-    "sheetSourceCommit": "3b00ce0748d8a260c34c3137c78553ad64927fa9",
-    "nativeBaselineCommit": "902b585bb8323d6a4d1f93382950b6307504a63f",
+    "sheetRendererVersion": "0.7.50",
+    "sheetSourceCommit": "b69c213fed85f9224b1fb86e3512c9d3b6acbd79",
+    "nativeBaselineCommit": "ca8638a7ea9e7907df3b9af4437ff84470b5b71d",
     "changes": [
       "Back key-down/repeat/key-up remains one viewer exit",
       "ignore legacy unconfirmed close; explicit sheetClose retains confirmed close",
       "Android stable presentation without feeding old display values into calculations",
       "isolated worksheet PrintManager adapter, current/selection/charts, native PDF save",
       "uniform scaling on system paper/margin changes, print cancellation/error cleanup",
-      "readonly print preserves workbook/history and existing Sheet lifecycle protection"
+      "readonly print preserves workbook/history and existing Sheet lifecycle protection",
+      "shared trackpad pinch and Ctrl-wheel sheet zoom with stable pointer anchor",
+      "native Sheet Ctrl+ACTION_SCROLL forwarding; normal scrolling and other studios unchanged"
     ],
-    "verification": "9 native checks passed in 190.915s; see android/qa/results/sheet-print-20261108.md"
+    "verification": "Final source run pending; previous source 98ad455 passed all 10 native checks."
   }
 }
