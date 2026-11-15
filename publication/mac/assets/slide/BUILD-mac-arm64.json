@@ -1,38 +1,20 @@
 {
   "product": "Slide Studio",
-  "version": "1.6.24",
-  "target": "mac-arm64",
-  "sourceCommit": "766fb2df3ac4e751b408d9bfd9eb04c5ccbbe753",
+  "version": "1.6.25",
+  "platform": "darwin",
+  "architecture": "arm64",
   "filename": "Slide-Studio-mac-arm64.zip",
-  "bytes": 130635912,
-  "sha256": "e371d0ea32bfb8bc59ca007e9cada8049721b5cde8dd2017f926d98caa9da5a8",
-  "signing": "ad-hoc; no Developer ID signing or Apple notarization",
-  "verification": {
-    "id": "slide",
-    "version": "1.6.24",
-    "minimumMacOS": "12.0",
-    "architecture": "arm64",
-    "sourceCommit": "766fb2df3ac4e751b408d9bfd9eb04c5ccbbe753",
-    "nativeStartup": true,
-    "packaged": true,
-    "profileIsolated": true,
-    "updateMenu": true,
-    "disableUpdatesPersists": true,
-    "rendererFiles": 48,
-    "electronFiles": 15,
-    "rendererMatchesSource": true,
-    "electronMatchesSource": true,
-    "updaterSHA256": "b8f1eecbbd3a21bb65adcfbb2415139bd1e3ed8077bb162412b7a08112666593",
-    "normalClose": true,
-    "profileSentinelPreserved": true
-  },
-  "systemInstallationTested": false,
-  "additionalAppScenarios": [
-    {
-      "id": "slide",
-      "scenario": "save-and-recovery",
-      "passed": true,
-      "exitCode": 0
-    }
-  ]
+  "bytes": 130641099,
+  "sha256": "8dbcbcc7652c77630b197ab8bb45591f4a4e9a44e3703a10f082ddecfadc48ab",
+  "sourceCommit": "580f7c373d42985d1864f3cd11e368a7169d7bd2",
+  "signing": "ad-hoc; no Developer ID notarization",
+  "validation": {
+    "suiteNativeStartup": true,
+    "rendererAndElectronMatchSource": true,
+    "profileAndDocumentsPreserved": true,
+    "additionalNativeScenarios": [
+      "save-recovery"
+    ],
+    "nativeInstall": false
+  }
 }

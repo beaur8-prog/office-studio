@@ -1,1 +1,1 @@
-e371d0ea32bfb8bc59ca007e9cada8049721b5cde8dd2017f926d98caa9da5a8  Slide-Studio-mac-arm64.zip
+8dbcbcc7652c77630b197ab8bb45591f4a4e9a44e3703a10f082ddecfadc48ab  Slide-Studio-mac-arm64.zip

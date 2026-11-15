@@ -1,1 +1,1 @@
-101c1f4372c4daf668f62c95dfaa9dbd0cbc1c4862fd2f4ab3bfc44d713dd11b  Word-Studio-1.4.15-mac-arm64.zip
+52a4e11d8b3d3c9a9672a59f59a43a3611cf7cf8adf807cd81870c3b4d7c3b73  Word-Studio-1.4.16-mac-arm64.zip

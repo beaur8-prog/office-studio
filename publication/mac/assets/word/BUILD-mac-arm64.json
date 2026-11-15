@@ -1,50 +1,22 @@
 {
   "product": "Word Studio",
-  "version": "1.4.15",
-  "target": "mac-arm64",
-  "sourceCommit": "0bc3b5391f4e7bc2fe105596eb9f9d1810d5f319",
-  "filename": "Word-Studio-1.4.15-mac-arm64.zip",
-  "bytes": 155470814,
-  "sha256": "101c1f4372c4daf668f62c95dfaa9dbd0cbc1c4862fd2f4ab3bfc44d713dd11b",
-  "signing": "ad-hoc; no Developer ID signing or Apple notarization",
-  "verification": {
-    "id": "word",
-    "version": "1.4.15",
-    "minimumMacOS": "12.0",
-    "architecture": "arm64",
-    "sourceCommit": "0bc3b5391f4e7bc2fe105596eb9f9d1810d5f319",
-    "nativeStartup": true,
-    "packaged": true,
-    "profileIsolated": true,
-    "updateMenu": true,
-    "disableUpdatesPersists": true,
-    "rendererFiles": 1007,
-    "electronFiles": 32,
-    "rendererMatchesSource": true,
-    "electronMatchesSource": true,
-    "updaterSHA256": "c7b6a15f5713468cf07d16c9a28be6f346e7ba94b4239830451317aaf0b2ce91",
-    "normalClose": true,
-    "profileSentinelPreserved": true
-  },
-  "systemInstallationTested": false,
-  "additionalAppScenarios": [
-    {
-      "id": "word",
-      "scenario": "editor-and-native-files",
-      "passed": true,
-      "exitCode": 0
-    },
-    {
-      "id": "word",
-      "scenario": "hwp-reader-and-pdf",
-      "passed": true,
-      "exitCode": 0
-    },
-    {
-      "id": "word",
-      "scenario": "hwp-editing-and-docx",
-      "passed": true,
-      "exitCode": 0
-    }
-  ]
+  "version": "1.4.16",
+  "platform": "darwin",
+  "architecture": "arm64",
+  "filename": "Word-Studio-1.4.16-mac-arm64.zip",
+  "bytes": 155507904,
+  "sha256": "52a4e11d8b3d3c9a9672a59f59a43a3611cf7cf8adf807cd81870c3b4d7c3b73",
+  "sourceCommit": "08b7feeaf4b6d3198a65b62fc1cd9dc840acc5f8",
+  "signing": "ad-hoc; no Developer ID notarization",
+  "validation": {
+    "suiteNativeStartup": true,
+    "rendererAndElectronMatchSource": true,
+    "profileAndDocumentsPreserved": true,
+    "additionalNativeScenarios": [
+      "editor-files",
+      "hwp-reader",
+      "hwp-editing"
+    ],
+    "nativeInstall": false
+  }
 }

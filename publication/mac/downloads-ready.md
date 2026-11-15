@@ -6,37 +6,39 @@
 
 > **Mac 설치 안내 — 보안 경고가 표시될 때**
 >
-> 아래 공식 GitHub 링크에서 받은 **Office-Studio-1.0.6-mac-arm64-Setup.pkg**인지 확인하세요. 현재 배포본은 Apple Developer ID 서명·공증을 받지 않았으므로 개발자 확인 경고가 나타날 수 있습니다. 파일을 한 번 열어 차단된 뒤 **시스템 설정 → 개인정보 보호 및 보안 → 그래도 열기 → 열기**를 선택합니다. 구버전 macOS에서는 **시스템 환경설정 → 보안 및 개인정보 보호**에서 해당 파일의 열기 허용 항목을 확인하세요. 설치 후 앱을 처음 실행할 때도 앱별로 같은 확인이 필요할 수 있습니다.
+> 아래 공식 GitHub 링크에서 받은 **Office-Studio-1.0.7-mac-arm64-Setup.pkg**인지 확인하세요. 현재 배포본은 Apple Developer ID 서명·공증을 받지 않았으므로 개발자 확인 경고가 나타날 수 있습니다. 파일을 한 번 열어 차단된 뒤 **시스템 설정 → 개인정보 보호 및 보안 → 그래도 열기 → 열기**를 선택합니다. 구버전 macOS에서는 **시스템 환경설정 → 보안 및 개인정보 보호**에서 해당 파일의 열기 허용 항목을 확인하세요. 설치 후 앱을 처음 실행할 때도 앱별로 같은 확인이 필요할 수 있습니다.
 >
 > 파일 출처와 맨 아래 SHA-256을 확인한 경우에만 허용하세요. 악성 소프트웨어 감지·손상 경고가 뜨면 강제로 실행하지 말고 파일을 다시 내려받아 체크섬을 확인하세요. 조직에서 관리하는 Mac은 관리자 정책을 따라야 합니다. [Apple 공식 보안 경고 안내](https://support.apple.com/ko-kr/102445)
 
 # 오피스 스튜디오 Mac 다운로드
 
-**Office Studio 1.0.6 · 2026-11-08 · Apple Silicon 전용 통합 설치**
+**Office Studio 1.0.7 · 2026-11-15 · Apple Silicon 전용 통합 설치**
 
 Sheet Studio·Slide Studio·Word Studio를 한 설치 파일로 설치합니다. 설치 화면의 **사용자화**에서 필요한 앱을 고를 수 있으며, 기본값은 세 앱 모두입니다.
 
+이번 배포에는 Sheet의 확대·축소·트랙패드·Ctrl+휠 개선과 Word의 최신 DOCX 서식·체크박스 상태·개요 수준 보존 수정을 포함합니다. Slide도 현재 main 소스로 새로 빌드했습니다.
+
 ## 1. 다운로드
 
-### [오피스 스튜디오 Mac 설치 파일 다운로드](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.6/Office-Studio-1.0.6-mac-arm64-Setup.pkg)
+### [오피스 스튜디오 Mac 설치 파일 다운로드](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.7/Office-Studio-1.0.7-mac-arm64-Setup.pkg)
 
 - **대상:** Apple Silicon(M1 이상) Mac · macOS 12 Monterey 이상
-- **파일:** `Office-Studio-1.0.6-mac-arm64-Setup.pkg`
-- **크기:** 387.4 MiB (406,243,561바이트)
+- **파일:** `Office-Studio-1.0.7-mac-arm64-Setup.pkg`
+- **크기:** 387.5 MiB (406,311,896바이트)
 - **설치 위치:** Finder의 **응용 프로그램** 폴더(`/Applications`)
 - **권한:** 관리자 인증 필요
 
 Intel Mac에서는 실행할 수 없습니다. Microsoft Office·Node.js를 따로 설치할 필요가 없고, 설치와 기본 편집은 오프라인에서도 가능합니다. 업데이트 확인과 다운로드에는 인터넷 연결이 필요합니다.
 
-[SHA-256 확인 파일](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.6/Office-Studio-1.0.6-mac-arm64-Setup.pkg.sha256) · [배포 구성·검증 기록](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.6/BUILD-mac-arm64.json) · [Mac 실행 검증 기록](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.6/MAC-VERIFICATION.json) · [GitHub Mac 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/mac-v1.0.6)
+[SHA-256 확인 파일](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.7/Office-Studio-1.0.7-mac-arm64-Setup.pkg.sha256) · [배포 구성·검증 기록](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.7/BUILD-mac-arm64.json) · [Mac 실행 검증 기록](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.7/MAC-VERIFICATION.json) · [GitHub Mac 릴리스](https://github.com/beaur8-prog/office-studio/releases/tag/mac-v1.0.7)
 
 ## 2. 포함 앱과 개별 다운로드
 
 | 앱 | 포함 버전 | 개별 다운로드 |
 | --- | --- | --- |
-| Sheet Studio | 0.7.40 | [Mac ZIP](https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.40/Sheet-Studio-0.7.40-macOS-arm64.zip) |
-| Slide Studio | 1.6.24 | [Mac ZIP](https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.24/Slide-Studio-mac-arm64.zip) |
-| Word Studio | 1.4.15 | [Mac ZIP](https://github.com/beaur8-prog/word-studio/releases/download/v1.4.15/Word-Studio-1.4.15-mac-arm64.zip) |
+| Sheet Studio | 0.7.50 | [Mac ZIP](https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.50/Sheet-Studio-0.7.50-macOS-arm64.zip) |
+| Slide Studio | 1.6.25 | [Mac ZIP](https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.25/Slide-Studio-mac-arm64.zip) |
+| Word Studio | 1.4.16 | [Mac ZIP](https://github.com/beaur8-prog/word-studio/releases/download/v1.4.16/Word-Studio-1.4.16-mac-arm64.zip) |
 
 통합 설치 파일은 세 앱을 응용 프로그램 폴더에 설치합니다. 개별 ZIP을 사용할 때는 압축을 풀고 원하는 앱을 응용 프로그램 폴더로 옮기세요.
 
@@ -87,13 +89,13 @@ Mac 배포 인증서가 없으므로 앱을 자동 교체하지는 않습니다.
 다운로드한 파일의 SHA-256:
 
 ```text
-2bee993ee1e61f1c1a6057f4ad6ad96a650ed8ce75c5ae8dae45af1915d268dc
+e5c72de4b9fcabd8df9280a67a97cf9c5b6117c2bd40c9bc99d59837aff84e04
 ```
 
 터미널에서 다음 명령으로 확인할 수 있습니다. 다운로드 폴더나 파일명을 바꿨다면 경로도 맞춰주세요.
 
 ```sh
-shasum -a 256 ~/Downloads/Office-Studio-1.0.6-mac-arm64-Setup.pkg
+shasum -a 256 ~/Downloads/Office-Studio-1.0.7-mac-arm64-Setup.pkg
 ```
 
 표시된 값이 위 값과 정확히 같아야 합니다.

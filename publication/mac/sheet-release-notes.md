@@ -1,4 +1,6 @@
-Sheet Studio 0.7.40 · Mac Apple Silicon 배포
+Sheet Studio 0.7.50 · Mac Apple Silicon 배포
+
+확대·축소·트랙패드·Ctrl+휠 동작을 개선했습니다.
 
 - Apple Silicon(M1 이상), macOS 12 이상.
 - Mac 릴리스만 확인해 새 버전을 자동 다운로드하고, 문서 저장·종료 후 ZIP을 직접 교체하도록 안내합니다.

@@ -1,0 +1,375 @@
+{
+  "product": "Office Studio",
+  "windowsVersion": "1.0.11",
+  "macVersion": "1.0.7",
+  "androidVersion": "1.0.14",
+  "sourceCommit": "e74f9c5abe4a06b3e43abcf1ae7f925bbfa054c6",
+  "sourceApps": {
+    "sheet": {
+      "developmentRef": "main",
+      "developmentCommit": "aab43ec743ff52e4ee0f084e87874b22acf82ad6",
+      "version": "0.7.50",
+      "releaseCommit": "aab43ec743ff52e4ee0f084e87874b22acf82ad6"
+    },
+    "slide": {
+      "developmentRef": "main",
+      "developmentCommit": "bd5c5143fe9148cdac075f2ff23baf2a9b5e1f19",
+      "version": "1.6.25",
+      "releaseCommit": "580f7c373d42985d1864f3cd11e368a7169d7bd2"
+    },
+    "word": {
+      "developmentRef": "codex/word-layout-local-eight-hours-20261115",
+      "developmentCommit": "17d8ef8456973dfe5cf5b0240bf34cc7a60e4c01",
+      "version": "1.4.16",
+      "releaseCommit": "08b7feeaf4b6d3198a65b62fc1cd9dc840acc5f8"
+    }
+  },
+  "windows": {
+    "build": {
+      "product": "Office Studio",
+      "version": "1.0.11",
+      "target": "win-x64",
+      "builtAt": "2026-11-15T14:07:43.193Z",
+      "filename": "Office-Studio-1.0.11-win-x64-Setup.exe",
+      "bytes": 346962523,
+      "sha256": "c42047e16942c46a6266a491f9310ae4d09e9e28ab1e2ee8fb824c8a8fd3829a",
+      "signing": "unsigned",
+      "apps": [
+        {
+          "id": "sheet",
+          "product": "Sheet Studio",
+          "version": "0.7.50",
+          "sourceCommit": "aab43ec743ff52e4ee0f084e87874b22acf82ad6",
+          "input": {
+            "filename": "Sheet-Studio-0.7.50-Windows-x64-Setup.exe",
+            "bytes": 103416050,
+            "sha256": "9fab34ac5b75d2ee2d3b9127669d26319e4a793ccbbb8d6a714233bef1b79648",
+            "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.50/Sheet-Studio-0.7.50-Windows-x64-Setup.exe"
+          }
+        },
+        {
+          "id": "slide",
+          "product": "Slide Studio",
+          "version": "1.6.25",
+          "sourceCommit": "580f7c373d42985d1864f3cd11e368a7169d7bd2",
+          "input": {
+            "filename": "Slide-Studio-Setup-x64.exe",
+            "bytes": 110317664,
+            "sha256": "36d770ea834b28c3ed5561d031c9a0523e48e7147ad68da0059da2acf5eaadb7",
+            "url": "https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.25/Slide-Studio-Setup-x64.exe"
+          }
+        },
+        {
+          "id": "word",
+          "product": "Word Studio",
+          "version": "1.4.16",
+          "sourceCommit": "08b7feeaf4b6d3198a65b62fc1cd9dc840acc5f8",
+          "input": {
+            "filename": "Word-Studio-1.4.16-windows-x64-setup.exe",
+            "bytes": 133089187,
+            "sha256": "e3f04b411e41665887c1530c51ebe176e5d90d3faf4744de6814c8b127232957",
+            "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.16/Word-Studio-1.4.16-windows-x64-setup.exe"
+          }
+        }
+      ],
+      "checks": {
+        "inputSHA256": true,
+        "nsisCompileWarningsAsErrors": true,
+        "installerArchiveIntegrity": true,
+        "embeddedInstallersSHA256": true,
+        "nativeInstall": true
+      },
+      "sourceCommit": "e74f9c5abe4a06b3e43abcf1ae7f925bbfa054c6",
+      "nativeCI": {
+        "runId": 43722993710,
+        "url": "https://github.com/beaur8-prog/office-studio/actions/runs/43722993710",
+        "sourceCommit": "e74f9c5abe4a06b3e43abcf1ae7f925bbfa054c6",
+        "passed": true
+      }
+    },
+    "nativeInstallation": {
+      "suiteVersion": "1.0.11",
+      "setupSHA256": "c42047e16942c46a6266a491f9310ae4d09e9e28ab1e2ee8fb824c8a8fd3829a",
+      "passed": true,
+      "freshInstall": true,
+      "reinstall": true,
+      "upgrades": [
+        {
+          "nativeWindow": true,
+          "to": "0.7.50",
+          "helper": true,
+          "normalClose": true,
+          "app": "sheet",
+          "from": "0.7.40"
+        },
+        {
+          "nativeWindow": true,
+          "to": "1.6.25",
+          "helper": true,
+          "normalClose": true,
+          "app": "slide",
+          "from": "1.6.24"
+        },
+        {
+          "nativeWindow": true,
+          "to": "1.4.16",
+          "helper": true,
+          "normalClose": true,
+          "app": "word",
+          "from": "1.4.15"
+        }
+      ],
+      "unchangedApps": [],
+      "uninstall": true,
+      "userDataPreserved": true
+    },
+    "updaterHandoff": {
+      "platform": "win32",
+      "passed": true,
+      "results": [
+        {
+          "id": "sheet",
+          "mode": "install",
+          "nativeElectronQuit": true,
+          "helperAcknowledgedBeforeQuit": true,
+          "installed": true,
+          "versionVerified": true,
+          "reopened": true
+        },
+        {
+          "id": "slide",
+          "mode": "install",
+          "nativeElectronQuit": true,
+          "helperAcknowledgedBeforeQuit": true,
+          "installed": true,
+          "versionVerified": true,
+          "reopened": true
+        },
+        {
+          "id": "word",
+          "mode": "install",
+          "nativeElectronQuit": true,
+          "helperAcknowledgedBeforeQuit": true,
+          "installed": true,
+          "versionVerified": true,
+          "reopened": true
+        },
+        {
+          "id": "word",
+          "mode": "cancel",
+          "editorKeptOpen": true,
+          "noInstallation": true
+        },
+        {
+          "id": "word",
+          "mode": "blocked",
+          "editorKeptOpen": true,
+          "noInstallation": true
+        },
+        {
+          "id": "word",
+          "mode": "tampered",
+          "editorKeptOpen": true,
+          "noInstallation": true
+        }
+      ]
+    }
+  },
+  "mac": {
+    "target": "mac-arm64",
+    "suiteVersion": "1.0.7",
+    "setupSHA256": "e5c72de4b9fcabd8df9280a67a97cf9c5b6117c2bd40c9bc99d59837aff84e04",
+    "passed": true,
+    "nativeInstall": false,
+    "apps": [
+      {
+        "id": "sheet",
+        "version": "0.7.50",
+        "minimumMacOS": "12.0",
+        "architecture": "arm64",
+        "sourceCommit": "aab43ec743ff52e4ee0f084e87874b22acf82ad6",
+        "nativeStartup": true,
+        "packaged": true,
+        "profileIsolated": true,
+        "updateMenu": true,
+        "disableUpdatesPersists": true,
+        "rendererFiles": 10,
+        "electronFiles": 12,
+        "rendererMatchesSource": true,
+        "electronMatchesSource": true,
+        "updaterSHA256": "0a4c2bf8a76eedda7e4a7e803e8efd611a95976de4c2c8887bab9159521205cf",
+        "normalClose": true,
+        "profileSentinelPreserved": true
+      },
+      {
+        "id": "slide",
+        "version": "1.6.25",
+        "minimumMacOS": "12.0",
+        "architecture": "arm64",
+        "sourceCommit": "580f7c373d42985d1864f3cd11e368a7169d7bd2",
+        "nativeStartup": true,
+        "packaged": true,
+        "profileIsolated": true,
+        "updateMenu": true,
+        "disableUpdatesPersists": true,
+        "rendererFiles": 48,
+        "electronFiles": 15,
+        "rendererMatchesSource": true,
+        "electronMatchesSource": true,
+        "updaterSHA256": "b8f1eecbbd3a21bb65adcfbb2415139bd1e3ed8077bb162412b7a08112666593",
+        "normalClose": true,
+        "profileSentinelPreserved": true
+      },
+      {
+        "id": "word",
+        "version": "1.4.16",
+        "minimumMacOS": "12.0",
+        "architecture": "arm64",
+        "sourceCommit": "08b7feeaf4b6d3198a65b62fc1cd9dc840acc5f8",
+        "nativeStartup": true,
+        "packaged": true,
+        "profileIsolated": true,
+        "updateMenu": true,
+        "disableUpdatesPersists": true,
+        "rendererFiles": 1009,
+        "electronFiles": 32,
+        "rendererMatchesSource": true,
+        "electronMatchesSource": true,
+        "updaterSHA256": "c7b6a15f5713468cf07d16c9a28be6f346e7ba94b4239830451317aaf0b2ce91",
+        "normalClose": true,
+        "profileSentinelPreserved": true
+      }
+    ],
+    "nativeStartup": true,
+    "additionalAppScenarios": [
+      {
+        "app": "word",
+        "scenario": "editor-files",
+        "exitCode": 0,
+        "seconds": 13.45,
+        "log": "/private/tmp/office-studio-release-20261115-tuvfuhsr/logs/native-word-editor-files-verified-path.log"
+      },
+      {
+        "app": "word",
+        "scenario": "hwp-reader",
+        "exitCode": 0,
+        "seconds": 4.93,
+        "log": "/private/tmp/office-studio-release-20261115-tuvfuhsr/logs/native-word-hwp-reader-verified-path.log"
+      },
+      {
+        "app": "word",
+        "scenario": "hwp-editing",
+        "exitCode": 0,
+        "seconds": 4.1,
+        "log": "/private/tmp/office-studio-release-20261115-tuvfuhsr/logs/native-word-hwp-editing-verified-path.log"
+      },
+      {
+        "app": "sheet",
+        "scenario": "editor-files",
+        "exitCode": 0,
+        "seconds": 3.25,
+        "log": "/private/tmp/office-studio-release-20261115-tuvfuhsr/logs/native-sheet-editor-files-verified-path.log"
+      },
+      {
+        "app": "sheet",
+        "scenario": "formulas",
+        "exitCode": 0,
+        "seconds": 8.01,
+        "log": "/private/tmp/office-studio-release-20261115-tuvfuhsr/logs/native-sheet-formulas-verified-path.log"
+      },
+      {
+        "app": "slide",
+        "scenario": "save-recovery",
+        "exitCode": 0,
+        "seconds": 5.82,
+        "log": "/private/tmp/office-studio-release-20261115-tuvfuhsr/logs/native-slide-save-recovery-verified-path.log"
+      }
+    ]
+  },
+  "android": {
+    "version": "1.0.14",
+    "downloadPage": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a",
+    "distribution": "local-only",
+    "apps": [
+      {
+        "id": "sheet",
+        "name": "Sheet Studio",
+        "version": "1.0.7",
+        "versionCode": 8,
+        "applicationId": "io.officestudio.sheet",
+        "filename": "Sheet-Studio-1.0.7-Android.apk",
+        "bytes": 6193020,
+        "sha256": "fa670ceecc07d0788986c41eef2b10e350a33d01d69c1591ab0bb27183d633c9",
+        "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b",
+        "minSdk": 29,
+        "targetSdk": 36,
+        "universalBytecodeAPK": true,
+        "debuggable": false,
+        "sourceCommit": "206c5bc6206677e0beec264fb6a4b33e6999aa14",
+        "offlineAssetsVerified": true,
+        "launcherDensities": 5,
+        "adaptiveIcon": true,
+        "roundIcon": true,
+        "monochromeIcon": true,
+        "downloadURL": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a/download/f402c5332b97ce85057eeba82e180b9d",
+        "rebuilt": true,
+        "upstreamCommit": "aab43ec743ff52e4ee0f084e87874b22acf82ad6"
+      },
+      {
+        "id": "slide",
+        "name": "Slide Studio",
+        "version": "1.0.8",
+        "versionCode": 9,
+        "applicationId": "io.officestudio.slide",
+        "filename": "Slide-Studio-1.0.8-Android.apk",
+        "bytes": 13529067,
+        "sha256": "5cdde04ca9a7261d8c4c2b82b8490b7a72da9595d26e0e0c3dffd2fe59742df5",
+        "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b",
+        "minSdk": 29,
+        "targetSdk": 36,
+        "universalBytecodeAPK": true,
+        "debuggable": false,
+        "sourceCommit": "367055a6446ee18af14d2bfe437592fcbf201c3e",
+        "offlineAssetsVerified": true,
+        "launcherDensities": 5,
+        "adaptiveIcon": true,
+        "roundIcon": true,
+        "monochromeIcon": true,
+        "upstreamCommit": "bd5c5143fe9148cdac075f2ff23baf2a9b5e1f19",
+        "downloadURL": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a/download/c0b97697d671c5d9108f3f9e2d6823ed",
+        "rebuilt": true
+      },
+      {
+        "id": "word",
+        "name": "Word Studio",
+        "version": "1.0.6",
+        "versionCode": 7,
+        "applicationId": "io.officestudio.word",
+        "filename": "Word-Studio-1.0.6-Android.apk",
+        "bytes": 38167797,
+        "sha256": "45f981f9ec5a6b440bc49b36a898d7783e6e96fbd95b397c074c8fd4654f2909",
+        "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b",
+        "minSdk": 29,
+        "targetSdk": 36,
+        "universalBytecodeAPK": true,
+        "debuggable": false,
+        "sourceCommit": "05f3c24328aa4dd0c9756d1e233125f271735092",
+        "offlineAssetsVerified": true,
+        "launcherDensities": 5,
+        "adaptiveIcon": true,
+        "roundIcon": true,
+        "monochromeIcon": true,
+        "downloadURL": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a/download/f8dedb2605c068ce41a24f815b5d63c9",
+        "rebuilt": true,
+        "upstreamCommit": "17d8ef8456973dfe5cf5b0240bf34cc7a60e4c01"
+      }
+    ],
+    "buildSourceCommit": "e398d1c0376f37a7986c441c6edccf93829b86c4",
+    "publicationCommit": "784199aaf9d68e380b1d1c50247f8feb29cbebc6",
+    "basicValidationPassed": true,
+    "publicDownloadsSHA256Verified": 3,
+    "nativeAndroidDeviceTested": false,
+    "combinedZIP": false,
+    "completedAt": "2026-11-15T14:12:51.623552+00:00"
+  }
+}

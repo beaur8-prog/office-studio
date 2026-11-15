@@ -1,44 +1,21 @@
 {
   "product": "Sheet Studio",
-  "version": "0.7.40",
-  "target": "mac-arm64",
-  "sourceCommit": "69aae3e5ba4c2a5033cbf79eda66d388c242e5d5",
-  "filename": "Sheet-Studio-0.7.40-macOS-arm64.zip",
-  "bytes": 120625531,
-  "sha256": "4e8fcbb5f413242d9ac3cd008e02a87e1db79a23ccaa5b7da5a6ec96802177b4",
-  "signing": "ad-hoc; no Developer ID signing or Apple notarization",
-  "verification": {
-    "id": "sheet",
-    "version": "0.7.40",
-    "minimumMacOS": "12.0",
-    "architecture": "arm64",
-    "sourceCommit": "69aae3e5ba4c2a5033cbf79eda66d388c242e5d5",
-    "nativeStartup": true,
-    "packaged": true,
-    "profileIsolated": true,
-    "updateMenu": true,
-    "disableUpdatesPersists": true,
-    "rendererFiles": 8,
-    "electronFiles": 12,
-    "rendererMatchesSource": true,
-    "electronMatchesSource": true,
-    "updaterSHA256": "0a4c2bf8a76eedda7e4a7e803e8efd611a95976de4c2c8887bab9159521205cf",
-    "normalClose": true,
-    "profileSentinelPreserved": true
-  },
-  "systemInstallationTested": false,
-  "additionalAppScenarios": [
-    {
-      "id": "sheet",
-      "scenario": "editor-and-native-files",
-      "passed": true,
-      "exitCode": 0
-    },
-    {
-      "id": "sheet",
-      "scenario": "formulas",
-      "passed": true,
-      "exitCode": 0
-    }
-  ]
+  "version": "0.7.50",
+  "platform": "darwin",
+  "architecture": "arm64",
+  "filename": "Sheet-Studio-0.7.50-macOS-arm64.zip",
+  "bytes": 120637729,
+  "sha256": "308c6089cc58439845de899b8257d97bc21d364ce8f04b2a5604877b28769658",
+  "sourceCommit": "aab43ec743ff52e4ee0f084e87874b22acf82ad6",
+  "signing": "ad-hoc; no Developer ID notarization",
+  "validation": {
+    "suiteNativeStartup": true,
+    "rendererAndElectronMatchSource": true,
+    "profileAndDocumentsPreserved": true,
+    "additionalNativeScenarios": [
+      "editor-files",
+      "formulas"
+    ],
+    "nativeInstall": false
+  }
 }

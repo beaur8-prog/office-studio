@@ -31,6 +31,8 @@ async function main(){
 
 Sheet Studio·Slide Studio·Word Studio를 한 설치 파일로 설치합니다. 설치 화면의 **사용자화**에서 필요한 앱을 고를 수 있으며, 기본값은 세 앱 모두입니다.
 
+이번 배포에는 Sheet의 확대·축소·트랙패드·Ctrl+휠 개선과 Word의 최신 DOCX 서식·체크박스 상태·개요 수준 보존 수정을 포함합니다. Slide도 현재 main 소스로 새로 빌드했습니다.
+
 ## 1. 다운로드
 
 ### [오피스 스튜디오 Mac 설치 파일 다운로드](${url})

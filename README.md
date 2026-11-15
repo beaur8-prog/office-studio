@@ -9,11 +9,11 @@ Sheet Studio, Slide Studio, Word Studio를 묶어 설치하는 배포 프로젝�
 | 구성 | 포함 버전 |
 | --- | --- |
 | Office Studio | 1.0.10 |
-| Sheet Studio | 0.7.40 |
-| Slide Studio | 1.6.24 |
-| Word Studio | 1.4.15 |
+| Sheet Studio | 0.7.50 |
+| Slide Studio | 1.6.25 |
+| Word Studio | 1.4.16 |
 
-Sheet 0.7.40의 차트·입력 검증·서식과 파일 호환성, Slide 1.6.24의 PPTX 그림·도형·개체 표시, Word 1.4.15의 HWP·DOCX 변환, 페이지 표시와 문서 내용 보존 개선을 함께 제공합니다. 기존 Windows 설치·업데이트 수정을 유지합니다.
+Sheet 0.7.50의 차트·입력 검증·서식과 파일 호환성, Slide 1.6.25의 PPTX 그림·도형·개체 표시, Word 1.4.16의 HWP·DOCX 변환, 페이지 표시와 문서 내용 보존 개선을 함께 제공합니다. 기존 Windows 설치·업데이트 수정을 유지합니다.
 
 ## 설치 파일
 
