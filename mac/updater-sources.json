@@ -2,24 +2,24 @@
   "schema": 1,
   "apps": {
     "sheet": {
-      "version": "0.7.40",
-      "sourceCommit": "69aae3e5ba4c2a5033cbf79eda66d388c242e5d5",
+      "version": "0.7.50",
+      "sourceCommit": "aab43ec743ff52e4ee0f084e87874b22acf82ad6",
       "files": {
         "studio-updater.cjs": "0a4c2bf8a76eedda7e4a7e803e8efd611a95976de4c2c8887bab9159521205cf",
         "studio-update-windows.ps1": "01d7579c4fe498bef2e0afafc681321b6eccd7afc57c1115b208759a4ca7b934"
       }
     },
     "slide": {
-      "version": "1.6.24",
-      "sourceCommit": "766fb2df3ac4e751b408d9bfd9eb04c5ccbbe753",
+      "version": "1.6.25",
+      "sourceCommit": "580f7c373d42985d1864f3cd11e368a7169d7bd2",
       "files": {
         "studio-updater.cjs": "b8f1eecbbd3a21bb65adcfbb2415139bd1e3ed8077bb162412b7a08112666593",
         "studio-update-windows.ps1": "7e4f93a526a1dce848fcfedd49eac6176da4a7205597d84dfd5c00a63b746132"
       }
     },
     "word": {
-      "version": "1.4.15",
-      "sourceCommit": "0bc3b5391f4e7bc2fe105596eb9f9d1810d5f319",
+      "version": "1.4.16",
+      "sourceCommit": "08b7feeaf4b6d3198a65b62fc1cd9dc840acc5f8",
       "files": {
         "studio-updater.cjs": "c7b6a15f5713468cf07d16c9a28be6f346e7ba94b4239830451317aaf0b2ce91",
         "studio-update-windows.ps1": "295dad506370260656f1b6946eecb7a99f3eea8ba70426e54b1e8445d9568f4e"
