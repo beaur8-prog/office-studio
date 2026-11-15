@@ -1,31 +1,31 @@
 {
   "schema": 1,
-  "version": "1.0.13",
+  "version": "1.0.14",
   "versionCode": 2,
   "apps": {
     "sheet": {
       "repository": "beaur8-prog/sheet-studio",
-      "ref": "codex/android-1.0.6",
-      "sourceCommit": "cfacc7fb3e0786f1d0a033f996476a6b0d2c1c82",
-      "version": "1.0.6",
-      "versionCode": 7,
-      "upstreamCommit": "febff8cd538c14b8e8f5d62ee6d5a7efd79b27a4"
+      "ref": "codex/android-1.0.7",
+      "sourceCommit": "206c5bc6206677e0beec264fb6a4b33e6999aa14",
+      "version": "1.0.7",
+      "versionCode": 8,
+      "upstreamCommit": "aab43ec743ff52e4ee0f084e87874b22acf82ad6"
     },
     "slide": {
       "repository": "beaur8-prog/slide-studio",
-      "ref": "codex/android-1.0.7",
-      "sourceCommit": "566e849fb3e8ba28f0e17819e85c596a9e18c3b2",
-      "version": "1.0.7",
-      "versionCode": 8,
+      "ref": "codex/android-1.0.8",
+      "sourceCommit": "367055a6446ee18af14d2bfe437592fcbf201c3e",
+      "version": "1.0.8",
+      "versionCode": 9,
       "upstreamCommit": "bd5c5143fe9148cdac075f2ff23baf2a9b5e1f19"
     },
     "word": {
       "repository": "beaur8-prog/word-studio",
-      "ref": "codex/android-1.0.5",
-      "sourceCommit": "4bac8ad20543a56a444d74bbb158c43b61bca482",
-      "version": "1.0.5",
-      "versionCode": 6,
-      "upstreamCommit": "5cb424690b89090183d326bfe3ec29b49b62382d"
+      "ref": "codex/android-1.0.6",
+      "sourceCommit": "05f3c24328aa4dd0c9756d1e233125f271735092",
+      "version": "1.0.6",
+      "versionCode": 7,
+      "upstreamCommit": "17d8ef8456973dfe5cf5b0240bf34cc7a60e4c01"
     }
   },
   "minSdk": 29,
@@ -48,5 +48,5 @@
   "combinedZIP": false,
   "nativeSlideHostUpstreamCommit": "612555c1aa480fe57a573039ae943ad92e085619",
   "nativeWordHostUpstreamCommit": "434829094550a95c05b2bcea0af644699a6fc5a1",
-  "nativeSheetHostUpstreamCommit": "f04f9bdd6d506f17fc66e4c0ed89532ed3a016dd"
+  "nativeSheetHostUpstreamCommit": "c5a2a04987a649c79d20eff0c664fa8e8303736b"
 }

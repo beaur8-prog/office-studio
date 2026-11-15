@@ -40,6 +40,8 @@ public class MainActivity extends Activity {
     boolean ready, destroyed, immersive, wordPrintKeyDown;
     boolean slideBackKeyDown;
     boolean sheetViewer, sheetBackKeyDown;
+    boolean sheetTrackpadActive;
+    double sheetTrackpadScale=1;
     int slideNavigationGeneration;
     Insets slideSafeInsets = Insets.NONE;
     String insetStyle;
@@ -74,6 +76,15 @@ public class MainActivity extends Activity {
         }
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         root=new FrameLayout(this);web=new WebView(this){
+            @Override public boolean onTouchEvent(MotionEvent event){
+                if(forwardSheetPinch(event))return true;
+                return super.onTouchEvent(event);
+            }
+            @Override public boolean onGenericMotionEvent(MotionEvent event){
+                if(forwardSheetPinch(event))return true;
+                if(forwardSheetWheel(event))return true;
+                return super.onGenericMotionEvent(event);
+            }
             @Override public boolean onKeyPreIme(int keyCode,KeyEvent event){
                 if(handleSlideNavigationKey(event))return true;
                 if(handleWordEscape(event))return true;
@@ -310,6 +321,52 @@ public class MainActivity extends Activity {
             obj("systemBars",sheetInsets(sheetBarInsets),"displayCutout",sheetInsets(sheetCutoutInsets),"displayCutoutRects",sheetCutoutRects)+"}));";
         if(force || !script.equals(sheetInsetScript)){sheetInsetScript=script;web.evaluateJavascript(script,null);}
     }
+    void publishSheetPinch(MotionEvent event,String phase){
+        double x=Float.isFinite(event.getX())?Math.max(0,Math.min(1,event.getX()/(double)Math.max(1,web.getWidth()))):.5;
+        double y=Float.isFinite(event.getY())?Math.max(0,Math.min(1,event.getY()/(double)Math.max(1,web.getHeight()))):.5;
+        JSONObject detail=obj("phase",phase,"scale",sheetTrackpadScale,"x",x,"y",y);
+        web.evaluateJavascript("window.dispatchEvent(new CustomEvent('sheet-studio-android-pinch',{detail:"+detail+"}));",null);
+    }
+    boolean forwardSheetPinch(MotionEvent event){
+        if(!BuildConfig.STUDIO.equals("sheet")||Build.VERSION.SDK_INT<34||web==null)return false;
+        boolean pinch=event.getClassification()==MotionEvent.CLASSIFICATION_PINCH;
+        int action=event.getActionMasked();
+        if(!pinch&&!sheetTrackpadActive)return false;
+        if(!pinch&&action!=MotionEvent.ACTION_UP&&action!=MotionEvent.ACTION_CANCEL){
+            publishSheetPinch(event,"cancel");sheetTrackpadActive=false;return false;
+        }
+        if(!sheetTrackpadActive||action==MotionEvent.ACTION_DOWN){
+            sheetTrackpadActive=true;sheetTrackpadScale=1;publishSheetPinch(event,"start");
+        }
+        if(action==MotionEvent.ACTION_CANCEL){publishSheetPinch(event,"cancel");sheetTrackpadActive=false;return true;}
+        // API 34+ touchpad scales are relative to the previous sample, including
+        // batched history. Consume only classified touchpad pinch; touchscreen
+        // touches and ordinary trackpad scrolling keep the WebView route.
+        if(pinch){
+            boolean changed=false;
+            for(int i=0;i<=event.getHistorySize();i++){
+                float factor=i<event.getHistorySize()?event.getHistoricalAxisValue(MotionEvent.AXIS_GESTURE_PINCH_SCALE_FACTOR,i):event.getAxisValue(MotionEvent.AXIS_GESTURE_PINCH_SCALE_FACTOR);
+                double next=sheetTrackpadScale*factor;
+                if(Float.isFinite(factor)&&factor>0&&Double.isFinite(next)&&next>0){sheetTrackpadScale=next;changed|=factor!=1;}
+            }
+            if(changed)publishSheetPinch(event,"change");
+        }
+        if(action==MotionEvent.ACTION_UP){publishSheetPinch(event,"end");sheetTrackpadActive=false;}
+        return true;
+    }
+    boolean forwardSheetWheel(MotionEvent event){
+        if(!BuildConfig.STUDIO.equals("sheet")||event.getActionMasked()!=MotionEvent.ACTION_SCROLL||(KeyEvent.normalizeMetaState(event.getMetaState())&KeyEvent.META_CTRL_ON)==0||web==null)return false;
+        float amount=event.getAxisValue(MotionEvent.AXIS_VSCROLL);
+        if(!Float.isFinite(amount)||!Float.isFinite(event.getX())||!Float.isFinite(event.getY())||web.getWidth()==0||web.getHeight()==0)return true;
+        if(amount==0)return false;
+        // WebView can consume Ctrl+wheel before a cancellable DOM wheel event.
+        // Forward this one native event to the shared sheet zoom controller;
+        // ordinary scrolling and Word/Slide keep the default WebView route.
+        double x=Math.max(0,Math.min(1,event.getX()/(double)web.getWidth())),y=Math.max(0,Math.min(1,event.getY()/(double)web.getHeight()));
+        JSONObject detail=obj("ctrlKey",true,"deltaY",-((double)amount)*100,"x",x,"y",y,"buttons",event.getButtonState());
+        web.evaluateJavascript("window.dispatchEvent(new CustomEvent('sheet-studio-android-wheel',{detail:"+detail+"}));",null);
+        return true;
+    }
     void applySheetSystemBars() {
         WindowInsetsControllerCompat bars=WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView());
         bars.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
@@ -351,6 +408,7 @@ public class MainActivity extends Activity {
     @Override public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if(hasFocus&&BuildConfig.STUDIO.equals("word")&&web!=null&&!destroyed)web.requestFocus();
+        if(!hasFocus)sheetTrackpadActive=false;
         if(hasFocus&&immersive&&BuildConfig.STUDIO.equals("word")&&root!=null){WindowInsetsControllerCompat bars=WindowCompat.getInsetsController(getWindow(),getWindow().getDecorView());bars.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);bars.hide(WindowInsetsCompat.Type.systemBars());ViewCompat.requestApplyInsets(root);}
         if (hasFocus && root != null && web != null && BuildConfig.STUDIO.equals("slide")) setSlideImmersive(immersive);
         if(hasFocus&&BuildConfig.STUDIO.equals("sheet")&&root!=null&&web!=null)applySheetSystemBars();

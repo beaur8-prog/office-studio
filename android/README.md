@@ -4,6 +4,10 @@
 
 Android는 **로컬에서 빌드·서명 → 파일·버전·서명·체크섬 확인 → 리토스 첨부 게시**로 배포합니다. GitHub 릴리스 생성, APK 업로드, APK 재다운로드는 하지 않습니다. 소스의 Git pull·commit·push와 버전 태그 관리는 그대로 사용합니다. `distribution-policy.json`으로 이 방식을 고정합니다.
 
+## Android 1.0.14 · 2026년 11월 15일 최신 소스 배포
+
+Sheet 1.0.7/code8, Slide 1.0.8/code9, Word 1.0.6/code7을 새로 빌드합니다. Sheet의 공통 확대·축소와 Android 네이티브 트랙패드 핀치·Ctrl-wheel 전달, Word의 최신 DOCX 가져오기·서식 수정을 포함합니다. 기존 Slide 파일 열기·저장 어댑터와 세 앱의 인쇄·키보드 처리를 유지합니다. 기본 검증 후 기존 페이지에 개별 APK를 직접 첨부하며 통합 ZIP을 만들지 않습니다.
+
 ## Android 1.0.13 · 세 앱 기본 검증 배포
 
 Sheet 1.0.6/code7, Slide 1.0.7/code8, Word 1.0.5/code6을 함께 빌드합니다. 세 앱의 문서 전용 인쇄 렌더러와 PDF 저장 연결, Slide 개체 메뉴·접이식 발표 도구, Word 포인터 중심 확대·축소·Ctrl+P·Esc 연결을 포함합니다. 최신 앱·호스트 커밋은 source-lock에 고정합니다.
