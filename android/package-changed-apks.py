@@ -77,6 +77,7 @@ for old in prior['apps']:
     href = 'attachments/office-studio-android/' + app['filename']
     identifier = hashlib.sha256(('앱/' + href).encode()).hexdigest()[:32]
     app['downloadURL'] = before['url'] + '/download/' + identifier
+    app['downloadURL'] = before['url'] + '/download/' + hashlib.sha256(('앱/attachments/office-studio-android/' + app['filename']).encode()).hexdigest()[:32]
     apps.append(app)
 
 source = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=s, text=True).strip()
@@ -105,9 +106,9 @@ build = {
     (sha(out / 'BASIC-VERIFICATION.json') + '  BASIC-VERIFICATION.json\n' if basic else ''))
 
 changes = {
-    'sheet': '현재 시트·선택 영역의 인쇄 및 PDF 저장 연결',
-    'slide': '개체 메뉴·접이식 발표 도구와 문서 전용 인쇄 및 PDF 저장 연결',
-    'word': '포인터 중심 확대·축소와 문서 전용 인쇄, Ctrl+P·Esc 입력 연결',
+    'sheet': '공통 확대·축소와 네이티브 트랙패드 핀치·Ctrl-wheel, 기존 인쇄·PDF 저장 유지',
+    'slide': '최신 main으로 재빌드하고 파일 열기·저장, 개체 메뉴·인쇄·PDF 저장 유지',
+    'word': '최신 DOCX 체크박스·개요 수준 보존과 기존 Android 보기·편집·인쇄 유지',
 }
 day = datetime.datetime.now(ZoneInfo('Asia/Seoul')).strftime('%Y년 %m월 %d일')
 summary = ', '.join(a['name'] + ' **' + a['version'] + '**' for a in apps if a['rebuilt'])
@@ -143,12 +144,20 @@ for a in apps:
     if a['rebuilt']:
         old = next(x for x in prior['apps'] if x['id'] == a['id'])
         body = body.replace(old['sha256'] + '  ' + old['filename'], a['sha256'] + '  ' + a['filename'])
-if 'sheet' in changed:
-    body = body.replace('1.0.5에는 숫자 표시·열 너비 조절·평균 수식 범위 선택과 Esc·뒤로가기 처리 개선을 포함합니다.', '1.0.6에는 현재 시트·선택 영역 인쇄와 PDF 저장 연결을 포함합니다.')
-if 'slide' in changed:
-    body = body.replace('1.0.6에는 원래 앱 창에서 발표 화면 유지와 키보드 숨김, Android 16 Esc·뒤로가기 처리 개선을 포함합니다.', '1.0.7에는 개체 메뉴·접이식 발표 도구와 문서 인쇄·PDF 저장 연결을 포함합니다.')
-if 'word' in changed:
-    body = body.replace('1.0.4에는 느린 드래그 페이지 넘김과 태블릿 확대 배율 표시 개선을 포함합니다.', '1.0.5에는 포인터 중심 확대·축소와 문서 인쇄·PDF 저장, Ctrl+P·Esc 입력 연결을 포함합니다.')
+usage_updates = {
+    'sheet': '공통 확대·축소와 Android 네이티브 트랙패드 핀치·Ctrl-wheel 개선을 포함하며, 현재 시트·선택 영역 인쇄·PDF 저장도 유지합니다.',
+    'slide': '최신 main으로 재빌드하고 기존 네이티브 파일 열기·저장, 개체 메뉴·접이식 발표 도구·인쇄·PDF 저장을 유지합니다.',
+    'word': '최신 DOCX 체크박스 상태·표시 기호와 개요 수준 보존을 포함하며, 기존 Android 보기·편집·인쇄·PDF 저장을 유지합니다.',
+}
+for a in apps:
+    if a['rebuilt']:
+        prefix = '- **' + a['name'] + ':**'
+        lines = body.splitlines()
+        for i, line in enumerate(lines):
+            if line.startswith(prefix):
+                lines[i], count = re.subn(r'\d+\.\d+\.\d+에는[^\n]*?포함합니다\.', a['version'] + '에는 ' + usage_updates[a['id']], line, count=1)
+                assert count == 1, a['id']
+        body = '\n'.join(lines) + '\n'
 start = body.index('## 7. 이번 배포의 확인 범위')
 end = body.index('이 문서는 리토스의 읽기 전용 공유 페이지입니다.', start)
 details = '\n'.join(f"- **{a['name']} {a['version']}**: {changes[a['id']]} · versionCode {a['versionCode']}"

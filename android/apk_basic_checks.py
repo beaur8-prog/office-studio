@@ -23,5 +23,8 @@ def verify_apk(apk, app_id, asset_manifest, bridge_file, build_tools):
         dex = b''.join(archive.read(name) for name in archive.namelist() if name.startswith('classes') and name.endswith('.dex'))
         print_class = {'sheet': 'SheetPrintAdapter', 'slide': 'SlidePrintSession', 'word': 'WordPrintSession'}[app_id]
         assert ('Lio/officestudio/shell/' + print_class + ';').encode() in dex, print_class
+        if app_id == 'sheet':
+            for method in ['forwardSheetPinch', 'forwardSheetWheel', 'publishSheetPinch']:
+                assert method.encode() in dex, method
     return {'offlineAssets': True, 'webAssetFiles': len(expected), 'nativeBridge': True,
             'compiledLauncherIcons': True, 'compiledPrintClass': print_class, 'nativeDeviceTested': False}
