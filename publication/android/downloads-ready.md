@@ -32,11 +32,11 @@ Sheet Studio **1.0.7**, Slide Studio **1.0.8**, Word Studio **1.0.6**로 갱신�
 
 | 아이콘 | 앱 | 설치 파일 | 크기 |
 | --- | --- | --- | --- |
-| ![Sheet Studio 아이콘](attachments/office-studio-android/Sheet-Studio-Android-icon.png) | **Sheet Studio 1.0.7** | [APK 바로 받기](https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a/download/f402c5332b97ce85057eeba82e180b9d) | 5.9 MiB |
-| ![Slide Studio 아이콘](attachments/office-studio-android/Slide-Studio-Android-icon.png) | **Slide Studio 1.0.8** | [APK 바로 받기](https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a/download/c0b97697d671c5d9108f3f9e2d6823ed) | 12.9 MiB |
-| ![Word Studio 아이콘](attachments/office-studio-android/Word-Studio-Android-icon.png) | **Word Studio 1.0.6** | [APK 바로 받기](https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a/download/f8dedb2605c068ce41a24f815b5d63c9) | 36.4 MiB |
+| ![Sheet Studio 아이콘](attachments/office-studio-android/Sheet-Studio-Android-icon.png) | **Sheet Studio 1.0.7** | [APK 바로 받기](attachments/office-studio-android/Sheet-Studio-1.0.7-Android.apk) | 5.9 MiB |
+| ![Slide Studio 아이콘](attachments/office-studio-android/Slide-Studio-Android-icon.png) | **Slide Studio 1.0.8** | [APK 바로 받기](attachments/office-studio-android/Slide-Studio-1.0.8-Android.apk) | 12.9 MiB |
+| ![Word Studio 아이콘](attachments/office-studio-android/Word-Studio-Android-icon.png) | **Word Studio 1.0.6** | [APK 바로 받기](attachments/office-studio-android/Word-Studio-1.0.6-Android.apk) | 36.4 MiB |
 
-[SHA-256 확인 파일](attachments/office-studio-android/1.0.13/SHA256SUMS-android.txt) · [빌드 구성·포함 소스](attachments/office-studio-android/1.0.13/BUILD-android.json) · [1.0.0 배포 당시 검증 기록](attachments/office-studio-android/1.0.0/ANDROID-VERIFICATION.json)
+[SHA-256 확인 파일](attachments/office-studio-android/1.0.14/SHA256SUMS-android.txt) · [빌드 구성·포함 소스](attachments/office-studio-android/1.0.14/BUILD-android.json) · [1.0.0 배포 당시 검증 기록](attachments/office-studio-android/1.0.0/ANDROID-VERIFICATION.json)
 
 ## 2. 설치와 실행
 
