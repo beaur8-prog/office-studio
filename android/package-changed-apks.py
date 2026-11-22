@@ -25,8 +25,8 @@ assert lock['combinedZIP'] is False
 if basic:
     frontend = json.loads((r / 'records/FRONTEND-BUILDS.json').read_text())
     browsers = json.loads((r / 'records/BROWSER-CHECKS.json').read_text())
-    assert len(frontend) == 3 and all(result['passed'] for result in frontend)
-    assert len(browsers) == 3 and all(result['passed'] for result in browsers)
+    assert {result['id'] for result in frontend} == set(changed) and all(result['passed'] for result in frontend)
+    assert {result['id'] for result in browsers} == set(changed) and all(result['passed'] for result in browsers)
 else:
     assert lock['tests']['executed'] is False and lock['tests']['explicitlyAuthorized'] is True
     assert lock['tests']['status'] == 'skipped'
@@ -108,7 +108,7 @@ build = {
 changes = {
     'sheet': '공통 확대·축소와 네이티브 트랙패드 핀치·Ctrl-wheel, 기존 인쇄·PDF 저장 유지',
     'slide': '최신 main으로 재빌드하고 파일 열기·저장, 개체 메뉴·인쇄·PDF 저장 유지',
-    'word': '최신 DOCX 체크박스·개요 수준 보존과 기존 Android 보기·편집·인쇄 유지',
+    'word': '최신 DOCX 줄 높이·표 쪽 나눔·반사 효과·문단 보존 개선과 기존 Android 기능 유지',
 }
 day = datetime.datetime.now(ZoneInfo('Asia/Seoul')).strftime('%Y년 %m월 %d일')
 summary = ', '.join(a['name'] + ' **' + a['version'] + '**' for a in apps if a['rebuilt'])
@@ -147,7 +147,7 @@ for a in apps:
 usage_updates = {
     'sheet': '공통 확대·축소와 Android 네이티브 트랙패드 핀치·Ctrl-wheel 개선을 포함하며, 현재 시트·선택 영역 인쇄·PDF 저장도 유지합니다.',
     'slide': '최신 main으로 재빌드하고 기존 네이티브 파일 열기·저장, 개체 메뉴·접이식 발표 도구·인쇄·PDF 저장을 유지합니다.',
-    'word': '최신 DOCX 체크박스 상태·표시 기호와 개요 수준 보존을 포함하며, 기존 Android 보기·편집·인쇄·PDF 저장을 유지합니다.',
+    'word': '최신 DOCX 줄 높이·표 쪽 나눔·반사 효과·문단 보존 개선을 포함하며, 기존 Android 보기·편집·인쇄·PDF 저장을 유지합니다.',
 }
 for a in apps:
     if a['rebuilt']:
@@ -155,7 +155,7 @@ for a in apps:
         lines = body.splitlines()
         for i, line in enumerate(lines):
             if line.startswith(prefix):
-                lines[i], count = re.subn(r'\d+\.\d+\.\d+에는[^\n]*?포함합니다\.', a['version'] + '에는 ' + usage_updates[a['id']], line, count=1)
+                lines[i], count = re.subn(r'\d+\.\d+\.\d+에는[^.\n]*\.', a['version'] + '에는 ' + usage_updates[a['id']], line, count=1)
                 assert count == 1, a['id']
         body = '\n'.join(lines) + '\n'
 start = body.index('## 7. 이번 배포의 확인 범위')

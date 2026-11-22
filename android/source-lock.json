@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "1.0.14",
+  "version": "1.0.15",
   "versionCode": 2,
   "apps": {
     "sheet": {
@@ -21,11 +21,11 @@
     },
     "word": {
       "repository": "beaur8-prog/word-studio",
-      "ref": "codex/android-1.0.6",
-      "sourceCommit": "05f3c24328aa4dd0c9756d1e233125f271735092",
-      "version": "1.0.6",
-      "versionCode": 7,
-      "upstreamCommit": "17d8ef8456973dfe5cf5b0240bf34cc7a60e4c01"
+      "ref": "codex/android-1.0.7",
+      "sourceCommit": "26d3dda219e164a1524753cd7e705b582828729a",
+      "version": "1.0.7",
+      "versionCode": 8,
+      "upstreamCommit": "c117be6a1b9d4164163bccb6e859c2eed2166b64"
     }
   },
   "minSdk": 29,
@@ -34,8 +34,6 @@
   "gradle": "8.13",
   "webkit": "1.14.0",
   "changedApps": [
-    "sheet",
-    "slide",
     "word"
   ],
   "tests": {
