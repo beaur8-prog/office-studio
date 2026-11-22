@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "product": "Office Studio",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "apps": [
     {
       "id": "sheet",
@@ -36,17 +36,17 @@
     {
       "id": "word",
       "product": "Word Studio",
-      "version": "1.4.16",
+      "version": "1.4.17",
       "bundleId": "local.wordstudio.app",
       "assets": {
         "win-x64": {
-          "filename": "Word-Studio-1.4.16-windows-x64-setup.exe",
-          "bytes": 133089187,
-          "sha256": "e3f04b411e41665887c1530c51ebe176e5d90d3faf4744de6814c8b127232957",
-          "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.16/Word-Studio-1.4.16-windows-x64-setup.exe"
+          "filename": "Word-Studio-1.4.17-windows-x64-setup.exe",
+          "bytes": 133113166,
+          "sha256": "dbd22346cccf5b74813fc56184f5501c24561105dd9015d62ca73afd6dfec01e",
+          "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.17/Word-Studio-1.4.17-windows-x64-setup.exe"
         }
       },
-      "sourceCommit": "08b7feeaf4b6d3198a65b62fc1cd9dc840acc5f8"
+      "sourceCommit": "8490afc35226ce59a07f727e94d4e1ded0fb1261"
     }
   ],
   "target": "win-x64"

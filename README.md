@@ -1,6 +1,6 @@
 # Office Studio 배포
 
-[리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/b448bde7b88792d8776c7f6a908e88891c473d4b5f6cace2) · [Windows 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.11/Office-Studio-1.0.10-win-x64-Setup.exe)
+[리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/b448bde7b88792d8776c7f6a908e88891c473d4b5f6cace2) · [Windows 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/v1.0.12/Office-Studio-1.0.10-win-x64-Setup.exe)
 
 [Mac 리토스 배포 페이지](https://sentence-durable-databases-toys.trycloudflare.com/s/7ef9c9402c857485a69bb9e8e0c441f57e1025bc8dd9d002) · [Mac Apple Silicon 설치 파일](https://github.com/beaur8-prog/office-studio/releases/download/mac-v1.0.7/Office-Studio-1.0.6-mac-arm64-Setup.pkg) · [Mac 배포 안내](publication/mac/downloads-ready.md)
 
