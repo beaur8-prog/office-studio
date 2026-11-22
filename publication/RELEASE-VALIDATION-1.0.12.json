@@ -1,0 +1,334 @@
+{
+  "product": "Office Studio",
+  "windowsVersion": "1.0.12",
+  "androidVersion": "1.0.15",
+  "changedApps": [
+    "word"
+  ],
+  "sources": {
+    "word": {
+      "developmentRef": "codex/word-layout-local-twenty-hours-20261116",
+      "developmentCommit": "c117be6a1b9d4164163bccb6e859c2eed2166b64",
+      "sourceLocation": "/Users/swryu/Developer/word-studio",
+      "notYetOnRemoteAtStart": true,
+      "version": "1.4.17",
+      "releaseCommit": "8490afc35226ce59a07f727e94d4e1ded0fb1261",
+      "androidSourceCommit": "26d3dda219e164a1524753cd7e705b582828729a",
+      "androidVersion": "1.0.7",
+      "tagSourceCommit": "c6e02db93b99d2c40d39bd9cf31accdff9e2f79e",
+      "productSourceIdenticalToTag": true
+    },
+    "sheet": {
+      "version": "0.7.50",
+      "unchanged": true,
+      "developmentCommit": "aab43ec743ff52e4ee0f084e87874b22acf82ad6"
+    },
+    "slide": {
+      "version": "1.6.25",
+      "unchanged": true,
+      "developmentCommit": "bd5c5143fe9148cdac075f2ff23baf2a9b5e1f19",
+      "releaseCommit": "580f7c373d42985d1864f3cd11e368a7169d7bd2"
+    }
+  },
+  "windows": {
+    "build": {
+      "product": "Office Studio",
+      "version": "1.0.12",
+      "target": "win-x64",
+      "builtAt": "2026-11-22T13:01:20.727Z",
+      "filename": "Office-Studio-1.0.12-win-x64-Setup.exe",
+      "bytes": 346986496,
+      "sha256": "daf27d8c52bec79594986d7416cae747976852853366e2c311edad61f7babdab",
+      "signing": "unsigned",
+      "apps": [
+        {
+          "id": "sheet",
+          "product": "Sheet Studio",
+          "version": "0.7.50",
+          "sourceCommit": "aab43ec743ff52e4ee0f084e87874b22acf82ad6",
+          "input": {
+            "filename": "Sheet-Studio-0.7.50-Windows-x64-Setup.exe",
+            "bytes": 103416050,
+            "sha256": "9fab34ac5b75d2ee2d3b9127669d26319e4a793ccbbb8d6a714233bef1b79648",
+            "url": "https://github.com/beaur8-prog/sheet-studio/releases/download/v0.7.50/Sheet-Studio-0.7.50-Windows-x64-Setup.exe"
+          }
+        },
+        {
+          "id": "slide",
+          "product": "Slide Studio",
+          "version": "1.6.25",
+          "sourceCommit": "580f7c373d42985d1864f3cd11e368a7169d7bd2",
+          "input": {
+            "filename": "Slide-Studio-Setup-x64.exe",
+            "bytes": 110317664,
+            "sha256": "36d770ea834b28c3ed5561d031c9a0523e48e7147ad68da0059da2acf5eaadb7",
+            "url": "https://github.com/beaur8-prog/slide-studio/releases/download/v1.6.25/Slide-Studio-Setup-x64.exe"
+          }
+        },
+        {
+          "id": "word",
+          "product": "Word Studio",
+          "version": "1.4.17",
+          "sourceCommit": "8490afc35226ce59a07f727e94d4e1ded0fb1261",
+          "input": {
+            "filename": "Word-Studio-1.4.17-windows-x64-setup.exe",
+            "bytes": 133113166,
+            "sha256": "dbd22346cccf5b74813fc56184f5501c24561105dd9015d62ca73afd6dfec01e",
+            "url": "https://github.com/beaur8-prog/word-studio/releases/download/v1.4.17/Word-Studio-1.4.17-windows-x64-setup.exe"
+          }
+        }
+      ],
+      "checks": {
+        "inputSHA256": true,
+        "nsisCompileWarningsAsErrors": true,
+        "installerArchiveIntegrity": true,
+        "embeddedInstallersSHA256": true,
+        "nativeInstall": true
+      },
+      "sourceCommit": "07b878b09c74418c8b27c346cbed3b0c0f202899",
+      "nativeCI": {
+        "runId": 45025615463,
+        "url": "https://github.com/beaur8-prog/office-studio/actions/runs/45025615463",
+        "sourceCommit": "07b878b09c74418c8b27c346cbed3b0c0f202899",
+        "passed": true
+      }
+    },
+    "nativeInstaller": {
+      "suiteVersion": "1.0.12",
+      "setupSHA256": "daf27d8c52bec79594986d7416cae747976852853366e2c311edad61f7babdab",
+      "passed": true,
+      "freshInstall": true,
+      "reinstall": true,
+      "upgrades": [
+        {
+          "from": "1.4.16",
+          "helper": true,
+          "to": "1.4.17",
+          "app": "word",
+          "nativeWindow": true,
+          "normalClose": true
+        }
+      ],
+      "unchangedApps": [
+        "sheet",
+        "slide"
+      ],
+      "uninstall": true,
+      "userDataPreserved": true
+    },
+    "updaterHandoff": {
+      "platform": "win32",
+      "passed": true,
+      "results": [
+        {
+          "id": "sheet",
+          "mode": "install",
+          "nativeElectronQuit": true,
+          "helperAcknowledgedBeforeQuit": true,
+          "installed": true,
+          "versionVerified": true,
+          "reopened": true
+        },
+        {
+          "id": "slide",
+          "mode": "install",
+          "nativeElectronQuit": true,
+          "helperAcknowledgedBeforeQuit": true,
+          "installed": true,
+          "versionVerified": true,
+          "reopened": true
+        },
+        {
+          "id": "word",
+          "mode": "install",
+          "nativeElectronQuit": true,
+          "helperAcknowledgedBeforeQuit": true,
+          "installed": true,
+          "versionVerified": true,
+          "reopened": true
+        },
+        {
+          "id": "word",
+          "mode": "cancel",
+          "editorKeptOpen": true,
+          "noInstallation": true
+        },
+        {
+          "id": "word",
+          "mode": "blocked",
+          "editorKeptOpen": true,
+          "noInstallation": true
+        },
+        {
+          "id": "word",
+          "mode": "tampered",
+          "editorKeptOpen": true,
+          "noInstallation": true
+        }
+      ]
+    },
+    "component": {
+      "product": "Word Studio",
+      "version": "1.4.17",
+      "filename": "Word-Studio-1.4.17-windows-x64-setup.exe",
+      "bytes": 133113166,
+      "sha256": "dbd22346cccf5b74813fc56184f5501c24561105dd9015d62ca73afd6dfec01e",
+      "sourceCommit": "8490afc35226ce59a07f727e94d4e1ded0fb1261",
+      "tagSourceCommit": "c6e02db93b99d2c40d39bd9cf31accdff9e2f79e",
+      "productSourceIdenticalToTag": true,
+      "passed": true,
+      "nativeInstaller": {
+        "version": "1.4.17",
+        "passed": true,
+        "freshSetupRunAfterFinish": true,
+        "freshInstall": true,
+        "shortcuts": true,
+        "installedAppsEntry": true,
+        "registeredDocumentTypes": [
+          "wordstudio",
+          "docx",
+          "hwp",
+          "hwpx",
+          "html",
+          "htm",
+          "txt"
+        ],
+        "openWithAndDefaultApps": true,
+        "existingDefaultsPreserved": true,
+        "installedApplication": true,
+        "hwpReader": true,
+        "hwpEditing": true,
+        "reinstall": true,
+        "nativeSetupWithoutLanguageSelector": true,
+        "handlerUnregistration": true,
+        "uninstall": true,
+        "userDataPreserved": true
+      },
+      "longDocumentRoundtrip": {
+        "paragraphs": 1000,
+        "characters": 187007,
+        "initialPages": 118,
+        "reopenedPages": 118,
+        "docxBytes": 20523,
+        "allParagraphsPreserved": true,
+        "openMs": 524,
+        "editUndoRedoMs": 618,
+        "saveMs": 728,
+        "reopenMs": 2168
+      },
+      "windowsCI": {
+        "runId": 45024517990,
+        "url": "https://github.com/beaur8-prog/word-studio/actions/runs/45024517990",
+        "passed": true
+      },
+      "additionalLayoutChecks": {
+        "runId": 45022707393,
+        "passedSteps": [
+          "Browser update and document preservation scenarios (Windows)",
+          "Latest Word layout and DOCX regression coverage"
+        ],
+        "nativeInstallPassedInInitialRun": false,
+        "nativeRetryCause": "Synthetic HTML input now explicitly uses the same Word Normal widow/orphan policy as exported DOCX; product code unchanged"
+      }
+    }
+  },
+  "android": {
+    "version": "1.0.15",
+    "downloadPage": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a",
+    "distribution": "local-only",
+    "changedApps": [
+      "word"
+    ],
+    "retainedApps": [
+      "sheet",
+      "slide"
+    ],
+    "apps": [
+      {
+        "id": "sheet",
+        "name": "Sheet Studio",
+        "version": "1.0.7",
+        "versionCode": 8,
+        "applicationId": "io.officestudio.sheet",
+        "filename": "Sheet-Studio-1.0.7-Android.apk",
+        "bytes": 6193020,
+        "sha256": "fa670ceecc07d0788986c41eef2b10e350a33d01d69c1591ab0bb27183d633c9",
+        "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b",
+        "minSdk": 29,
+        "targetSdk": 36,
+        "universalBytecodeAPK": true,
+        "debuggable": false,
+        "sourceCommit": "206c5bc6206677e0beec264fb6a4b33e6999aa14",
+        "offlineAssetsVerified": true,
+        "launcherDensities": 5,
+        "adaptiveIcon": true,
+        "roundIcon": true,
+        "monochromeIcon": true,
+        "downloadURL": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a/download/f402c5332b97ce85057eeba82e180b9d",
+        "rebuilt": false,
+        "upstreamCommit": "aab43ec743ff52e4ee0f084e87874b22acf82ad6"
+      },
+      {
+        "id": "slide",
+        "name": "Slide Studio",
+        "version": "1.0.8",
+        "versionCode": 9,
+        "applicationId": "io.officestudio.slide",
+        "filename": "Slide-Studio-1.0.8-Android.apk",
+        "bytes": 13529067,
+        "sha256": "5cdde04ca9a7261d8c4c2b82b8490b7a72da9595d26e0e0c3dffd2fe59742df5",
+        "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b",
+        "minSdk": 29,
+        "targetSdk": 36,
+        "universalBytecodeAPK": true,
+        "debuggable": false,
+        "sourceCommit": "367055a6446ee18af14d2bfe437592fcbf201c3e",
+        "offlineAssetsVerified": true,
+        "launcherDensities": 5,
+        "adaptiveIcon": true,
+        "roundIcon": true,
+        "monochromeIcon": true,
+        "upstreamCommit": "bd5c5143fe9148cdac075f2ff23baf2a9b5e1f19",
+        "downloadURL": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a/download/c0b97697d671c5d9108f3f9e2d6823ed",
+        "rebuilt": false
+      },
+      {
+        "id": "word",
+        "name": "Word Studio",
+        "version": "1.0.7",
+        "versionCode": 8,
+        "applicationId": "io.officestudio.word",
+        "filename": "Word-Studio-1.0.7-Android.apk",
+        "bytes": 38193197,
+        "sha256": "eaa7fbd58f45aa089a6355a7923b0e4e798ecda973edc2cdb87e9cdd0d3a50fa",
+        "certificateSHA256": "c166b002177773ea993d118545bec3ecdfd2a3f2f286cb7ac850ca646a7a9d3b",
+        "minSdk": 29,
+        "targetSdk": 36,
+        "universalBytecodeAPK": true,
+        "debuggable": false,
+        "sourceCommit": "26d3dda219e164a1524753cd7e705b582828729a",
+        "offlineAssetsVerified": true,
+        "launcherDensities": 5,
+        "adaptiveIcon": true,
+        "roundIcon": true,
+        "monochromeIcon": true,
+        "downloadURL": "https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a/download/461e852141599c73bf96fd254bed5071",
+        "rebuilt": true,
+        "upstreamCommit": "c117be6a1b9d4164163bccb6e859c2eed2166b64"
+      }
+    ],
+    "buildSourceCommit": "23f1b491247ca359d003a7de39c3cfe699607c84",
+    "publicationCommit": "c1be2689b2ca83d9d6f1d1f360a31704abb2f0ac",
+    "basicVerificationPassed": true,
+    "publicAPKsVerified": 3,
+    "publicIconsVerified": 3,
+    "nativeAndroidDeviceTested": false,
+    "combinedZIP": false,
+    "completedAt": "2026-11-22T12:53:14.833220+00:00",
+    "temporaryCleanupPending": true
+  },
+  "mac": {
+    "version": "1.0.7",
+    "unchanged": true
+  }
+}
