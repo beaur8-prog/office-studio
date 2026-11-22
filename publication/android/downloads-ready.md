@@ -34,9 +34,9 @@ Word Studio **1.0.7**로 갱신했습니다. Sheet Studio **1.0.7**, Slide Studi
 | --- | --- | --- | --- |
 | ![Sheet Studio 아이콘](attachments/office-studio-android/Sheet-Studio-Android-icon.png) | **Sheet Studio 1.0.7** | [APK 바로 받기](attachments/office-studio-android/Sheet-Studio-1.0.7-Android.apk) | 5.9 MiB |
 | ![Slide Studio 아이콘](attachments/office-studio-android/Slide-Studio-Android-icon.png) | **Slide Studio 1.0.8** | [APK 바로 받기](attachments/office-studio-android/Slide-Studio-1.0.8-Android.apk) | 12.9 MiB |
-| ![Word Studio 아이콘](attachments/office-studio-android/Word-Studio-Android-icon.png) | **Word Studio 1.0.7** | [APK 바로 받기](https://sentence-durable-databases-toys.trycloudflare.com/s/7ee660ab4fe42ff63c8aa9495bab1f1bfcdedc214e038c2a/download/461e852141599c73bf96fd254bed5071) | 36.4 MiB |
+| ![Word Studio 아이콘](attachments/office-studio-android/Word-Studio-Android-icon.png) | **Word Studio 1.0.7** | [APK 바로 받기](attachments/office-studio-android/Word-Studio-1.0.7-Android.apk) | 36.4 MiB |
 
-[SHA-256 확인 파일](attachments/office-studio-android/1.0.14/SHA256SUMS-android.txt) · [빌드 구성·포함 소스](attachments/office-studio-android/1.0.14/BUILD-android.json) · [1.0.0 배포 당시 검증 기록](attachments/office-studio-android/1.0.0/ANDROID-VERIFICATION.json)
+[SHA-256 확인 파일](attachments/office-studio-android/1.0.15/SHA256SUMS-android.txt) · [빌드 구성·포함 소스](attachments/office-studio-android/1.0.15/BUILD-android.json) · [1.0.0 배포 당시 검증 기록](attachments/office-studio-android/1.0.0/ANDROID-VERIFICATION.json)
 
 ## 2. 설치와 실행
 
